@@ -1,5 +1,16 @@
 import logo from './logo.svg';
 import './App.css';
+import { Map, Marker } from "pigeon-maps"
+
+export function MyMap() {
+  return (
+    <div style={{height: "99vh", width: "100%"}}>
+    <Map defaultCenter={[50.879, 4.6997]} defaultZoom={11}>
+      <Marker width={50} anchor={[50.879, 4.6997]} />
+    </Map>
+    </div>
+  )
+}
 
 function App() {
   return (
@@ -22,4 +33,4 @@ function App() {
   );
 }
 
-export default App;
+export default MyMap;
