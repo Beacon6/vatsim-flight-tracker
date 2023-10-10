@@ -1,14 +1,20 @@
 import logo from './logo.svg';
 import './App.css';
-import { Map, Marker } from "pigeon-maps"
+import { Map } from "pigeon-maps"
+import { maptiler } from 'pigeon-maps/providers'
+
+const maptilerProvider = maptiler('KR6OCyEjZD3WgFTla3Rv', 'streets')
 
 export function MyMap() {
   return (
-    <div style={{height: "99vh", width: "100%"}}>
-    <Map defaultCenter={[50.879, 4.6997]} defaultZoom={11}>
-      <Marker width={50} anchor={[50.879, 4.6997]} />
-    </Map>
-    </div>
+    <div style={{height: '100vh'}}>
+    <Map
+    provider={maptilerProvider}
+    dprs={[1, 2]} // this provider supports HiDPI tiles
+    defaultCenter={[50, 10]}
+    defaultZoom={6}
+  />
+  </div>
   )
 }
 
