@@ -9,7 +9,7 @@ def draw_state():
     api = OpenSkyApi("Beacon6", "FE01D81011737B8704E1256D24F2C2C16B3083BC2F1C5A90106C80BE24F40E20")
 
     # bbox = (min latitude, max latitude, min longitude, max longitude)
-    open_sky_states = api.get_states(bbox=(45.8389, 47.8229, 5.9962, 10.5226))
+    open_sky_states = api.get_states(bbox=(47.26, 54.92, 5.34, 14.90))
 
     tracked_aircraft = []
 
