@@ -3,7 +3,7 @@ import './App.css';
 import { Map } from "pigeon-maps"
 import { maptiler } from 'pigeon-maps/providers'
 
-const maptilerProvider = maptiler('KR6OCyEjZD3WgFTla3Rv', 'streets')
+const maptilerProvider = maptiler('KR6OCyEjZD3WgFTla3Rv', 'dataviz')
 
 export function MyMap() {
   return (
