@@ -2,41 +2,29 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import { Map, Marker, ZoomControl } from "pigeon-maps"
 import { maptiler } from 'pigeon-maps/providers'
-import icon from "./aircraft.png"
+import aircraft_icon from "./aircraft.png"
 
 const maptilerProvider = maptiler('KR6OCyEjZD3WgFTla3Rv', 'dataviz')
 
 function App() {
 
-  const [aircraftState, setAircraftState] = useState([]);
+  const [aircraftData, setAircraftData] = useState([]);
 
   useEffect(() => {
-    fetch('/state')
+    fetch('/aircraft_data')
     .then(response => response.json())
-    .then(data => setAircraftState(data));
-
-    const interval = setInterval(() => {
-    fetch('/state')
-    .then(response => response.json())
-    .then(data => setAircraftState(data));
-    }, 10000);
-
-    return() => clearInterval(interval);
+    .then(data => setAircraftData(data));
   }, []);
 
   return (
   <div style={{height: '100vh'}}>
     <Map provider={maptilerProvider} dprs={[1, 2]} defaultCenter={[50, 10]} defaultZoom={6} minZoom={4} >
       <ZoomControl/>
-        {aircraftState.map(item => (
-            <Marker key={item.callsign}
-              height={1}
-              width={1}
-              anchor={[item.latitude, item.longitude]}
-            >
-              <img src={icon} />
-            </Marker>
-        ))}
+      {aircraftData.map(item => (
+        <Marker anchor={[item.latitude, item.longitude]}>
+          <img style={{ height: 24, width: 24 }} src={ aircraft_icon } />
+        </Marker>
+      ))}
     </Map>
   </div>
   )
