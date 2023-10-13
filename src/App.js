@@ -19,10 +19,11 @@ function App() {
   <div style={{height: '100vh'}}>
     <Map provider={maptilerProvider} dprs={[1, 2]} defaultCenter={[50, 10]} defaultZoom={6} minZoom={4} >
       <ZoomControl/>
-      <Marker
-        width={50}
-        anchor={[50, 10]}
-      />
+        {aircraftState.map(item => (
+            <Marker key={item.callsign}
+              anchor={[item.latitude, item.longitude]}
+            />
+        ))}
     </Map>
   </div>
   )
