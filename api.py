@@ -28,7 +28,7 @@ for x in open_sky_states.states:
         })
 
 df = pd.DataFrame(tracked_aircraft)
-
+df = df.dropna()
 
 @app.route("/state")
 def draw_state():
