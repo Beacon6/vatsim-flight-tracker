@@ -12,7 +12,15 @@ function App() {
   useEffect(() => {
     fetch('/state')
     .then(response => response.json())
-    .then(data => setAircraftState(data))
+    .then(data => setAircraftState(data));
+
+    const interval = setInterval(() => {
+    fetch('/state')
+    .then(response => response.json())
+    .then(data => setAircraftState(data));
+    }, 10000);
+
+    return() => clearInterval(interval);
   }, []);
 
   return (
