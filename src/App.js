@@ -18,10 +18,14 @@ function App() {
 
   return (
   <div style={{height: '100vh'}}>
-    <Map provider={maptilerProvider} dprs={[1, 2]} defaultCenter={[50, 10]} defaultZoom={6} minZoom={4} >
+    <Map provider={maptilerProvider} dprs={[1, 2]} defaultCenter={[50, 10]} defaultZoom={6} minZoom={4}
+    onBoundsChanged= {({ center, zoom, bounds, initial }) => {
+      console.log(center, zoom, bounds, initial)
+    }}
+    >
       <ZoomControl/>
       {aircraftData.map(item => (
-        <Marker anchor={[item.latitude, item.longitude]}>
+        <Marker anchor={[item.latitude, item.longitude]} key={ item.icao24 }>
           <img style={{ height: 24, width: 24 }} src={ aircraft_icon } />
         </Marker>
       ))}
