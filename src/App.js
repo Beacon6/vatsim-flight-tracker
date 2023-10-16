@@ -1,36 +1,50 @@
-import logo from './logo.svg';
+import { useState, useEffect } from 'react';
 import './App.css';
-import { Map, Marker } from "pigeon-maps"
+import { Map, Marker, ZoomControl } from "pigeon-maps"
+import { maptiler } from 'pigeon-maps/providers'
+import aircraft_icon from "./aircraft.png"
 
-export function MyMap() {
+const maptilerProvider = maptiler('KR6OCyEjZD3WgFTla3Rv', 'dataviz')
+
+function App() {
+
+  const [bounds, setBounds] = useState(undefined)
+
+  function onBoundsChanged({ bounds }) {
+    setBounds(bounds)
+  }
+
+  useEffect(() => {
+      if (!bounds) return;
+      console.log(bounds)
+      fetch('/aircraft_data', {method: 'POST', body: JSON.stringify(bounds), headers: {"Content-Type": "application/json"}})
+      .then(response => response.json())
+      .then(data => setAircraftData(data));
+    },
+  [bounds]
+  )
+
+  let [aircraftData, setAircraftData] = useState([]);
+
   return (
-    <div style={{height: "99vh", width: "100%"}}>
-    <Map defaultCenter={[50.879, 4.6997]} defaultZoom={11}>
-      <Marker width={50} anchor={[50.879, 4.6997]} />
+  <div style={{height: '100vh'}}>
+    <Map
+    provider={maptilerProvider}
+    dprs={[1, 2]}
+    defaultCenter={[50, 10]}
+    defaultZoom={6}
+    minZoom={4}
+    onBoundsChanged={ onBoundsChanged }
+    >
+      <ZoomControl/>
+      {aircraftData.map(item => (
+        <Marker anchor={[item.latitude, item.longitude]} key={ item.icao24 }>
+          <img style={{ height: 24, width: 24 }} src={ aircraft_icon } alt="" />
+        </Marker>
+      ))}
     </Map>
-    </div>
+  </div>
   )
 }
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-
-export default MyMap;
+export default App;
