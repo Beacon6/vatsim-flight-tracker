@@ -1,13 +1,19 @@
-from flask import Flask
+from flask import Flask, request
 from opensky_api import OpenSkyApi # type: ignore
 
 app = Flask(__name__)
 api = OpenSkyApi("Beacon6", "FE01D81011737B8704E1256D24F2C2C16B3083BC2F1C5A90106C80BE24F40E20")
 
-@app.route("/aircraft_data")
-def get_aircraft_data(min_lat, max_lat, min_lon, max_lon):
+@app.route("/aircraft_data", methods = ["POST"])
+def get_aircraft_data():
+    viewport_bounds = request.json
+    print(viewport_bounds)
+
     # bbox = (min latitude, max latitude, min longitude, max longitude)
-    aircraft_states = api.get_states(bbox = (min_lat, max_lat, min_lon, max_lon))
+    aircraft_states = api.get_states(bbox = (viewport_bounds["sw"][0],
+                                             viewport_bounds["ne"][0],
+                                             viewport_bounds["sw"][1],
+                                             viewport_bounds["ne"][1]))
 
     aircraft_data = []
 
