@@ -1,50 +1,53 @@
-import { useState, useEffect } from 'react';
-import './App.css';
-import { Map, Marker, ZoomControl } from "pigeon-maps"
-import { maptiler } from 'pigeon-maps/providers'
-import aircraft_icon from "./aircraft.png"
+import { useState, useEffect } from "react";
+import { Map, Marker, ZoomControl } from "pigeon-maps";
+import { maptiler } from "pigeon-maps/providers";
+import aircraft_icon from "./aircraft.png";
 
-const maptilerProvider = maptiler('KR6OCyEjZD3WgFTla3Rv', 'dataviz')
+const mapProvider = maptiler("KR6OCyEjZD3WgFTla3Rv", "dataviz");
 
 function App() {
-
-  const [bounds, setBounds] = useState(undefined)
+  const [viewportBounds, setViewportBounds] = useState(undefined);
 
   function onBoundsChanged({ bounds }) {
-    setBounds(bounds)
+    setViewportBounds(bounds);
   }
 
-  useEffect(() => {
-      if (!bounds) return;
-      console.log(bounds)
-      fetch('/aircraft_data', {method: 'POST', body: JSON.stringify(bounds), headers: {"Content-Type": "application/json"}})
-      .then(response => response.json())
-      .then(data => setAircraftData(data));
-    },
-  [bounds]
-  )
+  const [aircraftData, setAircraftData] = useState([]);
 
-  let [aircraftData, setAircraftData] = useState([]);
+  useEffect(() => {
+    if (!viewportBounds) return;
+
+    console.log(viewportBounds);
+
+    fetch("/aircraft_data", {
+      method: "POST",
+      body: JSON.stringify(viewportBounds),
+      headers: { "Content-Type": "application/json" },
+    })
+    .then(response => response.json())
+    .then(data => setAircraftData(data));
+  }, [viewportBounds]);
 
   return (
-  <div style={{height: '100vh'}}>
-    <Map
-    provider={maptilerProvider}
-    dprs={[1, 2]}
-    defaultCenter={[50, 10]}
-    defaultZoom={6}
-    minZoom={4}
-    onBoundsChanged={ onBoundsChanged }
-    >
-      <ZoomControl/>
-      {aircraftData.map(item => (
-        <Marker anchor={[item.latitude, item.longitude]} key={ item.icao24 }>
-          <img style={{ height: 24, width: 24 }} src={ aircraft_icon } alt="" />
-        </Marker>
-      ))}
-    </Map>
-  </div>
-  )
+    <div style={{ height: "100vh" }}>
+      <Map
+        provider={mapProvider}
+        dprs={[1, 2]}
+        defaultCenter={[50, 10]}
+        defaultZoom={6}
+        minZoom={4}
+        onBoundsChanged={onBoundsChanged}
+      >
+        {aircraftData.map(item => (
+          <Marker anchor={[item.latitude, item.longitude]} key={item.icao24}>
+            <img style={{ height: 24, width: 24 }} src={aircraft_icon} alt="" />
+          </Marker>
+        ))}
+
+        <ZoomControl/>
+      </Map>
+    </div>
+    );
 }
 
 export default App;
