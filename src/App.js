@@ -12,6 +12,21 @@ function App() {
     setViewportBounds(bounds);
   }
 
+  const [timer, setTimer] = useState(20);
+
+  useEffect(() => {
+    console.log(timer);
+    const interval = setInterval(() => {
+      setTimer(timer - 1);
+    }, 1000);
+
+    if (timer === 0) {
+      setTimer(20);
+    }
+
+    return () => clearInterval(interval);
+  }, [timer]);
+
   const [aircraftData, setAircraftData] = useState([]);
 
   useEffect(() => {
