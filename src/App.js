@@ -10,9 +10,11 @@ function App() {
 
   function onBoundsChanged({ bounds }) {
     setViewportBounds(bounds);
+    console.log(requestAllowed)
   }
 
   const [timer, setTimer] = useState(20);
+  const [requestAllowed, setRequestAllowed] = useState(true)
 
   useEffect(() => {
     console.log(timer);
@@ -22,6 +24,7 @@ function App() {
 
     if (timer === 0) {
       setTimer(20);
+      setRequestAllowed(true)
     }
 
     return () => clearInterval(interval);
@@ -32,15 +35,18 @@ function App() {
   useEffect(() => {
     if (!viewportBounds) return;
 
-    console.log(viewportBounds);
+    if (requestAllowed === true) {
+      console.log(viewportBounds);
 
-    fetch("/aircraft_data", {
-      method: "POST",
-      body: JSON.stringify(viewportBounds),
-      headers: { "Content-Type": "application/json" },
-    })
-    .then(response => response.json())
-    .then(data => setAircraftData(data));
+      fetch("/aircraft_data", {
+        method: "POST",
+        body: JSON.stringify(viewportBounds),
+        headers: { "Content-Type": "application/json" },
+      })
+      .then(response => response.json())
+      .then(data => setAircraftData(data));
+      setRequestAllowed(false)
+  }
   }, [viewportBounds]);
 
   return (
