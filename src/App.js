@@ -10,11 +10,11 @@ function App() {
 
   function onBoundsChanged({ bounds }) {
     setViewportBounds(bounds);
-    console.log(requestAllowed)
+    console.log({requestAllowed});
   }
 
   const [timer, setTimer] = useState(20);
-  const [requestAllowed, setRequestAllowed] = useState(true)
+  const [requestAllowed, setRequestAllowed] = useState(true);
 
   useEffect(() => {
     console.log(timer);
@@ -24,7 +24,7 @@ function App() {
 
     if (timer === 0) {
       setTimer(20);
-      setRequestAllowed(true)
+      setRequestAllowed(true);
     }
 
     return () => clearInterval(interval);
@@ -45,9 +45,9 @@ function App() {
       })
       .then(response => response.json())
       .then(data => setAircraftData(data));
-      setRequestAllowed(false)
+      setRequestAllowed(false);
   }
-  }, [viewportBounds]);
+  }, [viewportBounds, requestAllowed]);
 
   return (
     <div style={{ height: "100vh" }}>
@@ -56,7 +56,7 @@ function App() {
         dprs={[1, 2]}
         defaultCenter={[50, 10]}
         defaultZoom={6}
-        minZoom={4}
+        minZoom={6}
         onBoundsChanged={onBoundsChanged}
       >
         {aircraftData.map(item => (
