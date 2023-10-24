@@ -10,10 +10,10 @@ function App() {
 
   function onBoundsChanged({ bounds }) {
     setViewportBounds(bounds);
-    console.log({requestAllowed});
+    console.log({ requestAllowed });
   }
 
-  const [timer, setTimer] = useState(20);
+  const [timer, setTimer] = useState(10);
   const [requestAllowed, setRequestAllowed] = useState(true);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ function App() {
     }, 1000);
 
     if (timer === 0) {
-      setTimer(20);
+      setTimer(10);
       setRequestAllowed(true);
     }
 
@@ -43,10 +43,10 @@ function App() {
         body: JSON.stringify(viewportBounds),
         headers: { "Content-Type": "application/json" },
       })
-      .then(response => response.json())
-      .then(data => setAircraftData(data));
+        .then(response => response.json())
+        .then(data => setAircraftData(data));
       setRequestAllowed(false);
-  }
+    }
   }, [viewportBounds, requestAllowed]);
 
   return (
@@ -65,10 +65,10 @@ function App() {
           </Marker>
         ))}
 
-        <ZoomControl/>
+        <ZoomControl />
       </Map>
     </div>
-    );
+  );
 }
 
 export default App;
