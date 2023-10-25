@@ -44,7 +44,10 @@ function App() {
         headers: { "Content-Type": "application/json" },
       })
         .then(response => response.json())
-        .then(data => setAircraftData(data));
+        .then(data => setAircraftData(data))
+        .catch((error) => {
+          console.log(error);
+        });
       setRequestAllowed(false);
     }
   }, [viewportBounds, requestAllowed]);
