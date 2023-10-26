@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Map, Marker, ZoomControl } from "pigeon-maps";
 import { maptiler } from "pigeon-maps/providers";
 import aircraft_icon from "./aircraft.png";
+import Navbar from "./Navbar";
+import "./App.css";
 
 const mapProvider = maptiler("KR6OCyEjZD3WgFTla3Rv", "dataviz");
 
@@ -54,6 +56,7 @@ function App() {
 
   return (
     <div style={{ height: "100vh" }}>
+      <Navbar />
       <Map
         provider={mapProvider}
         dprs={[1, 2]}
