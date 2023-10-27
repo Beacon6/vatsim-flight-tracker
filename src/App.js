@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Map, Marker, ZoomControl } from "pigeon-maps";
 import { maptiler } from "pigeon-maps/providers";
 import aircraft_icon from "./aircraft.png";
+import Navbar from "./Navbar";
+import "./App.css";
 
 const mapProvider = maptiler("KR6OCyEjZD3WgFTla3Rv", "dataviz");
 
@@ -44,7 +46,7 @@ function App() {
         headers: { "Content-Type": "application/json" },
       })
         .then(response => response.json())
-        .then(data => setAircraftData(data))
+        .then(data => setAircraftData(data[0]))
         .catch((error) => {
           console.log(error);
         });
@@ -54,6 +56,7 @@ function App() {
 
   return (
     <div style={{ height: "100vh" }}>
+      <Navbar count={aircraftData.length} timer={timer} />
       <Map
         provider={mapProvider}
         dprs={[1, 2]}

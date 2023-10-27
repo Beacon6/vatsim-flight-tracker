@@ -27,5 +27,5 @@ def get_aircraft_data():
             "latitude": s.latitude,
             })
 
-    print(len(aircraft_data))
-    return aircraft_data
+    aircraft_count = len(aircraft_data)
+    return [aircraft_data, aircraft_count]
