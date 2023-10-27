@@ -71,7 +71,10 @@ function App() {
           </Marker>
         ))}
 
-        <ZoomControl />
+        <ZoomControl
+          style={{ top: "8px", left: "unset", right: "8px" }}
+          buttonStyle={{ background: "#282c34", color: "#fff" }}
+        />
       </Map>
     </div>
   );
