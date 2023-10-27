@@ -1,19 +1,21 @@
-export default function Navbar() {
+function Navbar(props) {
   return <nav className="nav">
     <a href="/" className="home">
-      Placeholder name
+      ADS-B Flight Tracker
     </a>
     <ul>
       <li>
         <p>
-          count
+          Currently tracking {props.count} aircraft
         </p>
       </li>
       <li>
         <p>
-          status
+          Next refresh in {props.timer} seconds
         </p>
       </li>
     </ul>
   </nav>
 }
+
+export default Navbar;
