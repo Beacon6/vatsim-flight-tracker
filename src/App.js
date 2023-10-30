@@ -46,7 +46,7 @@ function App() {
         headers: { "Content-Type": "application/json" },
       })
         .then(response => response.json())
-        .then(data => setAircraftData(data[1]))
+        .then(data => setAircraftData(data.aircraft_data))
         .catch((error) => {
           console.log(error);
         });

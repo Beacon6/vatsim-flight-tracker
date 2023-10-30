@@ -30,12 +30,19 @@ def get_aircraft_data():
                 "latitude": s.latitude,
                 })
 
-
         aircraft_count = len(aircraft_data)
         print(f"Request status is {request_successful} for {aircraft_count} aircraft")
-        return [str(request_successful), aircraft_data, aircraft_count]
+        return {
+            "request_successful": request_successful,
+            "aircraft_data": aircraft_data,
+            "aircraft_count": aircraft_count
+        }
 
     except ReadTimeout:
         request_successful = False
         print(f"Request status is {request_successful}")
-        return str(request_successful)
+        return {
+            "request_successful": request_successful,
+            "aircraft_data": None,
+            "aircraft_count": None
+        }
