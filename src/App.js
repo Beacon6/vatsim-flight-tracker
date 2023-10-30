@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { Map, Marker, ZoomControl } from "pigeon-maps";
 import { maptiler } from "pigeon-maps/providers";
+import Offcanvas from "react-bootstrap/Offcanvas";
+import Button from "react-bootstrap/Button";
 import aircraft_icon from "./aircraft.png";
 import Navbar from "./Navbar";
 import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const mapProvider = maptiler("KR6OCyEjZD3WgFTla3Rv", "dataviz");
 
@@ -57,29 +60,54 @@ function App() {
     }
   }, [viewportBounds, requestAllowed]);
 
-  return (
-    <div style={{ height: "100vh" }}>
-      <Navbar count={aircraftData.length} timer={timer} />
-      <Map
-        provider={mapProvider}
-        dprs={[1, 2]}
-        defaultCenter={[50, 10]}
-        defaultZoom={6}
-        minZoom={6}
-        onBoundsChanged={onBoundsChanged}
-      >
-        {aircraftData.map(item => (
-          <Marker anchor={[item.latitude, item.longitude]} key={item.icao24}>
-            <img style={{ height: 24, width: 24 }} src={aircraft_icon} alt="" />
-          </Marker>
-        ))}
+  const [show, setShow] = useState(false);
+  const [selectedICAO, setSelectedICAO] = useState("");
 
-        <ZoomControl
-          style={{ top: "8px", left: "unset", right: "8px" }}
-          buttonStyle={{ background: "#282c34", color: "#fff" }}
-        />
-      </Map>
-    </div>
+  const handleClose = () => setShow(false);
+  const handleShow = (icao24) => {
+    setSelectedICAO(icao24);
+    setShow(true);
+  }
+
+  return (
+    <>
+      <div style={{ height: "100vh" }}>
+        <Button variant="primary" onClick={handleShow}>
+          Launch
+        </Button>
+        <Navbar count={aircraftData.length} timer={timer} />
+        <Map
+          provider={mapProvider}
+          dprs={[1, 2]}
+          defaultCenter={[50, 10]}
+          defaultZoom={6}
+          minZoom={6}
+          onBoundsChanged={onBoundsChanged}
+        >
+          {aircraftData.map(item => (
+            <Marker anchor={[item.latitude, item.longitude]} key={item.icao24}
+              onClick={() => handleShow(item.icao24)} >
+              <img style={{ height: 24, width: 24, pointerEvents: "auto" }} src={aircraft_icon} alt="" />
+            </Marker>
+          ))}
+
+          <ZoomControl
+            style={{ top: "8px", left: "unset", right: "8px" }}
+            buttonStyle={{ background: "#282c34", color: "#fff" }}
+          />
+        </Map>
+      </div>
+      <Offcanvas show={show} onHide={handleClose}>
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Offcanvas</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <p>
+            selectedICAO = {selectedICAO}
+          </p>
+        </Offcanvas.Body>
+      </Offcanvas>
+    </>
   );
 }
 
