@@ -15,7 +15,7 @@ function App() {
     console.log({ requestAllowed });
   }
 
-  const [timer, setTimer] = useState(10);
+  const [timer, setTimer] = useState(30);
   const [requestAllowed, setRequestAllowed] = useState(true);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ function App() {
     }, 1000);
 
     if (timer === 0) {
-      setTimer(10);
+      setTimer(30);
       setRequestAllowed(true);
     }
 
@@ -46,10 +46,13 @@ function App() {
         headers: { "Content-Type": "application/json" },
       })
         .then(response => response.json())
-        .then(data => setAircraftData(data.aircraft_data))
-        .catch((error) => {
-          console.log(error);
-        });
+        .then(data => {
+          if (data.request_successful === true) {
+            setAircraftData(data.aircraft_data);
+          } else {
+            console.log("API timeout");
+          }
+        })
       setRequestAllowed(false);
     }
   }, [viewportBounds, requestAllowed]);

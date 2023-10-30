@@ -16,9 +16,9 @@ def get_aircraft_data():
         request_successful = True
         # bbox = (min latitude, max latitude, min longitude, max longitude)
         aircraft_states = api.get_states(bbox=(viewport_bounds["sw"][0],
-                                            viewport_bounds["ne"][0],
-                                            viewport_bounds["sw"][1],
-                                            viewport_bounds["ne"][1]))
+                                               viewport_bounds["ne"][0],
+                                               viewport_bounds["sw"][1],
+                                               viewport_bounds["ne"][1]))
 
         aircraft_data = []
 
