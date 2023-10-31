@@ -1,18 +1,14 @@
 from flask import Flask, request
 from opensky_api import OpenSkyApi  # type: ignore
 from requests.exceptions import ReadTimeout
+import dummy_data
 
 app = Flask(__name__)
 key = "FE01D81011737B8704E1256D24F2C2C16B3083BC2F1C5A90106C80BE24F40E20"
 api = OpenSkyApi("Beacon6", key)
 
 debug = True
-dummy_data = [
-    {'icao24': '4b1816', 'callsign': 'SWR8WA', 'longitude': 14.9186, 'latitude': 45.6102, 'velocity': 237.93, 'true_track': 130.44, 'baro_altitude': 11277.6, 'category': 0},
-    {'icao24': '440da4', 'callsign': 'JPV137', 'longitude': 9.5135, 'latitude': 47.6696, 'velocity': 0, 'true_track': 140.62, 'baro_altitude': None, 'category': 0},
-    {'icao24': '4b1804', 'callsign': 'SWR1ZH', 'longitude': 14.4882, 'latitude': 46.208, 'velocity': 69.86, 'true_track': 306.62, 'baro_altitude': 510.54, 'category': 0},
-    {'icao24': '4b1806', 'callsign': 'SWR6LH', 'longitude': 6.3414, 'latitude': 46.396, 'velocity': 86.94, 'true_track': 225.24, 'baro_altitude': 1783.08, 'category': 0},
-    {'icao24': '4b1807', 'callsign': 'SWR6FL', 'longitude': 6.7643, 'latitude': 51.2833, 'velocity': 10.29, 'true_track': 53.44, 'baro_altitude': None, 'category': 0}]
+dummy_data = dummy_data.dummy_data
 
 
 @app.route("/aircraft_data", methods=["POST"])
@@ -46,7 +42,8 @@ def get_aircraft_data():
                     })
 
         aircraft_count = len(aircraft_data)
-        print(f"Request status is {request_successful} for {aircraft_count} aircraft")
+        print(f"Request status: {request_successful}")
+        print(f"Tracking: {aircraft_count} aircraft")
         return {
             "request_successful": request_successful,
             "aircraft_data": aircraft_data,
