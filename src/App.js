@@ -59,13 +59,16 @@ function App() {
     }
   }, [viewportBounds, requestAllowed]);
 
-  const [show, setShow] = useState(false);
-  const [selectedICAO, setSelectedICAO] = useState("");
+  const [selectedAircraft, setSelectedAircraft] = useState("");
+  const [showPanel, setShowPanel] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = (icao24) => {
-    setSelectedICAO(icao24);
-    setShow(true);
+  function handleShowPanel(selectedAircraft) {
+    setSelectedAircraft(selectedAircraft);
+    setShowPanel(true);
+  }
+
+  function handleClosePanel() {
+    setShowPanel(false);
   }
 
   return (
@@ -80,8 +83,11 @@ function App() {
         onBoundsChanged={onBoundsChanged}
       >
         {aircraftData.map(item => (
-          <Marker anchor={[item.latitude, item.longitude]} key={item.icao24}
-            onClick={() => handleShow(item.icao24)} >
+          <Marker
+            anchor={[item.latitude, item.longitude]}
+            key={item.icao24}
+            onClick={() => handleShowPanel(item.callsign)}
+          >
             <img style={{ height: 24, width: 24, pointerEvents: "auto" }} src={aircraft_icon} alt="" />
           </Marker>
         ))}
@@ -91,7 +97,7 @@ function App() {
           buttonStyle={{ background: "#282c34", color: "#fff" }}
         />
       </Map>
-      <Panel show={show} onHide={handleClose} selectedICAO={selectedICAO} />
+      <Panel show={showPanel} onHide={handleClosePanel} selectedAircraft={selectedAircraft} />
     </div>
   );
 }
