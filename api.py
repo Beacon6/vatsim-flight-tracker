@@ -1,6 +1,7 @@
 from flask import Flask, request
 from opensky_api import OpenSkyApi  # type: ignore
 from requests.exceptions import ReadTimeout
+from requests import get
 import dummy_data
 
 app = Flask(__name__)
@@ -58,3 +59,18 @@ def get_aircraft_data():
             "aircraft_data": None,
             "aircraft_count": None
         }
+
+
+@app.route("/aircraft_photo", methods=["POST"])
+def get_aircraft_photo():
+    hex_code = request.json()
+    base_url = "https://api.planespotters.net/pub/photos/hex/"
+    response = get(base_url + hex_code).json()
+
+    aircraft_photo = {}
+
+    aircraft_photo["img"] = response["photos"][0]["thumbnail_large"]["src"]
+    aircraft_photo["link"] = response["photos"][0]["link"]
+    aircraft_photo["author"] = response["photos"][0]["photographer"]
+
+    return aircraft_photo
