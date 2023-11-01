@@ -63,7 +63,9 @@ def get_aircraft_data():
 
 @app.route("/aircraft_photo", methods=["POST"])
 def get_aircraft_photo():
-    hex_code = request.json()
+    hex_code = request.json
+    print(hex_code)
+
     base_url = "https://api.planespotters.net/pub/photos/hex/"
     response = get(base_url + hex_code).json()
 
