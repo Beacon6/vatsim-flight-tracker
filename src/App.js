@@ -82,7 +82,6 @@ function App() {
   return (
     <div style={{ height: "100vh" }}>
       <Navbar count={aircraftData.length} timer={timer} />
-      <img src={aircraftPhoto.img} alt="test" />
       <Map
         provider={mapProvider}
         dprs={[1, 2]}
@@ -106,7 +105,12 @@ function App() {
           buttonStyle={{ background: "#282c34", color: "#fff" }}
         />
       </Map>
-      <Panel show={showPanel} onHide={handleClosePanel} selectedAircraft={selectedAircraft} />
+      <Panel
+        show={showPanel}
+        onHide={handleClosePanel}
+        selectedAircraftCallsign={selectedAircraft}
+        selectedAircraftPhoto={aircraftPhoto.img}
+      />
     </div>
   );
 }
