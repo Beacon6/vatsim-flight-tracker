@@ -10,10 +10,10 @@ function Panel(props) {
       <Offcanvas.Title>{props.selectedAircraftCallsign}</Offcanvas.Title>
     </Offcanvas.Header>
     <Offcanvas.Body>
-      <img src={props.selectedAircraftPhoto} alt="Selected aircraft photo" />
-      <p>
-        Callsign = {props.selectedAircraftHex}
-      </p>
+      <img src={props.selectedAircraftPhoto} alt="Selected aircraft" />
+      <p> CALLSIGN = {props.selectedAircraftCallsign} </p>
+      <p> GND SPEED = {Math.round(props.selectedAircraftVelocity * 1.94384)} </p>
+      <p> BARO ALT = {Math.round(props.selectedAircraftAltitude * 3.28084)} </p>
     </Offcanvas.Body>
   </Offcanvas>
 }

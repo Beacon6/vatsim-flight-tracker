@@ -60,10 +60,11 @@ function App() {
   }, [viewportBounds, requestAllowed]);
 
   const [selectedAircraft, setSelectedAircraft] = useState("");
+  const [aircraftPayload, setAicraftPayload] = useState("");
   const [showPanel, setShowPanel] = useState(false);
   const [aircraftPhoto, setAircraftPhoto] = useState([]);
 
-  function handleShowPanel(selectedAircraft) {
+  function handleShowPanel(selectedAircraft, payload) {
     setSelectedAircraft(selectedAircraft);
     fetch("/aircraft_photo", {
       method: "POST",
@@ -73,6 +74,8 @@ function App() {
     .then(response => response.json())
     .then(data => setAircraftPhoto(data));
     setShowPanel(true);
+    setAicraftPayload(payload);
+    console.log("Clicked on:", aircraftPayload);
   }
 
   function handleClosePanel() {
@@ -94,7 +97,7 @@ function App() {
           <Marker
             anchor={[item.latitude, item.longitude]}
             key={item.icao24}
-            onClick={() => handleShowPanel(item.icao24)}
+            onClick={() => handleShowPanel(item.icao24, item)}
           >
             <img style={{ height: 24, width: 24, pointerEvents: "auto" }} src={aircraft_icon} alt="" />
           </Marker>
@@ -108,7 +111,9 @@ function App() {
       <Panel
         show={showPanel}
         onHide={handleClosePanel}
-        selectedAircraftCallsign={selectedAircraft}
+        selectedAircraftCallsign={aircraftPayload.callsign}
+        selectedAircraftVelocity={aircraftPayload.velocity}
+        selectedAircraftAltitude={aircraftPayload.baro_altitude}
         selectedAircraftPhoto={aircraftPhoto.img}
       />
     </div>
