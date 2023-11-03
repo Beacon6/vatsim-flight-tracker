@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import { Map, Marker, ZoomControl } from "pigeon-maps";
 import { maptiler } from "pigeon-maps/providers";
-import aircraft_icon from "./aircraft.png";
+import airplane_icon from "./airplane.png";
 import Navbar from "./Navbar";
+import Panel from "./Panel";
 import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
+// Map styling
 const mapProvider = maptiler("KR6OCyEjZD3WgFTla3Rv", "dataviz");
 
 function App() {
+  // Updating viewport bounds on each change
   const [viewportBounds, setViewportBounds] = useState(undefined);
 
   function onBoundsChanged({ bounds }) {
@@ -15,6 +19,7 @@ function App() {
     console.log({ requestAllowed });
   }
 
+  // Measuring time between API calls
   const [timer, setTimer] = useState(30);
   const [requestAllowed, setRequestAllowed] = useState(true);
 
@@ -32,6 +37,7 @@ function App() {
     return () => clearInterval(interval);
   }, [timer]);
 
+  // Fetching aircraft data from the Flask backend
   const [aircraftData, setAircraftData] = useState([]);
 
   useEffect(() => {
@@ -57,6 +63,29 @@ function App() {
     }
   }, [viewportBounds, requestAllowed]);
 
+  // Handling the 'Offcanvas' panel component
+  // Fetching aircraft photo and other data for the panel
+  const [selectedAircraft, setSelectedAircraft] = useState("");
+  const [showPanel, setShowPanel] = useState(false);
+  const [aircraftPhoto, setAircraftPhoto] = useState([]);
+
+  function handleShowPanel(selectedAircraft) {
+    setSelectedAircraft(selectedAircraft);
+    fetch("/aircraft_photo", {
+      method: "POST",
+      body: JSON.stringify(selectedAircraft.icao24),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then(response => response.json())
+      .then(data => setAircraftPhoto(data));
+    setShowPanel(true);
+    console.log("Clicked on:", selectedAircraft);
+  }
+
+  function handleClosePanel() {
+    setShowPanel(false);
+  }
+
   return (
     <div style={{ height: "100vh" }}>
       <Navbar count={aircraftData.length} timer={timer} />
@@ -69,8 +98,12 @@ function App() {
         onBoundsChanged={onBoundsChanged}
       >
         {aircraftData.map(item => (
-          <Marker anchor={[item.latitude, item.longitude]} key={item.icao24}>
-            <img style={{ height: 24, width: 24 }} src={aircraft_icon} alt="" />
+          <Marker
+            anchor={[item.latitude, item.longitude]}
+            key={item.icao24}
+            onClick={() => handleShowPanel(item)}
+          >
+            <img style={{ height: 16, width: 16, pointerEvents: "auto" }} src={airplane_icon} alt="" />
           </Marker>
         ))}
 
@@ -79,6 +112,14 @@ function App() {
           buttonStyle={{ background: "#282c34", color: "#fff" }}
         />
       </Map>
+      <Panel
+        show={showPanel}
+        onHide={handleClosePanel}
+        selectedAircraftCallsign={selectedAircraft.callsign}
+        selectedAircraftVelocity={selectedAircraft.velocity}
+        selectedAircraftAltitude={selectedAircraft.baro_altitude}
+        selectedAircraftPhoto={aircraftPhoto.img}
+      />
     </div>
   );
 }

@@ -28,3 +28,8 @@
 .home {
   font-size: 2rem;
 }
+
+.offcanvas {
+  top: auto !important;
+  width: auto !important;
+}
