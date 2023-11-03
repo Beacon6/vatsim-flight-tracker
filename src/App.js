@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Map, Marker, ZoomControl } from "pigeon-maps";
 import { maptiler } from "pigeon-maps/providers";
-import aircraft_icon from "./aircraft.png";
+import airplane_icon from "./airplane.png";
 import Navbar from "./Navbar";
 import Panel from "./Panel";
 import "./App.css";
@@ -103,7 +103,7 @@ function App() {
             key={item.icao24}
             onClick={() => handleShowPanel(item)}
           >
-            <img style={{ height: 24, width: 24, pointerEvents: "auto" }} src={aircraft_icon} alt="" />
+            <img style={{ height: 16, width: 16, pointerEvents: "auto" }} src={airplane_icon} alt="" />
           </Marker>
         ))}
 
