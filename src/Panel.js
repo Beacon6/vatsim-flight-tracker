@@ -2,10 +2,10 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 
 function Panel(props) {
   return <Offcanvas
-            show={props.show}
-            onHide={props.onHide}
-            backdrop={false}
-          >
+    show={props.show}
+    onHide={props.onHide}
+    backdrop={false}
+  >
     <Offcanvas.Header closeButton>
       <Offcanvas.Title>{props.selectedAircraftCallsign}</Offcanvas.Title>
     </Offcanvas.Header>

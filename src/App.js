@@ -7,9 +7,11 @@ import Panel from "./Panel";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+// Map styling
 const mapProvider = maptiler("KR6OCyEjZD3WgFTla3Rv", "dataviz");
 
 function App() {
+  // Updating viewport bounds on each change
   const [viewportBounds, setViewportBounds] = useState(undefined);
 
   function onBoundsChanged({ bounds }) {
@@ -17,6 +19,7 @@ function App() {
     console.log({ requestAllowed });
   }
 
+  // Measuring time between API calls
   const [timer, setTimer] = useState(30);
   const [requestAllowed, setRequestAllowed] = useState(true);
 
@@ -34,6 +37,7 @@ function App() {
     return () => clearInterval(interval);
   }, [timer]);
 
+  // Fetching aircraft data from the Flask backend
   const [aircraftData, setAircraftData] = useState([]);
 
   useEffect(() => {
@@ -59,23 +63,23 @@ function App() {
     }
   }, [viewportBounds, requestAllowed]);
 
+  // Handling the 'Offcanvas' panel component
+  // Fetching aircraft photo and other data for the panel
   const [selectedAircraft, setSelectedAircraft] = useState("");
-  const [aircraftPayload, setAicraftPayload] = useState("");
   const [showPanel, setShowPanel] = useState(false);
   const [aircraftPhoto, setAircraftPhoto] = useState([]);
 
-  function handleShowPanel(selectedAircraft, payload) {
+  function handleShowPanel(selectedAircraft) {
     setSelectedAircraft(selectedAircraft);
     fetch("/aircraft_photo", {
       method: "POST",
-      body: JSON.stringify(selectedAircraft),
+      body: JSON.stringify(selectedAircraft.icao24),
       headers: { "Content-Type": "application/json" },
     })
-    .then(response => response.json())
-    .then(data => setAircraftPhoto(data));
+      .then(response => response.json())
+      .then(data => setAircraftPhoto(data));
     setShowPanel(true);
-    setAicraftPayload(payload);
-    console.log("Clicked on:", aircraftPayload);
+    console.log("Clicked on:", selectedAircraft);
   }
 
   function handleClosePanel() {
@@ -97,7 +101,7 @@ function App() {
           <Marker
             anchor={[item.latitude, item.longitude]}
             key={item.icao24}
-            onClick={() => handleShowPanel(item.icao24, item)}
+            onClick={() => handleShowPanel(item)}
           >
             <img style={{ height: 24, width: 24, pointerEvents: "auto" }} src={aircraft_icon} alt="" />
           </Marker>
@@ -111,9 +115,9 @@ function App() {
       <Panel
         show={showPanel}
         onHide={handleClosePanel}
-        selectedAircraftCallsign={aircraftPayload.callsign}
-        selectedAircraftVelocity={aircraftPayload.velocity}
-        selectedAircraftAltitude={aircraftPayload.baro_altitude}
+        selectedAircraftCallsign={selectedAircraft.callsign}
+        selectedAircraftVelocity={selectedAircraft.velocity}
+        selectedAircraftAltitude={selectedAircraft.baro_altitude}
         selectedAircraftPhoto={aircraftPhoto.img}
       />
     </div>
