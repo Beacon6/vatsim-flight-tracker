@@ -33,3 +33,13 @@
   top: auto !important;
   width: auto !important;
 }
+
+.photo-container {
+  position: relative;
+}
+
+.photo-attribution {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+}

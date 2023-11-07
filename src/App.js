@@ -119,6 +119,8 @@ function App() {
         selectedAircraftVelocity={selectedAircraft.velocity}
         selectedAircraftAltitude={selectedAircraft.baro_altitude}
         selectedAircraftPhoto={aircraftPhoto.img}
+        selectedAircraftPhotoLink={aircraftPhoto.link}
+        selectedAircraftPhotoAuthor={aircraftPhoto.author}
       />
     </div>
   );
