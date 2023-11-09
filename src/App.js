@@ -87,31 +87,33 @@ function App() {
   }
 
   return (
-    <div style={{ height: "100vh" }}>
+    <div className="app">
       <Navbar count={aircraftData.length} timer={timer} />
-      <Map
-        provider={mapProvider}
-        dprs={[1, 2]}
-        defaultCenter={[50, 10]}
-        defaultZoom={6}
-        minZoom={6}
-        onBoundsChanged={onBoundsChanged}
-      >
-        {aircraftData.map(item => (
-          <Marker
-            anchor={[item.latitude, item.longitude]}
-            key={item.icao24}
-            onClick={() => handleShowPanel(item)}
-          >
-            <img style={{ height: 16, width: 16, pointerEvents: "auto" }} src={airplane_icon} alt="" />
-          </Marker>
-        ))}
+      <div className="map">
+        <Map
+          provider={mapProvider}
+          dprs={[1, 2]}
+          defaultCenter={[50, 10]}
+          defaultZoom={6}
+          minZoom={6}
+          onBoundsChanged={onBoundsChanged}
+        >
+          {aircraftData.map(item => (
+            <Marker
+              anchor={[item.latitude, item.longitude]}
+              key={item.icao24}
+              onClick={() => handleShowPanel(item)}
+            >
+              <img style={{ height: 16, width: 16, pointerEvents: "auto" }} src={airplane_icon} alt="" />
+            </Marker>
+          ))}
 
-        <ZoomControl
-          style={{ top: "8px", left: "unset", right: "8px" }}
-          buttonStyle={{ background: "#282c34", color: "#fff" }}
-        />
-      </Map>
+          <ZoomControl
+            style={{ top: "8px", left: "unset", right: "8px" }}
+            buttonStyle={{ background: "#282c34", color: "#fff" }}
+          />
+        </Map>
+      </div>
       <Panel
         show={showPanel}
         onHide={handleClosePanel}
