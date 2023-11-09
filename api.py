@@ -39,7 +39,7 @@ def get_aircraft_data():
                     "velocity": s.velocity,
                     "true_track": s.true_track,
                     "baro_altitude": s.baro_altitude,
-                    "category": s.category
+                    "squawk": s.squawk
                     })
 
         aircraft_count = len(aircraft_data)

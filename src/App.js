@@ -118,6 +118,7 @@ function App() {
         selectedAircraftCallsign={selectedAircraft.callsign}
         selectedAircraftVelocity={selectedAircraft.velocity}
         selectedAircraftAltitude={selectedAircraft.baro_altitude}
+        selectedAircraftSquawk={selectedAircraft.squawk}
         selectedAircraftPhoto={aircraftPhoto.img}
         selectedAircraftPhotoLink={aircraftPhoto.link}
         selectedAircraftPhotoAuthor={aircraftPhoto.author}
