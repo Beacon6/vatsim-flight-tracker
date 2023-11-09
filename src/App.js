@@ -67,7 +67,7 @@ function App() {
   // Fetching aircraft photo and other data for the panel
   const [selectedAircraft, setSelectedAircraft] = useState("");
   const [showPanel, setShowPanel] = useState(false);
-  const [aircraftPhoto, setAircraftPhoto] = useState([]);
+  const [aircraftPhoto, setAircraftPhoto] = useState({});
 
   function handleShowPanel(selectedAircraft) {
     setSelectedAircraft(selectedAircraft);
@@ -122,14 +122,8 @@ function App() {
       <Panel
         show={showPanel}
         onHide={handleClosePanel}
-        selectedAircraftCallsign={selectedAircraft.callsign}
-        selectedAircraftVelocity={selectedAircraft.velocity}
-        selectedAircraftAltitude={selectedAircraft.baro_altitude}
-        selectedAircraftTrueTrack={selectedAircraft.true_track}
-        selectedAircraftSquawk={selectedAircraft.squawk}
-        selectedAircraftPhoto={aircraftPhoto.img}
-        selectedAircraftPhotoLink={aircraftPhoto.link}
-        selectedAircraftPhotoAuthor={aircraftPhoto.author}
+        selectedAircraftData={selectedAircraft}
+        selectedAircraftPhoto={aircraftPhoto}
       />
     </div>
   );

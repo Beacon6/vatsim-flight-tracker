@@ -1,5 +1,4 @@
-import { Offcanvas } from "react-bootstrap";
-import { Badge } from "react-bootstrap";
+import { Offcanvas, Badge, Container, Row, Col } from "react-bootstrap";
 
 function Panel(props) {
   return <Offcanvas
@@ -8,22 +7,36 @@ function Panel(props) {
     backdrop={false}
   >
     <Offcanvas.Header closeButton>
-      <Offcanvas.Title>{props.selectedAircraftCallsign}</Offcanvas.Title>
+      <Offcanvas.Title>{props.selectedAircraftData.callsign}</Offcanvas.Title>
     </Offcanvas.Header>
     <Offcanvas.Body>
-      <div className="photo-container">
-        <a href={props.selectedAircraftPhotoLink} >
-          <img src={props.selectedAircraftPhoto} alt="Selected aircraft" />
-          <Badge className="photo-attribution">
-            Photo: {props.selectedAircraftPhotoAuthor}
-          </Badge>
-        </a>
-      </div>
-      <p> CALLSIGN = {props.selectedAircraftCallsign} </p>
-      <p> GND SPEED = {Math.round(props.selectedAircraftVelocity * 1.94384)} </p>
-      <p> BARO ALT = {Math.round(props.selectedAircraftAltitude * 3.28084)} </p>
-      <p> TRUE TRACK = {Math.round(props.selectedAircraftTrueTrack)} </p>
-      <p> SQUAWK = {props.selectedAircraftSquawk} </p>
+      <Container>
+        <Row>
+          <div className="photo-container mb-3">
+            <a href={props.selectedAircraftPhoto.link} >
+              <img src={props.selectedAircraftPhoto.img} alt="Selected aircraft" />
+              <Badge className="photo-attribution">
+                Photo: {props.selectedAircraftPhoto.author}
+              </Badge>
+            </a>
+          </div>
+        </Row>
+        <Row>
+          <Col>CALLSIGN</Col><Col>{props.selectedAircraftData.callsign}</Col>
+        </Row>
+        <Row>
+          <Col>GND SPEED</Col><Col>{Math.round(props.selectedAircraftData.velocity * 1.94384)}</Col>
+        </Row>
+        <Row>
+          <Col>BARO ALT</Col><Col>{Math.round(props.selectedAircraftData.baro_altitude * 3.28084)}</Col>
+        </Row>
+        <Row>
+          <Col>TRUE TRACK</Col><Col>{Math.round(props.selectedAircraftData.true_track)}</Col>
+        </Row>
+        <Row>
+          <Col>SQUAWK</Col><Col>{props.selectedAircraftData.squawk}</Col>
+        </Row>
+      </Container>
     </Offcanvas.Body>
   </Offcanvas>
 }
