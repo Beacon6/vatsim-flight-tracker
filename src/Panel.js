@@ -22,6 +22,7 @@ function Panel(props) {
       <p> CALLSIGN = {props.selectedAircraftCallsign} </p>
       <p> GND SPEED = {Math.round(props.selectedAircraftVelocity * 1.94384)} </p>
       <p> BARO ALT = {Math.round(props.selectedAircraftAltitude * 3.28084)} </p>
+      <p> TRUE TRACK = {Math.round(props.selectedAircraftTrueTrack)} </p>
       <p> SQUAWK = {props.selectedAircraftSquawk} </p>
     </Offcanvas.Body>
   </Offcanvas>

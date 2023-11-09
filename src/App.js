@@ -104,7 +104,12 @@ function App() {
               key={item.icao24}
               onClick={() => handleShowPanel(item)}
             >
-              <img style={{ height: 16, width: 16, pointerEvents: "auto" }} src={airplane_icon} alt="" />
+              <img
+                className="airplane-icon"
+                style={{ transform: `rotate(${item.true_track}deg)` }}
+                src={airplane_icon}
+                alt=""
+              />
             </Marker>
           ))}
 
@@ -120,6 +125,7 @@ function App() {
         selectedAircraftCallsign={selectedAircraft.callsign}
         selectedAircraftVelocity={selectedAircraft.velocity}
         selectedAircraftAltitude={selectedAircraft.baro_altitude}
+        selectedAircraftTrueTrack={selectedAircraft.true_track}
         selectedAircraftSquawk={selectedAircraft.squawk}
         selectedAircraftPhoto={aircraftPhoto.img}
         selectedAircraftPhotoLink={aircraftPhoto.link}

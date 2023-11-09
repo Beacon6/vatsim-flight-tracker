@@ -12,6 +12,12 @@
   overflow: hidden;
 }
 
+.airplane-icon {
+  height: 16px;
+  width: 16px;
+  pointer-events: auto;
+}
+
 .nav {
   background-color: #282c34;
   color: #fff;
