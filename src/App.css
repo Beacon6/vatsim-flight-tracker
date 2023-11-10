@@ -38,11 +38,17 @@
   margin: 0;
   list-style: none;
   display: flex;
+  align-items: center;
   gap: 1rem;
 }
 
 .nav p {
   margin: 0;
+  font-weight: bold;
+}
+
+.progress {
+  width: 15vw;
 }
 
 .home {

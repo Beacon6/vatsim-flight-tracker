@@ -1,19 +1,13 @@
+import { ProgressBar } from "react-bootstrap";
+
 function Navbar(props) {
   return <nav className="nav">
     <a href="/" className="home">
       ADS-B Flight Tracker
     </a>
+    <p> Currently tracking {props.count} aircraft </p>
     <ul>
-      <li>
-        <p>
-          Currently tracking {props.count} aircraft
-        </p>
-      </li>
-      <li>
-        <p>
-          Next refresh in {props.timer} seconds
-        </p>
-      </li>
+      <ProgressBar striped min={-30} max={-1} now={-props.timer} />
     </ul>
   </nav>
 }
