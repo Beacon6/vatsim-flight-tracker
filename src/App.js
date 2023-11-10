@@ -16,6 +16,11 @@ function App() {
 
   function onBoundsChanged({ bounds }) {
     setViewportBounds(bounds);
+
+    if (timer < 20) {
+      setRequestAllowed(true);
+      setTimer(30);
+    }
     console.log({ requestAllowed });
   }
 
@@ -24,7 +29,6 @@ function App() {
   const [requestAllowed, setRequestAllowed] = useState(true);
 
   useEffect(() => {
-    console.log(timer);
     const interval = setInterval(() => {
       setTimer(timer - 1);
     }, 1000);
