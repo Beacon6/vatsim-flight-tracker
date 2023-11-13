@@ -21,7 +21,6 @@ function App() {
       setRequestAllowed(true);
       setTimer(30);
     }
-    console.log({ requestAllowed });
   }
 
   // Measuring time between API calls
@@ -92,7 +91,7 @@ function App() {
 
   return (
     <div className="app">
-      <Navbar count={aircraftData.length} timer={timer} />
+      <Navbar count={aircraftData.length} timer={timer} variant={timer < 20 ? "success" : "danger"} />
       <div className="map">
         <Map
           provider={mapProvider}

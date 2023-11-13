@@ -7,7 +7,7 @@ function Navbar(props) {
     </a>
     <p> Currently tracking {props.count} aircraft </p>
     <ul>
-      <ProgressBar striped min={-30} max={-1} now={-props.timer} />
+      <ProgressBar variant={props.variant} striped min={-30} max={-1} now={-props.timer} />
     </ul>
   </nav>
 }
