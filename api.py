@@ -1,10 +1,12 @@
 from flask import Flask, request
+from flask_cors import CORS
 from opensky_api import OpenSkyApi  # type: ignore
 from requests.exceptions import ReadTimeout
 from requests import get
 import dummy_data
 
 app = Flask(__name__)
+CORS(app)
 key = "FE01D81011737B8704E1256D24F2C2C16B3083BC2F1C5A90106C80BE24F40E20"
 api = OpenSkyApi("Beacon6", key)
 

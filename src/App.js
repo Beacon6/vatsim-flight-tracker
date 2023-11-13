@@ -49,7 +49,7 @@ function App() {
     if (requestAllowed === true) {
       console.log(viewportBounds);
 
-      fetch("/aircraft_data", {
+      fetch("http://localhost:5000/aircraft_data", {
         method: "POST",
         body: JSON.stringify(viewportBounds),
         headers: { "Content-Type": "application/json" },
@@ -74,7 +74,7 @@ function App() {
 
   function handleShowPanel(selectedAircraft) {
     setSelectedAircraft(selectedAircraft);
-    fetch("/aircraft_photo", {
+    fetch("http://localhost:5000/aircraft_photo", {
       method: "POST",
       body: JSON.stringify(selectedAircraft.icao24),
       headers: { "Content-Type": "application/json" },
