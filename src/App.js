@@ -80,7 +80,13 @@ function App() {
       headers: { "Content-Type": "application/json" },
     })
       .then(response => response.json())
-      .then(data => setAircraftPhoto(data));
+      .then(data => {
+        if (data.aircraft_photo_exists === true) {
+          setAircraftPhoto(data.aircraft_photo);
+        } else {
+          console.log("Could not find any photo for this aircraft");
+        }
+      })
     setShowPanel(true);
     console.log("Clicked on:", selectedAircraft);
   }

@@ -10,7 +10,7 @@ CORS(app)
 key = "FE01D81011737B8704E1256D24F2C2C16B3083BC2F1C5A90106C80BE24F40E20"
 api = OpenSkyApi("Beacon6", key)
 
-debug = False
+debug = True
 dummy_data = dummy_data.dummy_data
 
 
@@ -73,8 +73,22 @@ def get_aircraft_photo():
 
     aircraft_photo = {}
 
-    aircraft_photo["img"] = response["photos"][0]["thumbnail_large"]["src"]
-    aircraft_photo["link"] = response["photos"][0]["link"]
-    aircraft_photo["author"] = response["photos"][0]["photographer"]
+    try:
+        aircraft_photo_exists = True
 
-    return aircraft_photo
+        aircraft_photo["img"] = response["photos"][0]["thumbnail_large"]["src"]
+        aircraft_photo["link"] = response["photos"][0]["link"]
+        aircraft_photo["author"] = response["photos"][0]["photographer"]
+
+        return {
+            "aircraft_photo_exists": aircraft_photo_exists,
+            "aircraft_photo": aircraft_photo
+        }
+
+    except IndexError:
+        aircraft_photo_exists = False
+        print("Could not find any photo for this aircraft")
+        return {
+            "aircraft_photo_exists": aircraft_photo_exists,
+            "aircraft_photo": None
+        }
