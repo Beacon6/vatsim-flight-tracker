@@ -13,11 +13,11 @@ function Panel(props) {
       <Container>
         <Row>
           <div className="photo-container mb-3">
-            <a href={props.selectedAircraftPhoto.link} >
-              <img src={props.selectedAircraftPhoto.img} alt="Selected aircraft" />
-              <Badge className="photo-attribution">
-                Photo: {props.selectedAircraftPhoto.author}
-              </Badge>
+            <a href={props.selectedAircraftPhoto.link} className="aircraft-photo" >
+                <img src={props.selectedAircraftPhoto.img} alt="Selected aircraft" />
+                <Badge pill bg="secondary" className="photo-attribution">
+                  Photo: {props.selectedAircraftPhoto.author}
+                </Badge>
             </a>
           </div>
         </Row>

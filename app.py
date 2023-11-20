@@ -10,7 +10,7 @@ CORS(app)
 key = "FE01D81011737B8704E1256D24F2C2C16B3083BC2F1C5A90106C80BE24F40E20"
 api = OpenSkyApi("Beacon6", key)
 
-debug = True
+debug = False
 dummy_data = dummy_data.dummy_data
 
 
