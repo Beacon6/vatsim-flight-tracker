@@ -32,17 +32,20 @@ def get_aircraft_data():
 
             aircraft_data = []
 
-            for s in aircraft_states.states:
-                aircraft_data.append({
-                    "icao24": s.icao24,
-                    "callsign": s.callsign,
-                    "longitude": s.longitude,
-                    "latitude": s.latitude,
-                    "velocity": s.velocity,
-                    "true_track": s.true_track,
-                    "baro_altitude": s.baro_altitude,
-                    "squawk": s.squawk
-                    })
+            if aircraft_states is not None:
+                for s in aircraft_states.states:
+                    aircraft_data.append({
+                        "icao24": s.icao24,
+                        "callsign": s.callsign,
+                        "longitude": s.longitude,
+                        "latitude": s.latitude,
+                        "velocity": s.velocity,
+                        "true_track": s.true_track,
+                        "baro_altitude": s.baro_altitude,
+                        "squawk": s.squawk
+                        })
+            else:
+                raise TypeError
 
         aircraft_count = len(aircraft_data)
         print(f"Request status: {request_successful}")
@@ -56,6 +59,15 @@ def get_aircraft_data():
     except ReadTimeout:
         request_successful = False
         print(f"Request status is {request_successful}")
+        return {
+            "request_successful": request_successful,
+            "aircraft_data": None,
+            "aircraft_count": None
+        }
+
+    except TypeError:
+        request_successful = False
+        print("Received data is invalid")
         return {
             "request_successful": request_successful,
             "aircraft_data": None,
