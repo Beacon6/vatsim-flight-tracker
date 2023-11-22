@@ -1,14 +1,13 @@
 from flask import Flask, request
 from flask_cors import CORS
-from opensky_api import OpenSkyApi  # type: ignore
+from api_key import api_key
 from requests.exceptions import ReadTimeout
 from requests import get
 import dummy_data
 
 app = Flask(__name__)
 CORS(app)
-key = "FE01D81011737B8704E1256D24F2C2C16B3083BC2F1C5A90106C80BE24F40E20"
-api = OpenSkyApi("Beacon6", key)
+api_url = "https://aviation-edge.com/v2/public/flights"
 
 debug = False
 dummy_data = dummy_data.dummy_data
@@ -25,25 +24,30 @@ def get_aircraft_data():
         if debug:
             aircraft_data = dummy_data
         else:
-            aircraft_states = api.get_states(bbox=(viewport_bounds["sw"][0],
-                                                   viewport_bounds["ne"][0],
-                                                   viewport_bounds["sw"][1],
-                                                   viewport_bounds["ne"][1]))
+            payload = {
+                "lat": viewport_bounds[0],
+                "lng": viewport_bounds[1],
+                "distance": 1000,
+                "key": api_key
+                }
+            response = get(api_url, payload)
 
             aircraft_data = []
 
-            if aircraft_states is not None:
-                for s in aircraft_states.states:
-                    aircraft_data.append({
-                        "icao24": s.icao24,
-                        "callsign": s.callsign,
-                        "longitude": s.longitude,
-                        "latitude": s.latitude,
-                        "velocity": s.velocity,
-                        "true_track": s.true_track,
-                        "baro_altitude": s.baro_altitude,
-                        "squawk": s.squawk
-                        })
+            if response is not None:
+                print(response.json())
+
+                # for s in aircraft_states.states:
+                #     aircraft_data.append({
+                #         "icao24": s.icao24,
+                #         "callsign": s.callsign,
+                #         "longitude": s.longitude,
+                #         "latitude": s.latitude,
+                #         "velocity": s.velocity,
+                #         "true_track": s.true_track,
+                #         "baro_altitude": s.baro_altitude,
+                #         "squawk": s.squawk
+                #         })
             else:
                 raise TypeError
 
