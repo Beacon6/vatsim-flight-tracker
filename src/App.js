@@ -14,8 +14,8 @@ function App() {
   // Updating viewport bounds on each change
   const [viewportBounds, setViewportBounds] = useState(undefined);
 
-  function onBoundsChanged({ bounds }) {
-    setViewportBounds(bounds);
+  function onBoundsChanged({ center }) {
+    setViewportBounds(center);
 
     if (timer < 20) {
       setRequestAllowed(true);
