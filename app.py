@@ -20,7 +20,7 @@ def get_aircraft_data():
 
     try:
         request_successful = True
-        # bbox = (min latitude, max latitude, min longitude, max longitude)
+
         if debug:
             aircraft_data = dummy_data
         else:
@@ -35,19 +35,17 @@ def get_aircraft_data():
             aircraft_data = []
 
             if response is not None:
-                print(response.json())
-
-                # for s in aircraft_states.states:
-                #     aircraft_data.append({
-                #         "icao24": s.icao24,
-                #         "callsign": s.callsign,
-                #         "longitude": s.longitude,
-                #         "latitude": s.latitude,
-                #         "velocity": s.velocity,
-                #         "true_track": s.true_track,
-                #         "baro_altitude": s.baro_altitude,
-                #         "squawk": s.squawk
-                #         })
+                for s in response.json():
+                    aircraft_data.append({
+                        "icao24": s["aircraft"]["icao24"],
+                        "callsign": s["flight"]["icaoNumber"],
+                        "longitude": s["geography"]["longitude"],
+                        "latitude": s["geography"]["latitude"],
+                        "velocity": s["speed"]["horizontal"],
+                        "true_track": s["geography"]["direction"],
+                        "baro_altitude": s["geography"]["altitude"],
+                        "squawk": s["system"]["squawk"]
+                        })
             else:
                 raise TypeError
 
