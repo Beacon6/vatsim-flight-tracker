@@ -24,38 +24,43 @@ def get_aircraft_data():
         if debug:
             aircraft_data = dummy_data
         else:
-            payload = {
-                "lat": viewport_bounds[0],
-                "lng": viewport_bounds[1],
-                "distance": 1000,
-                "key": api_key
-                }
-            response = get(api_url, payload)
+            response = get(api_url, api_key)
 
             aircraft_data = []
 
             if response is not None:
                 for s in response.json():
-                    aircraft_data.append({
-                        "icao24": s["aircraft"]["icao24"],
-                        "callsign": s["flight"]["icaoNumber"],
-                        "longitude": s["geography"]["longitude"],
-                        "latitude": s["geography"]["latitude"],
-                        "velocity": s["speed"]["horizontal"],
-                        "true_track": s["geography"]["direction"],
-                        "baro_altitude": s["geography"]["altitude"],
-                        "squawk": s["system"]["squawk"]
-                        })
+                    if s["aircraft"]["icao24"] != "XXC":
+                        aircraft_data.append({
+                            "icao24": s["aircraft"]["icao24"],
+                            "callsign": s["flight"]["icaoNumber"],
+                            "longitude": s["geography"]["longitude"],
+                            "latitude": s["geography"]["latitude"],
+                            "velocity": s["speed"]["horizontal"],
+                            "true_track": s["geography"]["direction"],
+                            "baro_altitude": s["geography"]["altitude"],
+                            "squawk": s["system"]["squawk"]
+                            })
+
+                displayed_aircraft = []
+
+                for x in aircraft_data:
+                    if viewport_bounds["sw"][0] < x["latitude"] < viewport_bounds["ne"][0] and viewport_bounds["sw"][1] < x["longitude"] < viewport_bounds["ne"][1]:
+                        displayed_aircraft.append(x)
+
             else:
                 raise TypeError
 
-        aircraft_count = len(aircraft_data)
+        tracking_count = len(aircraft_data)
+        displayed_count = len(displayed_aircraft)
         print(f"Request status: {request_successful}")
-        print(f"Tracking: {aircraft_count} aircraft")
+        print(f"Tracking: {tracking_count} aircraft")
+        print(f"Displaying: {displayed_count} aircraft")
         return {
             "request_successful": request_successful,
-            "aircraft_data": aircraft_data,
-            "aircraft_count": aircraft_count
+            "aircraft_data": displayed_aircraft,
+            "aircraft_count_total": tracking_count,
+            "aircraft_count_displayed": displayed_count
         }
 
     except ReadTimeout:
