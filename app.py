@@ -24,7 +24,7 @@ def get_aircraft_data():
         if debug:
             aircraft_data = dummy_data
         else:
-            response = get(api_url, api_key)
+            response = get(api_url, {"key": api_key})
 
             aircraft_data = []
 
