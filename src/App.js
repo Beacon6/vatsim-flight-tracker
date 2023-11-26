@@ -115,7 +115,7 @@ function App() {
             >
               <img
                 className="airplane-icon"
-                style={{ transform: `rotate(${item.true_track}deg)` }}
+                style={{ transform: `rotate(${item.true_heading}deg)` }}
                 src={airplane_icon}
                 alt=""
               />

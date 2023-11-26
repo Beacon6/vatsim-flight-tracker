@@ -33,19 +33,30 @@ def get_aircraft_data():
                     if s["aircraft"]["icao24"] != "XXC":
                         aircraft_data.append({
                             "icao24": s["aircraft"]["icao24"],
+                            "aircraft_type": s["aircraft"]["icaoCode"],
+                            "reg_number": s["aircraft"]["regNumber"],
+                            "airline": s["airline"]["icaoCode"],
+                            "arrival": s["arrival"]["icaoCode"],
+                            "departure": s["departure"]["icaoCode"],
+                            "flight_number": s["flight"]["iataNumber"],
                             "callsign": s["flight"]["icaoNumber"],
-                            "longitude": s["geography"]["longitude"],
+                            "baro_altitude": s["geography"]["altitude"],  # m
+                            "true_heading": s["geography"]["direction"],
                             "latitude": s["geography"]["latitude"],
-                            "velocity": s["speed"]["horizontal"],
-                            "true_track": s["geography"]["direction"],
-                            "baro_altitude": s["geography"]["altitude"],
+                            "longitude": s["geography"]["longitude"],
+                            "ground_speed": s["speed"]["horizontal"],  # km/h
+                            "vertical_speed": s["speed"]["vspeed"],  # m/s
+                            "on_ground": s["speed"]["isGround"],
                             "squawk": s["system"]["squawk"]
                             })
 
                 displayed_aircraft = []
 
                 for x in aircraft_data:
-                    if viewport_bounds["sw"][0] < x["latitude"] < viewport_bounds["ne"][0] and viewport_bounds["sw"][1] < x["longitude"] < viewport_bounds["ne"][1]:
+                    if (viewport_bounds["sw"][0] < x["latitude"]
+                            and x["latitude"] < viewport_bounds["ne"][0]
+                            and viewport_bounds["sw"][1] < x["longitude"]
+                            and x["longitude"] < viewport_bounds["ne"][1]):
                         displayed_aircraft.append(x)
 
             else:
