@@ -1,14 +1,13 @@
 from flask import Flask, request
 from flask_cors import CORS
-from opensky_api import OpenSkyApi  # type: ignore
+from api_key import api_key
 from requests.exceptions import ReadTimeout
 from requests import get
 import dummy_data
 
 app = Flask(__name__)
 CORS(app)
-key = "FE01D81011737B8704E1256D24F2C2C16B3083BC2F1C5A90106C80BE24F40E20"
-api = OpenSkyApi("Beacon6", key)
+api_url = "https://aviation-edge.com/v2/public/flights"
 
 debug = False
 dummy_data = dummy_data.dummy_data
@@ -21,39 +20,58 @@ def get_aircraft_data():
 
     try:
         request_successful = True
-        # bbox = (min latitude, max latitude, min longitude, max longitude)
+
         if debug:
             aircraft_data = dummy_data
         else:
-            aircraft_states = api.get_states(bbox=(viewport_bounds["sw"][0],
-                                                   viewport_bounds["ne"][0],
-                                                   viewport_bounds["sw"][1],
-                                                   viewport_bounds["ne"][1]))
+            response = get(api_url, {"key": api_key})
 
             aircraft_data = []
 
-            if aircraft_states is not None:
-                for s in aircraft_states.states:
-                    aircraft_data.append({
-                        "icao24": s.icao24,
-                        "callsign": s.callsign,
-                        "longitude": s.longitude,
-                        "latitude": s.latitude,
-                        "velocity": s.velocity,
-                        "true_track": s.true_track,
-                        "baro_altitude": s.baro_altitude,
-                        "squawk": s.squawk
-                        })
+            if response is not None:
+                for s in response.json():
+                    if s["aircraft"]["icao24"] != "XXC":
+                        aircraft_data.append({
+                            "icao24": s["aircraft"]["icao24"],
+                            "aircraft_type": s["aircraft"]["icaoCode"],
+                            "reg_number": s["aircraft"]["regNumber"],
+                            "airline": s["airline"]["icaoCode"],
+                            "arrival": s["arrival"]["icaoCode"],
+                            "departure": s["departure"]["icaoCode"],
+                            "flight_number": s["flight"]["iataNumber"],
+                            "callsign": s["flight"]["icaoNumber"],
+                            "baro_altitude": s["geography"]["altitude"],  # m
+                            "true_heading": s["geography"]["direction"],
+                            "latitude": s["geography"]["latitude"],
+                            "longitude": s["geography"]["longitude"],
+                            "ground_speed": s["speed"]["horizontal"],  # km/h
+                            "vertical_speed": s["speed"]["vspeed"],  # m/s
+                            "on_ground": s["speed"]["isGround"],
+                            "squawk": s["system"]["squawk"]
+                            })
+
+                displayed_aircraft = []
+
+                for x in aircraft_data:
+                    if (viewport_bounds["sw"][0] < x["latitude"]
+                            and x["latitude"] < viewport_bounds["ne"][0]
+                            and viewport_bounds["sw"][1] < x["longitude"]
+                            and x["longitude"] < viewport_bounds["ne"][1]):
+                        displayed_aircraft.append(x)
+
             else:
                 raise TypeError
 
-        aircraft_count = len(aircraft_data)
+        tracking_count = len(aircraft_data)
+        displayed_count = len(displayed_aircraft)
         print(f"Request status: {request_successful}")
-        print(f"Tracking: {aircraft_count} aircraft")
+        print(f"Tracking: {tracking_count} aircraft")
+        print(f"Displaying: {displayed_count} aircraft")
         return {
             "request_successful": request_successful,
-            "aircraft_data": aircraft_data,
-            "aircraft_count": aircraft_count
+            "aircraft_data": displayed_aircraft,
+            "aircraft_count_total": tracking_count,
+            "aircraft_count_displayed": displayed_count
         }
 
     except ReadTimeout:

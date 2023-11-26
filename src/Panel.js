@@ -25,13 +25,13 @@ function Panel(props) {
           <Col>CALLSIGN</Col><Col>{props.selectedAircraftData.callsign}</Col>
         </Row>
         <Row>
-          <Col>GND SPEED</Col><Col>{Math.round(props.selectedAircraftData.velocity * 1.94384)}</Col>
+          <Col>GND SPEED</Col><Col>{Math.round(props.selectedAircraftData.ground_speed * 0.53996)}</Col>
         </Row>
         <Row>
           <Col>BARO ALT</Col><Col>{Math.round(props.selectedAircraftData.baro_altitude * 3.28084)}</Col>
         </Row>
         <Row>
-          <Col>TRUE TRACK</Col><Col>{Math.round(props.selectedAircraftData.true_track)}</Col>
+          <Col>TRUE HDG</Col><Col>{Math.round(props.selectedAircraftData.true_heading)}</Col>
         </Row>
         <Row>
           <Col>SQUAWK</Col><Col>{props.selectedAircraftData.squawk}</Col>
