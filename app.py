@@ -27,10 +27,13 @@ def get_aircraft_data():
             response = get(api_url, {"key": api_key})
 
             aircraft_data = []
+            icao24_set = set()
 
             if response is not None:
                 for s in response.json():
-                    if s["aircraft"]["icao24"] != "XXC":
+                    if (s["aircraft"]["icao24"] != "XXC"
+                            and s["aircraft"]["icao24"] not in icao24_set):
+                        icao24_set.add(s["aircraft"]["icao24"])
                         aircraft_data.append({
                             "icao24": s["aircraft"]["icao24"],
                             "aircraft_type": s["aircraft"]["icaoCode"],
