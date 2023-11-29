@@ -103,7 +103,8 @@ function App() {
     <div className="app">
       <Navbar
         countTotal={aircraftCount}
-        countDisplayed={displayedCount}
+        countView={displayedCount}
+        countDisplayed={aircraftData.slice(0, 1000).length}
         timer={timer}
         variant={timer < 20 ? "success" : "danger"}
       />
@@ -116,7 +117,7 @@ function App() {
           minZoom={6}
           onBoundsChanged={onBoundsChanged}
         >
-          {aircraftData.map(item => (
+          {aircraftData.slice(0, 1000).map(item => (
             <Marker
               anchor={[item.latitude, item.longitude]}
               key={item.icao24}
