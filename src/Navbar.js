@@ -5,7 +5,7 @@ function Navbar(props) {
     <a href="/" className="home">
       ADS-B Flight Tracker
     </a>
-    <p> Currently tracking {props.count} aircraft </p>
+    <p> Tracking {props.countTotal} aircraft - {props.countDisplayed} within view</p>
     <ul>
       <ProgressBar variant={props.variant} striped min={-30} max={-1} now={-props.timer} />
     </ul>

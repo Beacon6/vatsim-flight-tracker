@@ -42,6 +42,8 @@ function App() {
 
   // Fetching aircraft data from the Flask backend
   const [aircraftData, setAircraftData] = useState([]);
+  const [aircraftCount, setAircraftCount] = useState(0);
+  const [displayedCount, setDisplayedCount] = useState(0);
 
   useEffect(() => {
     if (!viewportBounds) return;
@@ -58,6 +60,8 @@ function App() {
         .then(data => {
           if (data.request_successful === true) {
             setAircraftData(data.aircraft_data);
+            setAircraftCount(data.aircraft_count_total);
+            setDisplayedCount(data.aircraft_count_displayed);
           } else {
             console.log("API timeout");
           }
@@ -97,7 +101,12 @@ function App() {
 
   return (
     <div className="app">
-      <Navbar count={aircraftData.length} timer={timer} variant={timer < 20 ? "success" : "danger"} />
+      <Navbar
+        countTotal={aircraftCount}
+        countDisplayed={displayedCount}
+        timer={timer}
+        variant={timer < 20 ? "success" : "danger"}
+      />
       <div className="map">
         <Map
           provider={mapProvider}
