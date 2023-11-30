@@ -9,6 +9,5 @@ Made as a personal project.
 
 - **ADS-B API**: [Aviation Edge](https://aviation-edge.com/)
 - **Aircraft Photos**: [Planespotters.net](https://www.planespotters.net/)
-- **React Map Component**: [Pigeon Maps](https://pigeon-maps.js.org/)
-- **Map Provider**: [MapTiler](https://www.maptiler.com/)
+- **Map created with Mapbox GL JS** [Mapbox](https://www.mapbox.com/about/maps/)
 - **Airplane Icons**: [Twemoji](https://github.com/twitter/twemoji/)
