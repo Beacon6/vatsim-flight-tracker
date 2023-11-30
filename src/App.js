@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { mapboxgl } from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
+import { useEffect, useState, useRef } from "react";
+import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 import airplane_icon from "./airplane.png";
 import Navbar from "./Navbar";
 import Panel from "./Panel";
@@ -10,6 +10,24 @@ import "bootstrap/dist/css/bootstrap.min.css";
 mapboxgl.accessToken = "pk.eyJ1IjoiYmVhY29uNiIsImEiOiJjbHBsZGNnaHEwM2l2MnJvN2MxNTg5MG9mIn0.3Lo16H4bKYk2Mfsufr2IyQ";
 
 function App() {
+  // Initialize Mapbox GL map
+  const mapContainer = useRef(null);
+  const map = useRef(null);
+  const [lng, setLng] = useState(-70.9);
+  const [lat, setLat] = useState(42.35);
+  const [zoom, setZoom] = useState(9);
+
+  useEffect(() => {
+    if (map.current) return; // initialize map only once
+
+    map.current = new mapboxgl.Map({
+      container: mapContainer.current,
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: [lng, lat],
+      zoom: zoom
+    });
+  });
+
   // Updating viewport bounds on each change
   const [viewportBounds, setViewportBounds] = useState(undefined);
 
@@ -107,7 +125,10 @@ function App() {
         timer={timer}
         variant={timer < 20 ? "success" : "danger"}
       />
-      <div className="map">
+      <div>
+        <div ref={mapContainer} className="map-container" />
+      </div>
+      {/* <div className="map">
         <Map
           provider={mapProvider}
           dprs={[1, 2]}
@@ -136,7 +157,7 @@ function App() {
             buttonStyle={{ background: "#282c34", color: "#fff" }}
           />
         </Map>
-      </div>
+      </div> */}
       <Panel
         show={showPanel}
         onHide={handleClosePanel}
