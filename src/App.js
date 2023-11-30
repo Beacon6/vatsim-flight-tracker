@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
-import { Map, Marker, ZoomControl } from "pigeon-maps";
-import { maptiler } from "pigeon-maps/providers";
+import { mapboxgl } from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 import airplane_icon from "./airplane.png";
 import Navbar from "./Navbar";
 import Panel from "./Panel";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-// Map styling
-const mapProvider = maptiler("KR6OCyEjZD3WgFTla3Rv", "dataviz");
+// Mapbox GL API token
+mapboxgl.accessToken = "pk.eyJ1IjoiYmVhY29uNiIsImEiOiJjbHBsZGNnaHEwM2l2MnJvN2MxNTg5MG9mIn0.3Lo16H4bKYk2Mfsufr2IyQ";
 
 function App() {
   // Updating viewport bounds on each change
