@@ -137,36 +137,6 @@ function App() {
         </div>
         <div ref={mapContainer} className="map-container" />
       </div>
-      {/* <div className="map">
-        <Map
-          provider={mapProvider}
-          dprs={[1, 2]}
-          defaultCenter={[50, 10]}
-          defaultZoom={6}
-          minZoom={6}
-          onBoundsChanged={onBoundsChanged}
-        >
-          {aircraftData.slice(0, 1000).map(item => (
-            <Marker
-              anchor={[item.latitude, item.longitude]}
-              key={item.icao24}
-              onClick={() => handleShowPanel(item)}
-            >
-              <img
-                className="airplane-icon"
-                style={{ transform: `rotate(${item.true_heading}deg)` }}
-                src={airplane_icon}
-                alt=""
-              />
-            </Marker>
-          ))}
-
-          <ZoomControl
-            style={{ top: "8px", left: "unset", right: "8px" }}
-            buttonStyle={{ background: "#282c34", color: "#fff" }}
-          />
-        </Map>
-      </div> */}
       <Panel
         show={showPanel}
         onHide={handleClosePanel}
