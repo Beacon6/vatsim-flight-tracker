@@ -32,13 +32,23 @@ function App() {
       setLat(map.current.getCenter().lat.toFixed(4));
       setZoom(map.current.getZoom().toFixed(2));
       });
+
+    map.current.on('moveend', () => {
+      const bounds = map.current.getBounds();
+      onBoundsChanged(bounds);
+    })
   });
 
   // Updating viewport bounds on each change
   const [viewportBounds, setViewportBounds] = useState(undefined);
 
-  function onBoundsChanged({ bounds }) {
-    setViewportBounds(bounds);
+  function onBoundsChanged(bounds) {
+    const boundsObject = {};
+
+    boundsObject["sw"] = [bounds["_sw"]["lat"], bounds["_sw"]["lng"]];
+    boundsObject["ne"] = [bounds["_ne"]["lat"], bounds["_ne"]["lng"]];
+
+    setViewportBounds(boundsObject);
 
     if (timer < 20) {
       setRequestAllowed(true);
