@@ -16,33 +16,40 @@ function App() {
   const [lng, setLng] = useState(10);
   const [lat, setLat] = useState(50);
   const [zoom, setZoom] = useState(4);
+  const [bounds, setBounds] = useState(undefined);
 
   useEffect(() => {
     if (map.current) return; // initialize map only once
 
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/streets-v12',
+      style: "mapbox://styles/mapbox/streets-v12",
       center: [lng, lat],
       zoom: zoom
     });
 
-    map.current.on('move', () => {
+    map.current.on("move", () => {
       setLng(map.current.getCenter().lng.toFixed(4));
       setLat(map.current.getCenter().lat.toFixed(4));
       setZoom(map.current.getZoom().toFixed(2));
-      });
+    });
 
-    map.current.on('moveend', () => {
-      const bounds = map.current.getBounds();
-      onBoundsChanged(bounds);
-    })
-  });
+    map.current.on("moveend", () => {
+      let mapBounds = map.current.getBounds();
+      setBounds(mapBounds);
+    });
+  }, []);
 
   // Updating viewport bounds on each change
   const [viewportBounds, setViewportBounds] = useState(undefined);
 
+  useEffect(() => {
+    onBoundsChanged(bounds);
+  }, [bounds]);
+
   function onBoundsChanged(bounds) {
+    if (!bounds) return;
+
     const boundsObject = {};
 
     boundsObject["sw"] = [bounds["_sw"]["lat"], bounds["_sw"]["lng"]];
@@ -82,6 +89,7 @@ function App() {
     if (!viewportBounds) return;
 
     if (requestAllowed === true) {
+      console.log("Fetching aircraft data for:")
       console.log(viewportBounds);
 
       fetch("http://localhost:5000/aircraft_data", {
