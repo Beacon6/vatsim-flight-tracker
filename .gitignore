@@ -26,4 +26,4 @@ yarn-debug.log*
 yarn-error.log*
 
 # secret
-api_key.py
+.env

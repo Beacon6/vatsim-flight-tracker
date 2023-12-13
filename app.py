@@ -1,9 +1,13 @@
 from flask import Flask, request
 from flask_cors import CORS
-from api_key import api_key
+from dotenv import load_dotenv
+import os
 from requests.exceptions import ReadTimeout
 from requests import get
 import dummy_data
+
+load_dotenv()
+api_key = os.getenv("API_KEY")
 
 app = Flask(__name__)
 CORS(app)
