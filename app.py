@@ -30,7 +30,7 @@ def get_aircraft_data():
         else:
             response = get(api_url, {"key": api_key})
 
-            aircraft_data = []
+            aircraft_features = []
             icao24_set = set()
 
             if response is not None:
@@ -38,45 +38,57 @@ def get_aircraft_data():
                     if (s["aircraft"]["icao24"] != "XXC"
                             and s["aircraft"]["icao24"] not in icao24_set):
                         icao24_set.add(s["aircraft"]["icao24"])
-                        aircraft_data.append({
-                            "icao24": s["aircraft"]["icao24"],
-                            "aircraft_type": s["aircraft"]["icaoCode"],
-                            "reg_number": s["aircraft"]["regNumber"],
-                            "airline": s["airline"]["icaoCode"],
-                            "arrival": s["arrival"]["icaoCode"],
-                            "departure": s["departure"]["icaoCode"],
-                            "flight_number": s["flight"]["iataNumber"],
-                            "callsign": s["flight"]["icaoNumber"],
-                            "baro_altitude": s["geography"]["altitude"],  # m
-                            "true_heading": s["geography"]["direction"],
-                            "latitude": s["geography"]["latitude"],
-                            "longitude": s["geography"]["longitude"],
-                            "ground_speed": s["speed"]["horizontal"],  # km/h
-                            "vertical_speed": s["speed"]["vspeed"],  # m/s
-                            "on_ground": s["speed"]["isGround"],
-                            "squawk": s["system"]["squawk"]
-                            })
+                        aircraft_features.append({
+                            "type": "Feature",
+                            "properties": {
+                                "icao24": s["aircraft"]["icao24"],
+                                "aircraft_type": s["aircraft"]["icaoCode"],
+                                "reg_number": s["aircraft"]["regNumber"],
+                                "airline": s["airline"]["icaoCode"],
+                                "arrival": s["arrival"]["icaoCode"],
+                                "departure": s["departure"]["icaoCode"],
+                                "flight_number": s["flight"]["iataNumber"],
+                                "callsign": s["flight"]["icaoNumber"],
+                                "baro_altitude": s["geography"]["altitude"],
+                                "true_heading": s["geography"]["direction"],
+                                "ground_speed": s["speed"]["horizontal"],
+                                "vertical_speed": s["speed"]["vspeed"],
+                                "on_ground": s["speed"]["isGround"],
+                                "squawk": s["system"]["squawk"],
+                            },
+                            "geometry": {
+                                "type": "Point",
+                                "coordinates": [s["geography"]["longitude"],
+                                                s["geography"]["latitude"]],
+                            }
+                        })
 
                 displayed_aircraft = []
 
-                for x in aircraft_data:
-                    if (viewport_bounds["sw"][0] < x["latitude"]
-                            and x["latitude"] < viewport_bounds["ne"][0]
-                            and viewport_bounds["sw"][1] < x["longitude"]
-                            and x["longitude"] < viewport_bounds["ne"][1]):
+                for x in aircraft_features:
+                    lat = x["geometry"]["coordinates"][1]
+                    lng = x["geometry"]["coordinates"][0]
+                    if (viewport_bounds["sw"][0] < lat
+                            and lat < viewport_bounds["ne"][0]
+                            and viewport_bounds["sw"][1] < lng
+                            and lng < viewport_bounds["ne"][1]):
                         displayed_aircraft.append(x)
 
+                aircraft_data = {
+                    "type": "FeatureCollection",
+                    "features": displayed_aircraft
+                }
             else:
                 raise TypeError
 
-        tracking_count = len(aircraft_data)
+        tracking_count = len(aircraft_features)
         displayed_count = len(displayed_aircraft)
         print(f"Request status: {request_successful}")
         print(f"Tracking: {tracking_count} aircraft")
         print(f"Displaying: {displayed_count} aircraft")
         return {
             "request_successful": request_successful,
-            "aircraft_data": displayed_aircraft,
+            "aircraft_data": aircraft_data,
             "aircraft_count_total": tracking_count,
             "aircraft_count_displayed": displayed_count
         }
