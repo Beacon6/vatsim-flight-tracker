@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 from requests.exceptions import ReadTimeout
 from requests import get
+from typing import Dict, List, Union
 import dummy_data
 
 load_dotenv()
@@ -19,7 +20,7 @@ dummy_data = dummy_data.dummy_data
 
 @app.route("/aircraft_data", methods=["POST"])
 def get_aircraft_data():
-    viewport_bounds = request.json
+    viewport_bounds: Union[Dict[str, List[float]], None] = request.json
     print(viewport_bounds)
 
     try:
@@ -27,13 +28,15 @@ def get_aircraft_data():
 
         if debug:
             aircraft_data = dummy_data
+            aircraft_features = []
+            displayed_aircraft = []
         else:
             response = get(api_url, {"key": api_key})
 
             aircraft_features = []
             icao24_set = set()
 
-            if response is not None:
+            if response and viewport_bounds:
                 for s in response.json():
                     if (s["aircraft"]["icao24"] != "XXC"
                             and s["aircraft"]["icao24"] not in icao24_set):
@@ -114,10 +117,10 @@ def get_aircraft_data():
 
 @app.route("/aircraft_photo", methods=["POST"])
 def get_aircraft_photo():
-    hex_code = request.json
+    hex_code: str = str(request.json)
     print(hex_code)
 
-    base_url = "https://api.planespotters.net/pub/photos/hex/"
+    base_url: str = "https://api.planespotters.net/pub/photos/hex/"
     response = get(base_url + hex_code).json()
 
     aircraft_photo = {}
