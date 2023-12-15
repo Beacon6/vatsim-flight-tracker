@@ -7,7 +7,7 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 // Mapbox GL API token
-mapboxgl.accessToken = "pk.eyJ1IjoiYmVhY29uNiIsImEiOiJjbHBsZGNnaHEwM2l2MnJvN2MxNTg5MG9mIn0.3Lo16H4bKYk2Mfsufr2IyQ";
+mapboxgl.accessToken = "pk.eyJ1IjoiYmVhY29uNiIsImEiOiJjbHE0MTBxOGMwMDMwMmxudjdnMG8zYjVoIn0.p8CCQx3JpDOz5gq7iMhbAg";
 
 function App() {
   // Initialize Mapbox GL map
