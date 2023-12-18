@@ -1,4 +1,4 @@
-import { Offcanvas, Badge, Container, Row, Col } from "react-bootstrap";
+import { Offcanvas, Badge, Container, Row, Col } from 'react-bootstrap';
 
 function Panel(props) {
   return <Offcanvas
@@ -12,10 +12,10 @@ function Panel(props) {
     <Offcanvas.Body>
       <Container>
         <Row>
-          <div className="photo-container mb-3">
-            <a href={props.selectedAircraftPhoto.link} className="aircraft-photo" >
-                <img src={props.selectedAircraftPhoto.img} alt="Selected aircraft" />
-                <Badge pill bg="secondary" className="photo-attribution">
+          <div className='photo-container mb-3'>
+            <a href={props.selectedAircraftPhoto.link} className='aircraft-photo' >
+                <img src={props.selectedAircraftPhoto.img} alt='Selected aircraft' />
+                <Badge pill bg='secondary' className='photo-attribution'>
                   Photo: {props.selectedAircraftPhoto.author}
                 </Badge>
             </a>

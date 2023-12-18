@@ -12,22 +12,11 @@
   overflow: hidden;
 }
 
-.sidebar {
-  background-color: rgb(35 55 75 / 90%);
-  color: #fff;
-  padding: 6px 12px;
-  font-family: monospace;
-  z-index: 1;
-  position: absolute;
-  right: 0;
-  margin: 12px;
-  border-radius: 4px;
-}
-
 .airplane-icon {
   height: 16px;
   width: 16px;
   pointer-events: auto;
+  cursor: pointer;
 }
 
 .nav {
