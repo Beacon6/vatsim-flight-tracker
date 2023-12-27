@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Map, Marker } from 'react-map-gl';
+import { Map, Marker, Source, Layer } from 'react-map-gl';
 import airplane_icon from './airplane.png';
 import Navbar from './Navbar';
 import Panel from './Panel';
@@ -65,7 +65,7 @@ function App() {
         .then(response => response.json())
         .then(data => {
           if (data.request_successful === true) {
-            setAircraftData(data.aircraft_data.features);
+            setAircraftData(data.aircraft_data);
             setTrackedCount(data.tracked_aircraft_count);
           } else {
             console.log('API timeout');
@@ -104,6 +104,15 @@ function App() {
     setShowPanel(false);
   }
 
+  const layerStyle = {
+    id: 'point',
+    type: 'circle',
+    paint: {
+      'circle-radius': 10,
+      'circle-color': '#007cbf'
+    }
+  };
+
   return (
     <div className='app'>
       <Navbar
@@ -124,7 +133,10 @@ function App() {
           onMoveEnd={onBoundsChanged}
           ref={mapRef}
         >
-          {aircraftData.slice(0, 1000).map(item => (
+          <Source id="my-data" type="geojson" data={aircraftData}>
+            <Layer {...layerStyle} />
+          </Source>
+          {/* {aircraftData.slice(0, 1000).map(item => (
             <Marker
               latitude={item.geometry.coordinates[1]}
               longitude={item.geometry.coordinates[0]}
@@ -138,7 +150,7 @@ function App() {
                 alt=''
               />
             </Marker>
-          ))}
+          ))} */}
         </Map>
       </div>
       <Panel
