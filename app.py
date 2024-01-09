@@ -4,23 +4,22 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from requests.exceptions import ReadTimeout
 from requests import get
-from typing import Dict, List, Union
 
 load_dotenv()
-api_key: str | None = getenv('API_KEY')
+api_key = getenv('API_KEY')
 
 app = Flask(__name__)
 CORS(app)
-api_url: str = 'https://aviation-edge.com/v2/public/flights'
+api_url = 'https://aviation-edge.com/v2/public/flights'
 
 
 @app.route('/aircraft_data', methods=['POST'])
 def get_aircraft_data():
-    viewport_bounds: Union[Dict[str, List[float]], None] = request.json
+    viewport_bounds = request.json
     print(viewport_bounds)
 
     try:
-        request_successful: bool = True
+        request_successful = True
         response = get(api_url, {'key': api_key}).json()
 
         tracked_aircraft = []
@@ -58,8 +57,8 @@ def get_aircraft_data():
             displayed_aircraft = []
 
             for element in tracked_aircraft:
-                lat: float = element['geometry']['coordinates'][1]
-                lng: float = element['geometry']['coordinates'][0]
+                lat = element['geometry']['coordinates'][1]
+                lng = element['geometry']['coordinates'][0]
                 if (viewport_bounds['sw'][0] < lat
                         and lat < viewport_bounds['ne'][0]
                         and viewport_bounds['sw'][1] < lng
@@ -73,10 +72,10 @@ def get_aircraft_data():
 
         else:
             print('Something went wrong')
-            request_successful: bool = False
+            request_successful = False
             aircraft_data = {}
 
-        tracked_aircraft_count: int = len(tracked_aircraft)
+        tracked_aircraft_count = len(tracked_aircraft)
         print(f'Request status: {request_successful}')
         print(f'Tracking: {tracked_aircraft_count} aircraft')
         return {
@@ -86,7 +85,7 @@ def get_aircraft_data():
         }
 
     except ReadTimeout:
-        request_successful: bool = False
+        request_successful = False
         print('Something went wrong')
         return {
             'request_successful': request_successful,
@@ -97,10 +96,10 @@ def get_aircraft_data():
 
 @app.route('/aircraft_photo', methods=['POST'])
 def get_aircraft_photo():
-    hex_code: str = str(request.json)
+    hex_code = str(request.json)
     print(hex_code)
 
-    base_url: str = 'https://api.planespotters.net/pub/photos/hex/'
+    base_url = 'https://api.planespotters.net/pub/photos/hex/'
     response = get(base_url + hex_code).json()
 
     aircraft_photo = {}
