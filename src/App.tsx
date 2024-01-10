@@ -1,22 +1,23 @@
-import { useEffect, useState, useRef } from 'react';
-import { Map, Marker, Source, Layer } from 'react-map-gl';
-import airplane_icon from './airplane.png';
+import { useEffect, useState, useRef, SetStateAction } from 'react';
+import { Map, Source, Layer } from 'react-map-gl';
+// import airplane_icon from './airplane.png';
 import Navbar from './Navbar';
 import Panel from './Panel';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button } from 'react-bootstrap';
 
 // Mapbox GL API token
-const api_key = process.env.REACT_APP_API_KEY;
+const api_key = import.meta.env.VITE_API_KEY;
 
 function App() {
   // Updating viewport bounds on each change
-  const mapRef = useRef();
+  const mapRef: any = useRef();
   const [viewportBounds, setViewportBounds] = useState();
 
   function onBoundsChanged() {
     const bounds = mapRef.current.getBounds();
-    const boundsObject = {};
+    const boundsObject: any = {};
 
     boundsObject['sw'] = [bounds['_sw']['lat'], bounds['_sw']['lng']];
     boundsObject['ne'] = [bounds['_ne']['lat'], bounds['_ne']['lng']];
@@ -47,14 +48,14 @@ function App() {
   }, [timer]);
 
   // Fetching aircraft data from the Flask backend
-  const [aircraftData, setAircraftData] = useState([]);
+  const [aircraftData, setAircraftData] = useState<any>([]);
   const [trackedCount, setTrackedCount] = useState(0);
 
   useEffect(() => {
     if (!viewportBounds) return;
 
     if (requestAllowed === true) {
-      console.log('Fetching aircraft data for:')
+      console.log('Fetching aircraft data for:');
       console.log(viewportBounds);
 
       fetch('http://localhost:5000/aircraft_data', {
@@ -62,55 +63,55 @@ function App() {
         body: JSON.stringify(viewportBounds),
         headers: { 'Content-Type': 'application/json' },
       })
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => response.json())
+        .then((data) => {
           if (data.request_successful === true) {
             setAircraftData(data.aircraft_data);
             setTrackedCount(data.tracked_aircraft_count);
           } else {
             console.log('API timeout');
           }
-        })
+        });
       setRequestAllowed(false);
     }
   }, [viewportBounds, requestAllowed]);
 
   // Handling the 'Offcanvas' panel component
   // Fetching aircraft photo and other data for the panel
-  const [selectedAircraft, setSelectedAircraft] = useState('');
+  const [selectedAircraft, setSelectedAircraft] = useState<any>();
   const [showPanel, setShowPanel] = useState(false);
-  const [aircraftPhoto, setAircraftPhoto] = useState({});
+  const [aircraftPhoto, setAircraftPhoto] = useState<any>();
 
-  function handleShowPanel(selectedAircraft) {
+  function handleShowPanel(selectedAircraft: SetStateAction<any>) {
     setSelectedAircraft(selectedAircraft);
     fetch('http://localhost:5000/aircraft_photo', {
       method: 'POST',
       body: JSON.stringify(selectedAircraft.icao24),
       headers: { 'Content-Type': 'application/json' },
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.aircraft_photo_exists === true) {
           setAircraftPhoto(data.aircraft_photo);
         } else {
           console.log('Could not find any photo for this aircraft');
         }
-      })
+      });
     setShowPanel(true);
     console.log('Clicked on:', selectedAircraft);
   }
 
-  function handleClosePanel() {
+  const handleClosePanel: any = () => {
     setShowPanel(false);
-  }
+  };
 
-  const layerStyle = {
+  const layerStyle: any = {
     id: 'point',
     type: 'circle',
     paint: {
       'circle-radius': 10,
-      'circle-color': '#007cbf'
-    }
+      'circle-color': '#007cbf',
+    },
   };
 
   return (
@@ -133,7 +134,7 @@ function App() {
           onMoveEnd={onBoundsChanged}
           ref={mapRef}
         >
-          <Source id="my-data" type="geojson" data={aircraftData}>
+          <Source id='my-data' type='geojson' data={aircraftData}>
             <Layer {...layerStyle} />
           </Source>
           {/* {aircraftData.slice(0, 1000).map(item => (
@@ -151,6 +152,7 @@ function App() {
               />
             </Marker>
           ))} */}
+          <Button onClick={handleShowPanel} />
         </Map>
       </div>
       <Panel
