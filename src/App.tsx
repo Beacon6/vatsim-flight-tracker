@@ -3,9 +3,15 @@ import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import Navbar from './Navbar';
 import './App.css';
 
+interface VatsimData {
+  request_successful: boolean;
+  aircraft_data: { general: any; pilots: any };
+  tracked_aircraft_count: number;
+}
+
 function App() {
   // API call timer
-  const [timer, setTimer] = useState(30);
+  const [timer, setTimer] = useState(15);
   const [requestAllowed, setRequestAllowed] = useState(true);
 
   useEffect(() => {
@@ -22,17 +28,15 @@ function App() {
   }, [timer]);
 
   // Fetching VATSIM aircraft data from the Flask backend
-  const [aircraftData, setAircraftData] = useState<any>([]);
-  const [trackedCount, setTrackedCount] = useState(0);
+  const [vatsimData, setVatsimData] = useState<VatsimData>();
 
   useEffect(() => {
     if (requestAllowed === true) {
       fetch('http://localhost:5000/aircraft_data')
         .then((response) => response.json())
-        .then((data) => {
+        .then((data: VatsimData) => {
           if (data.request_successful === true) {
-            setAircraftData(data.aircraft_data.pilots);
-            setTrackedCount(data.tracked_aircraft_count);
+            setVatsimData(data);
           } else {
             console.log('API timeout');
           }
@@ -72,9 +76,14 @@ function App() {
 
   return (
     <>
-      <Navbar countTotal={trackedCount} />
+      <Navbar
+        countTotal={vatsimData?.tracked_aircraft_count}
+        countView={vatsimData?.tracked_aircraft_count}
+        variant='info'
+        timer={timer}
+      />
       <MapContainer
-        className='app'
+        className='map-container'
         center={[50, 10]}
         zoom={4}
         scrollWheelZoom={true}
@@ -83,7 +92,7 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ></TileLayer>
-        {aircraftData.map((item: any) => (
+        {vatsimData?.aircraft_data.pilots.map((item: any) => (
           <Marker
             position={[item.latitude, item.longitude]}
             key={item.cid}

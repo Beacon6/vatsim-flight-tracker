@@ -1,13 +1,11 @@
 import ProgressBar from 'react-bootstrap/ProgressBar';
 
-interface NavbarProps {
-  countTotal: number;
-  countView: number;
+const Navbar: React.FC<{
+  countTotal?: number;
+  countView?: number;
   variant: string;
   timer: number;
-}
-
-const Navbar: React.FC<NavbarProps> = (props) => {
+}> = (props) => {
   const { countTotal, countView, variant, timer } = props;
 
   return (
@@ -18,7 +16,13 @@ const Navbar: React.FC<NavbarProps> = (props) => {
         </a>
         Tracking {countTotal} aircraft - displaying {countView}
         <ul>
-          <ProgressBar variant={variant} striped min={-30} max={-1} now={-timer} />
+          <ProgressBar
+            variant={variant}
+            striped
+            min={-15}
+            max={-1}
+            now={-timer}
+          />
         </ul>
       </nav>
     </>
