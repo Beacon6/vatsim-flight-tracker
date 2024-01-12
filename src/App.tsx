@@ -78,7 +78,6 @@ function App() {
       <Navbar
         countTotal={vatsimData?.tracked_aircraft_count}
         countView={vatsimData?.tracked_aircraft_count}
-        variant='info'
         timer={timer}
       />
       <MapContainer
