@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import Navbar from './components/Navbar';
+import Aircrafts from './components/Aircrafts';
 
-interface VatsimData {
+export interface VatsimData {
   request_successful: boolean;
   aircraft_data: { general: any; pilots: any };
   tracked_aircraft_count: number;
@@ -90,12 +91,7 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ></TileLayer>
-        {vatsimData?.aircraft_data.pilots.map((item: any) => (
-          <Marker
-            position={[item.latitude, item.longitude]}
-            key={item.cid}
-          ></Marker>
-        ))}
+        <Aircrafts vatsimData={vatsimData} />
       </MapContainer>
     </>
   );
