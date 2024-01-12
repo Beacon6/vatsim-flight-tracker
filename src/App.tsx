@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
-import Navbar from './Navbar';
-import './App.css';
+import Navbar from './components/Navbar';
 
 interface VatsimData {
   request_successful: boolean;
