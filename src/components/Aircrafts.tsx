@@ -1,26 +1,41 @@
 import { Marker } from 'react-leaflet';
 import { VatsimData } from '../App';
-import { icon } from 'leaflet';
+import { LatLngBounds, icon } from 'leaflet';
 import { useMapEvent } from 'react-leaflet';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-interface ViewportBounds {
-  northEast: { lat: number; lng: number };
-  southWest: { lat: number; lng: number };
-}
-
-const Aircrafts: React.FC<{ vatsimData?: VatsimData }> = (props) => {
+const Aircraft: React.FC<{ vatsimData?: VatsimData }> = (props) => {
   const { vatsimData } = props;
-  const [viewportBounds, setViewportBounds] = useState<ViewportBounds>();
+  const [viewportBounds, setViewportBounds] = useState<LatLngBounds>();
 
   const map = useMapEvent('moveend', () => {
     const mapBounds = map.getBounds();
-    setViewportBounds({
-      northEast: mapBounds.getNorthEast(),
-      southWest: mapBounds.getSouthWest(),
-    });
-    console.log(viewportBounds);
+
+    setViewportBounds(mapBounds);
   });
+
+  const [filteredAircraft, setFilteredAircraft] =
+    useState<VatsimData['aircraft_data']['pilots']>();
+
+  useEffect(() => {
+    let displayedAircraft: VatsimData['aircraft_data']['pilots'] = [];
+
+    for (let i = 0; i < vatsimData?.aircraft_data.pilots.length; i++) {
+      const aircraftPosition = [
+        vatsimData?.aircraft_data.pilots[i].latitude,
+        vatsimData?.aircraft_data.pilots[i].longitude,
+      ];
+
+      if (viewportBounds?.contains(aircraftPosition)) {
+        displayedAircraft = [
+          ...displayedAircraft,
+          vatsimData?.aircraft_data.pilots[i],
+        ];
+      }
+
+      setFilteredAircraft(displayedAircraft);
+    }
+  }, [viewportBounds, vatsimData]);
 
   const airplaneIcon = icon({
     iconUrl: '../public/assets/airplane.png',
@@ -29,7 +44,7 @@ const Aircrafts: React.FC<{ vatsimData?: VatsimData }> = (props) => {
 
   return (
     <>
-      {vatsimData?.aircraft_data.pilots.map((item: any) => (
+      {filteredAircraft?.map((item: VatsimData['aircraft_data']['pilots']) => (
         <Marker
           icon={airplaneIcon}
           position={[item.latitude, item.longitude]}
@@ -40,4 +55,4 @@ const Aircrafts: React.FC<{ vatsimData?: VatsimData }> = (props) => {
   );
 };
 
-export default Aircrafts;
+export default Aircraft;
