@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import Navbar from './components/Navbar';
-import Aircrafts from './components/Aircrafts';
+import Aircraft from './components/Aircraft';
 
 export interface VatsimData {
   request_successful: boolean;
@@ -91,7 +91,7 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ></TileLayer>
-        <Aircrafts vatsimData={vatsimData} />
+        <Aircraft vatsimData={vatsimData} />
       </MapContainer>
     </>
   );
