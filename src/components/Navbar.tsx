@@ -1,11 +1,11 @@
 import ProgressBar from 'react-bootstrap/ProgressBar';
 
 const Navbar: React.FC<{
-  countTotal?: number;
-  countView?: number;
+  pilotsCount?: number;
+  atcCount?: number;
   timer: number;
 }> = (props) => {
-  const { countTotal, countView, timer } = props;
+  const { pilotsCount, atcCount, timer } = props;
 
   return (
     <>
@@ -13,7 +13,7 @@ const Navbar: React.FC<{
         <a href='/' className='home'>
           ADS-B Flight Tracker
         </a>
-        Tracking {countTotal} aircraft - {countView} currently in view
+        Pilots connected: {pilotsCount} | ATC connected: {atcCount}
         <ul>
           <ProgressBar variant='info' striped min={-15} max={-1} now={-timer} />
         </ul>

@@ -5,8 +5,9 @@ import Aircraft from './components/Aircraft';
 
 export interface VatsimData {
   request_successful: boolean;
-  aircraft_data: { general: any; pilots: any };
-  tracked_aircraft_count: number;
+  vatsim_data: { general: any; pilots: any; controllers: any };
+  pilots_count: number;
+  atc_count: number;
 }
 
 function App() {
@@ -32,7 +33,7 @@ function App() {
 
   useEffect(() => {
     if (requestAllowed === true) {
-      fetch('http://localhost:5000/aircraft_data')
+      fetch('http://localhost:5000/vatsim_data')
         .then((response) => response.json())
         .then((data: VatsimData) => {
           if (data.request_successful === true) {
@@ -77,8 +78,8 @@ function App() {
   return (
     <>
       <Navbar
-        countTotal={vatsimData?.tracked_aircraft_count}
-        countView={vatsimData?.tracked_aircraft_count}
+        pilotsCount={vatsimData?.pilots_count}
+        atcCount={vatsimData?.atc_count}
         timer={timer}
       />
       <MapContainer

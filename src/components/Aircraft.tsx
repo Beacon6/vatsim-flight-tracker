@@ -15,21 +15,21 @@ const Aircraft: React.FC<{ vatsimData?: VatsimData }> = (props) => {
   });
 
   const [filteredAircraft, setFilteredAircraft] =
-    useState<VatsimData['aircraft_data']['pilots']>();
+    useState<VatsimData['vatsim_data']['pilots']>();
 
   useEffect(() => {
-    let displayedAircraft: VatsimData['aircraft_data']['pilots'] = [];
+    let displayedAircraft: VatsimData['vatsim_data']['pilots'] = [];
 
-    for (let i = 0; i < vatsimData?.aircraft_data.pilots.length; i++) {
+    for (let i = 0; i < vatsimData?.vatsim_data.pilots.length; i++) {
       const aircraftPosition = [
-        vatsimData?.aircraft_data.pilots[i].latitude,
-        vatsimData?.aircraft_data.pilots[i].longitude,
+        vatsimData?.vatsim_data.pilots[i].latitude,
+        vatsimData?.vatsim_data.pilots[i].longitude,
       ];
 
       if (viewportBounds?.contains(aircraftPosition)) {
         displayedAircraft = [
           ...displayedAircraft,
-          vatsimData?.aircraft_data.pilots[i],
+          vatsimData?.vatsim_data.pilots[i],
         ];
       }
 
@@ -44,7 +44,7 @@ const Aircraft: React.FC<{ vatsimData?: VatsimData }> = (props) => {
 
   return (
     <>
-      {filteredAircraft?.map((item: VatsimData['aircraft_data']['pilots']) => (
+      {filteredAircraft?.map((item: VatsimData['vatsim_data']['pilots']) => (
         <Marker
           icon={airplaneIcon}
           position={[item.latitude, item.longitude]}
