@@ -80,7 +80,6 @@ function App() {
       <Navbar
         pilotsCount={vatsimData?.pilots_count}
         atcCount={vatsimData?.atc_count}
-        timer={timer}
       />
       <MapContainer
         className='map-container'
