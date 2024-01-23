@@ -40,7 +40,8 @@ const Aircraft: React.FC<{ vatsimData?: VatsimData }> = (props) => {
         ];
       }
 
-      setFilteredAircraft(displayedAircraft);
+      // Find better performance solution than slicing
+      setFilteredAircraft(displayedAircraft.slice(0, 250));
     }
   }, [viewportBounds, vatsimData]);
 

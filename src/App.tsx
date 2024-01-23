@@ -85,7 +85,8 @@ function App() {
       <MapContainer
         className='map-container'
         center={[50, 10]}
-        zoom={4}
+        zoom={6}
+        minZoom={3}
         scrollWheelZoom={true}
       >
         <TileLayer
