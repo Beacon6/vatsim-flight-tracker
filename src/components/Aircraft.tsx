@@ -1,15 +1,22 @@
 import { Marker } from 'react-leaflet';
 import { VatsimData } from '../App';
 import { LatLngBounds, icon } from 'leaflet';
-import { useMapEvent } from 'react-leaflet';
+import { useMapEvent, useMap } from 'react-leaflet';
 import { useEffect, useState } from 'react';
 
 const Aircraft: React.FC<{ vatsimData?: VatsimData }> = (props) => {
   const { vatsimData } = props;
   const [viewportBounds, setViewportBounds] = useState<LatLngBounds>();
+  const map = useMap();
 
-  const map = useMapEvent('moveend', () => {
-    const mapBounds = map.getBounds();
+  if (!viewportBounds) {
+    setViewportBounds(map.getBounds());
+    console.log('initial load');
+  }
+
+  const mapEvent = useMapEvent('moveend', () => {
+    const mapBounds = mapEvent.getBounds();
+    console.log('refresh test');
 
     setViewportBounds(mapBounds);
   });
