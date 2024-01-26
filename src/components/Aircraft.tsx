@@ -3,6 +3,7 @@ import { VatsimData } from '../App';
 import { LatLngBounds, icon } from 'leaflet';
 import { useMapEvent, useMap } from 'react-leaflet';
 import { useEffect, useState } from 'react';
+import 'leaflet-rotatedmarker';
 
 const Aircraft: React.FC<{ vatsimData?: VatsimData }> = (props) => {
   const { vatsimData } = props;
@@ -57,6 +58,7 @@ const Aircraft: React.FC<{ vatsimData?: VatsimData }> = (props) => {
           icon={airplaneIcon}
           position={[item.latitude, item.longitude]}
           key={item.cid}
+          rotationAngle={item.heading}
         ></Marker>
       ))}
     </>
