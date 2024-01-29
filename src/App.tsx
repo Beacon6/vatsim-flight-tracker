@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import Navbar from './components/Navbar';
 import Aircraft from './components/Aircraft';
+import { NmScale } from '@marfle/react-leaflet-nmscale';
 
 export interface VatsimData {
   request_successful: boolean;
@@ -108,6 +109,7 @@ function App() {
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ></TileLayer>
         <Aircraft vatsimData={vatsimData} />
+        <NmScale />
       </MapContainer>
     </>
   );
