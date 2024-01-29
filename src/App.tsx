@@ -5,7 +5,22 @@ import Aircraft from './components/Aircraft';
 
 export interface VatsimData {
   request_successful: boolean;
-  vatsim_data: { general: any; pilots: any; controllers: any };
+  vatsim_data: {
+    pilots: {
+      altitude: number;
+      callsign: string;
+      cid: number;
+      groundspeed: number;
+      heading: number;
+      latitude: number;
+      longitude: number;
+      name: string;
+      qnh_i_hq: number;
+      qnh_mb: number;
+      server: string;
+      transponder: number;
+    }[];
+  };
   pilots_count: number;
   atc_count: number;
 }
