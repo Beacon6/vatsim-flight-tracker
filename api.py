@@ -48,36 +48,5 @@ def get_vatsim_data():
             'atc_count': 0
         }
 
-
-# @app.route('/aircraft_photo', methods=['POST'])
-# def get_aircraft_photo():
-#     hex_code = str(request.json)
-#     print(hex_code)
-
-#     base_url = 'https://api.planespotters.net/pub/photos/hex/'
-#     response = get(base_url + hex_code).json()
-
-#     aircraft_photo = {}
-
-#     try:
-#         aircraft_photo_exists = True
-
-#         aircraft_photo['img'] = response['photos'][0]['thumbnail_large']['src']
-#         aircraft_photo['link'] = response['photos'][0]['link']
-#         aircraft_photo['author'] = response['photos'][0]['photographer']
-
-#         return {
-#             'aircraft_photo_exists': aircraft_photo_exists,
-#             'aircraft_photo': aircraft_photo
-#         }
-
-#     except IndexError:
-#         aircraft_photo_exists = False
-#         print('Could not find any photo for this aircraft')
-#         return {
-#             'aircraft_photo_exists': aircraft_photo_exists,
-#             'aircraft_photo': None
-#         }
-
 if __name__ == '__main__':
     app.run()
