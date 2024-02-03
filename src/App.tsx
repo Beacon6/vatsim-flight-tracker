@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import Navbar from './components/Navbar';
 import Aircraft from './components/Aircraft';
+import Panel from './components/Panel';
 import { NmScale } from '@marfle/react-leaflet-nmscale';
 
 export interface VatsimData {
@@ -62,34 +63,16 @@ function App() {
     }
   }, [requestAllowed]);
 
-  // // Handling the 'Offcanvas' panel component
-  // // Fetching aircraft photo and other data for the panel
-  // const [selectedAircraft, setSelectedAircraft] = useState<any>();
-  // const [showPanel, setShowPanel] = useState(false);
-  // const [aircraftPhoto, setAircraftPhoto] = useState<any>();
+  // Displaying selected Client info
+  const [showPanel, setShowPanel] = useState(false);
 
-  // function handleShowPanel(selectedAircraft: SetStateAction<any>) {
-  //   setSelectedAircraft(selectedAircraft);
-  //   fetch('http://localhost:5000/aircraft_photo', {
-  //     method: 'POST',
-  //     body: JSON.stringify(selectedAircraft.icao24),
-  //     headers: { 'Content-Type': 'application/json' },
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       if (data.aircraft_photo_exists === true) {
-  //         setAircraftPhoto(data.aircraft_photo);
-  //       } else {
-  //         console.log('Could not find any photo for this aircraft');
-  //       }
-  //     });
-  //   setShowPanel(true);
-  //   console.log('Clicked on:', selectedAircraft);
-  // }
+  const handleShow = () => {
+    setShowPanel(true);
+  };
 
-  // const handleClosePanel: any = () => {
-  //   setShowPanel(false);
-  // };
+  const handleClose = () => {
+    setShowPanel(false);
+  };
 
   return (
     <>
@@ -108,7 +91,12 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ></TileLayer>
-        <Aircraft vatsimData={vatsimData} />
+        <Aircraft vatsimData={vatsimData} onClick={handleShow} />
+        <Panel
+          show={showPanel}
+          onHide={handleClose}
+          selectedClient={vatsimData}
+        />
         <NmScale />
       </MapContainer>
     </>

@@ -5,8 +5,10 @@ import { useMapEvent, useMap } from 'react-leaflet';
 import { useEffect, useState } from 'react';
 import 'leaflet-rotatedmarker';
 
-const Aircraft: React.FC<{ vatsimData?: VatsimData }> = (props) => {
-  const { vatsimData } = props;
+const Aircraft: React.FC<{ vatsimData?: VatsimData; onClick: () => void }> = (
+  props
+) => {
+  const { vatsimData, onClick } = props;
   const [viewportBounds, setViewportBounds] = useState<LatLngBounds>();
   const map = useMap();
 
@@ -56,6 +58,9 @@ const Aircraft: React.FC<{ vatsimData?: VatsimData }> = (props) => {
           position={[item.latitude, item.longitude]}
           key={item.cid}
           rotationAngle={item.heading}
+          eventHandlers={{
+            click: () => onClick(),
+          }}
         ></Marker>
       ))}
     </>
