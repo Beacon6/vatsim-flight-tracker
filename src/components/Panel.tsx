@@ -12,10 +12,10 @@ const Panel: React.FC<PanelProps> = (props) => {
 
   return (
     <>
-      <Offcanvas show={show} onHide={onHide} backdrop={false}>
+      <Offcanvas show={show} onHide={onHide}>
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>
-            {selectedClient?.vatsim_data.pilots[6].callsign}
+            {selectedClient?.vatsim_data.pilots[0].callsign}
           </Offcanvas.Title>
         </Offcanvas.Header>
       </Offcanvas>

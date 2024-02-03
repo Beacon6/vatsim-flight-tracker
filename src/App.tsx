@@ -64,9 +64,12 @@ function App() {
   }, [requestAllowed]);
 
   // Displaying selected Client info
+  const [clientInfo, setClientInfo] = useState<any>();
   const [showPanel, setShowPanel] = useState(false);
 
-  const handleShow = () => {
+  const handleShow = (selected: any) => {
+    setClientInfo(selected);
+    console.log(clientInfo);
     setShowPanel(true);
   };
 
