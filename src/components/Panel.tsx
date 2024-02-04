@@ -1,5 +1,7 @@
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { VatsimPilot } from '../App';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
 
 interface PanelProps {
   show: boolean;
@@ -12,10 +14,25 @@ const Panel: React.FC<PanelProps> = (props) => {
 
   return (
     <>
-      <Offcanvas show={show} onHide={onHide}>
+      <Offcanvas show={show} onHide={onHide} backdrop={false}>
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>{selectedClient?.callsign}</Offcanvas.Title>
+          <Offcanvas.Title>
+            {selectedClient?.callsign} (
+            {selectedClient?.flight_plan.aircraft_short})
+          </Offcanvas.Title>
         </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Container>
+            <Row>CID: {selectedClient?.cid}</Row>
+            <Row>Departure: {selectedClient?.flight_plan.departure}</Row>
+            <Row>Arrival: {selectedClient?.flight_plan.arrival}</Row>
+            <Row>Alternate: {selectedClient?.flight_plan.alternate}</Row>
+            <Row>Altitude: {selectedClient?.altitude}</Row>
+            <Row>Ground speed: {selectedClient?.groundspeed}</Row>
+            <Row>Transponder: {selectedClient?.transponder}</Row>
+            <Row>Server: {selectedClient?.server}</Row>
+          </Container>
+        </Offcanvas.Body>
       </Offcanvas>
     </>
   );
