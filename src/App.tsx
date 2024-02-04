@@ -27,6 +27,10 @@ export interface VatsimData {
   atc_count: number;
 }
 
+export interface VatsimPilot {
+  vatsimPilot: VatsimData['vatsim_data']['pilots'][number];
+}
+
 function App() {
   // API call timer
   const [timer, setTimer] = useState(15);
@@ -64,10 +68,10 @@ function App() {
   }, [requestAllowed]);
 
   // Displaying selected Client info
-  const [clientInfo, setClientInfo] = useState<any>();
+  const [clientInfo, setClientInfo] = useState<VatsimPilot['vatsimPilot']>();
   const [showPanel, setShowPanel] = useState(false);
 
-  const handleShow = (selected: any) => {
+  const handleShow = (selected: VatsimPilot['vatsimPilot']) => {
     setClientInfo(selected);
     console.log(clientInfo);
     setShowPanel(true);
@@ -98,7 +102,7 @@ function App() {
         <Panel
           show={showPanel}
           onHide={handleClose}
-          selectedClient={vatsimData}
+          selectedClient={clientInfo}
         />
         <NmScale />
       </MapContainer>
