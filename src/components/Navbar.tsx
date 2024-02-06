@@ -6,10 +6,8 @@ const Navbar: React.FC<{
 
   return (
     <>
-      <nav className='nav'>
-        <a href='/' className='home'>
-          VATSIM Flight Tracker
-        </a>
+      <nav className='navbar'>
+        <a href='/'>VATSIM Flight Tracker</a>
         Pilots connected: {pilotsCount} | ATC connected: {atcCount}
       </nav>
     </>
