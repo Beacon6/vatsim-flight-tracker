@@ -4,8 +4,10 @@
 :root {
   --radius: 0.5rem;
   --background: #202426;
+  --font-color: aliceblue;
   --shadow: 1px 1px 13px #03030390;
-  --nav-show: show 600ms ease;
+  --nav-show: nav-show 600ms ease;
+  --offcanvas-show: offcanvas-show 600ms ease;
 }
 
 .navbar-container {
@@ -21,7 +23,7 @@
   font-family: 'Cairo Play', sans-serif;
   background-color: var(--background);
   box-shadow: var(--shadow);
-  color: #fff;
+  color: var(--font-color);
   border-radius: var(--radius);
   padding: 0.5rem 2rem;
   width: 60vw;
@@ -35,15 +37,30 @@
   text-decoration: none;
 }
 
-.panel {
+.offcanvas.offcanvas-start {
+  top: 20vh;
+  left: 1rem;
+}
+
+.offcanvas {
+  position: absolute;
+  display: flex;
+  background-color: var(--background);
+  box-shadow: var(--shadow);
+  color: var(--font-color);
+  border-radius: var(--radius);
   font-family: 'Cairo', sans-serif;
+  animation: var(--offcanvas-show);
+  transition: none;
+  bottom: 20vh;
+  z-index: 99999;
 }
 
 .map {
   height: 100vh;
 }
 
-@keyframes show {
+@keyframes nav-show {
   from {
     opacity: 0;
     transform: scale(0.5);
@@ -51,5 +68,14 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes offcanvas-show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
