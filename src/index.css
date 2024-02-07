@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo+Play&display=swap');
+
 :root {
   --radius: 0.5rem;
   --background: #202426;
@@ -15,6 +18,7 @@
 }
 
 .navbar {
+  font-family: 'Cairo Play', sans-serif;
   background-color: var(--background);
   box-shadow: var(--shadow);
   color: #fff;
@@ -29,6 +33,10 @@
 .navbar a {
   color: inherit;
   text-decoration: none;
+}
+
+.panel {
+  font-family: 'Cairo', sans-serif;
 }
 
 .map {

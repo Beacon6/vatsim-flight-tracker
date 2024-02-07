@@ -16,12 +16,12 @@ const Panel: React.FC<PanelProps> = (props) => {
     <>
       <Offcanvas show={show} onHide={onHide} backdrop={false}>
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>
+          <Offcanvas.Title className='panel'>
             {selectedClient?.callsign} (
             {selectedClient?.flight_plan.aircraft_short})
           </Offcanvas.Title>
         </Offcanvas.Header>
-        <Offcanvas.Body>
+        <Offcanvas.Body className='panel'>
           <Container>
             <Row>CID: {selectedClient?.cid}</Row>
             <Row>Departure: {selectedClient?.flight_plan.departure}</Row>
