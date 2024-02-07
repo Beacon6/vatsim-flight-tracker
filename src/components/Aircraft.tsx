@@ -47,7 +47,7 @@ const Aircraft: React.FC<{
   }, [viewportBounds, vatsimData]);
 
   const airplaneIcon = icon({
-    iconUrl: '../assets/airplane.png',
+    iconUrl: '../assets/airplane-dark.svg',
     iconSize: [24, 24],
   });
 
