@@ -8,7 +8,11 @@ const Navbar: React.FC<{
     <>
       <nav className='navbar'>
         <a href='/'>VATSIM Flight Tracker</a>
-        Pilots connected: {pilotsCount} | ATC connected: {atcCount}
+        <span>
+          <img src='../assets/flights-light.svg' />
+          Pilots connected: {pilotsCount} |{' '}
+          <img src='../assets/radar-light.svg' /> ATC connected: {atcCount}
+        </span>
       </nav>
     </>
   );
