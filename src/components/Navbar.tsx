@@ -9,9 +9,10 @@ const Navbar: React.FC<{
       <nav className='navbar'>
         <a href='/'>VATSIM Flight Tracker</a>
         <span>
-          <img src='../assets/flights-light.svg' />
+          <img src='../assets/flights-light.svg' height={32} width={32} />
           Pilots connected: {pilotsCount} |{' '}
-          <img src='../assets/radar-light.svg' /> ATC connected: {atcCount}
+          <img src='../assets/radar-light.svg' height={32} width={32} /> ATC
+          connected: {atcCount}
         </span>
       </nav>
     </>
