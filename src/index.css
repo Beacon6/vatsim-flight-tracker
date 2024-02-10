@@ -1,81 +1,108 @@
-* {
-  box-sizing: border-box;
+@import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo+Play&display=swap');
+
+:root {
+  --radius: 0.5rem;
+  --background: #202426;
+  --font-color: aliceblue;
+  --shadow: 1px 1px 13px #03030390;
+  --nav-show: nav-show 600ms ease;
+  --offcanvas-show: offcanvas-show 600ms ease;
 }
 
-.app {
-  height: 100vh;
+.navbar-container {
+  position: absolute;
+  display: flex;
+  justify-content: center;
   width: 100vw;
+  margin-top: 0.5rem;
+  z-index: 9999;
 }
 
-.map-container {
-  height: calc(100vh - 48px);
-  overflow: hidden;
-}
-
-.airplane-icon {
-  height: 16px;
-  width: 16px;
-  pointer-events: auto;
-  cursor: pointer;
-}
-
-.nav {
-  background-color: #282c34;
-  color: #fff;
+.navbar {
+  font-family: 'Cairo Play', sans-serif;
+  font-size: 1.5rem;
+  background-color: var(--background);
+  box-shadow: var(--shadow);
+  color: var(--font-color);
+  border-radius: var(--radius);
+  padding: 0.5rem 2rem;
+  width: 60vw;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: 2rem;
-  padding: 0 1rem 0 1rem !important;
+  animation: var(--nav-show);
 }
 
-.nav a {
+.navbar a {
   color: inherit;
   text-decoration: none;
 }
 
-.nav ul {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.nav p {
-  margin: 0;
-  font-weight: bold;
-}
-
-.progress {
-  width: 15vw;
-}
-
-.home {
-  font-size: 2rem;
+.offcanvas.offcanvas-start {
+  top: 15vh;
+  left: 1rem;
+  height: fit-content;
 }
 
 .offcanvas {
-  top: auto !important;
-  width: auto !important;
+  position: absolute;
+  display: flex;
+  background-color: var(--background);
+  box-shadow: var(--shadow);
+  color: var(--font-color);
+  border-radius: var(--radius);
+  font-family: 'Cairo', sans-serif;
+  animation: var(--offcanvas-show);
+  transition: none;
+  bottom: 20vh;
+  z-index: 99999;
 }
 
-.photo-container {
-  position: relative;
+.offcanvas-header {
+  flex-direction: column;
+  padding-bottom: 0px;
+}
+
+.offcanvas-backdrop.show {
+  opacity: 0;
+}
+
+.col {
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 0 !important;
-  width: 500px !important;
+  padding: 0 0 16px 0;
 }
 
-.aircraft-photo {
-  position: relative;
+.accordion-button.collapsed {
+  color: var(--font-color);
 }
 
-.photo-attribution {
-  position: absolute;
-  right: 4px;
-  bottom: 4px;
+.accordion-body {
+  color: var(--font-color);
+  font-size: 14px;
+  padding: 14px;
+}
+
+.map {
+  height: 100vh;
+}
+
+@keyframes nav-show {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes offcanvas-show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

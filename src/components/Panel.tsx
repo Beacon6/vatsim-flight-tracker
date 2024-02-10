@@ -1,37 +1,84 @@
-import Offcanvas from 'react-bootstrap/Offcanvas';
+import { Offcanvas, Accordion, Container, Row, Col } from 'react-bootstrap';
 import { VatsimPilot } from '../App';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
 
-interface PanelProps {
+const Panel: React.FC<{
   show: boolean;
   onHide: () => void;
   selectedClient?: VatsimPilot['vatsimPilot'];
-}
-
-const Panel: React.FC<PanelProps> = (props) => {
+}> = (props) => {
   const { show, onHide, selectedClient } = props;
 
   return (
     <>
-      <Offcanvas show={show} onHide={onHide} backdrop={false}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>
+      <Offcanvas show={show} onHide={onHide} backdrop={true}>
+        <Offcanvas.Header closeButton={false}>
+          <Offcanvas.Title as={'h5'}>
             {selectedClient?.callsign} (
             {selectedClient?.flight_plan.aircraft_short})
+          </Offcanvas.Title>
+          <Offcanvas.Title as={'h6'}>
+            CID: {selectedClient?.cid}
           </Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <Container>
-            <Row>CID: {selectedClient?.cid}</Row>
-            <Row>Departure: {selectedClient?.flight_plan.departure}</Row>
-            <Row>Arrival: {selectedClient?.flight_plan.arrival}</Row>
-            <Row>Alternate: {selectedClient?.flight_plan.alternate}</Row>
-            <Row>Altitude: {selectedClient?.altitude}</Row>
-            <Row>Ground speed: {selectedClient?.groundspeed}</Row>
-            <Row>Transponder: {selectedClient?.transponder}</Row>
-            <Row>Server: {selectedClient?.server}</Row>
+            <Row>
+              <Col>Departure</Col>
+              <Col></Col>
+              <Col>Arrival</Col>
+            </Row>
+            <Row>
+              <Col>
+                <img
+                  src='../assets/departure-light.svg'
+                  height={48}
+                  width={48}
+                />
+              </Col>
+              <Col></Col>
+              <Col>
+                <img src='../assets/arrival-light.svg' height={48} width={48} />
+              </Col>
+            </Row>
+            <Row>
+              <Col>{selectedClient?.flight_plan.departure}</Col>
+              <Col></Col>
+              <Col>{selectedClient?.flight_plan.arrival}</Col>
+            </Row>
           </Container>
+          <Container>
+            <Row>
+              <Col>Altitude (MSL): {selectedClient?.altitude} feet</Col>
+              <Col>Speed (GS): {selectedClient?.groundspeed} knots</Col>
+            </Row>
+            <Row>
+              <Col>Latitude: {selectedClient?.latitude}</Col>
+              <Col>Longitude: {selectedClient?.longitude}</Col>
+            </Row>
+            <Row>
+              <Col>
+                Flight rules:{' '}
+                {selectedClient?.flight_plan.flight_rules === 'I'
+                  ? 'IFR'
+                  : 'VFR'}
+              </Col>
+              <Col>Squawk: {selectedClient?.transponder}</Col>
+            </Row>
+          </Container>
+          <Accordion>
+            <Accordion.Item eventKey='0'>
+              <Accordion.Header>Filed flight plan route</Accordion.Header>
+              <Accordion.Body>
+                {selectedClient?.flight_plan.route}
+              </Accordion.Body>
+            </Accordion.Item>
+            <Accordion.Item eventKey='1'>
+              <Accordion.Header>Remarks</Accordion.Header>
+              <Accordion.Body>
+                {selectedClient?.flight_plan.remarks}
+              </Accordion.Body>
+            </Accordion.Item>
+          </Accordion>
         </Offcanvas.Body>
       </Offcanvas>
     </>

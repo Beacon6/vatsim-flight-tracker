@@ -41,13 +41,13 @@ const Aircraft: React.FC<{
         }
 
         // Find better performance solution than slicing
-        setFilteredAircraft(displayedAircraft.slice(0, 250));
+        setFilteredAircraft(displayedAircraft.slice(0, 1000));
       }
     }
   }, [viewportBounds, vatsimData]);
 
   const airplaneIcon = icon({
-    iconUrl: '../public/assets/airplane.png',
+    iconUrl: '../assets/airplane-dark.svg',
     iconSize: [24, 24],
   });
 

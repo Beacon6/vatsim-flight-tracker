@@ -6,11 +6,14 @@ const Navbar: React.FC<{
 
   return (
     <>
-      <nav className='nav'>
-        <a href='/' className='home'>
-          VATSIM Flight Tracker
-        </a>
-        Pilots connected: {pilotsCount} | ATC connected: {atcCount}
+      <nav className='navbar'>
+        <a href='/'>VATSIM Flight Tracker</a>
+        <span>
+          <img src='../assets/flights-light.svg' height={32} width={32} />
+          Pilots connected: {pilotsCount} |{' '}
+          <img src='../assets/radar-light.svg' height={32} width={32} /> ATC
+          connected: {atcCount}
+        </span>
       </nav>
     </>
   );

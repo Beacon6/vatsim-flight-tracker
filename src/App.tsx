@@ -100,16 +100,19 @@ function App() {
 
   return (
     <>
-      <Navbar
-        pilotsCount={vatsimData?.pilots_count}
-        atcCount={vatsimData?.atc_count}
-      />
+      <div className='navbar-container'>
+        <Navbar
+          pilotsCount={vatsimData?.pilots_count}
+          atcCount={vatsimData?.atc_count}
+        />
+      </div>
       <MapContainer
-        className='map-container'
+        className='map'
         center={[50, 10]}
         zoom={6}
         minZoom={3}
         scrollWheelZoom={true}
+        zoomControl={false}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
