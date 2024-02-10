@@ -63,6 +63,10 @@
   padding-bottom: 0px;
 }
 
+.offcanvas-backdrop.show {
+  opacity: 0;
+}
+
 .col {
   display: flex;
   justify-content: center;

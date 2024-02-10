@@ -41,7 +41,7 @@ const Aircraft: React.FC<{
         }
 
         // Find better performance solution than slicing
-        setFilteredAircraft(displayedAircraft.slice(0, 250));
+        setFilteredAircraft(displayedAircraft.slice(0, 1000));
       }
     }
   }, [viewportBounds, vatsimData]);

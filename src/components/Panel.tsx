@@ -10,7 +10,7 @@ const Panel: React.FC<{
 
   return (
     <>
-      <Offcanvas show={show} onHide={onHide} backdrop={false}>
+      <Offcanvas show={show} onHide={onHide} backdrop={true}>
         <Offcanvas.Header closeButton={false}>
           <Offcanvas.Title as={'h5'}>
             {selectedClient?.callsign} (
