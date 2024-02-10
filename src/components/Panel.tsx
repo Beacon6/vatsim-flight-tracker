@@ -1,8 +1,5 @@
-import Offcanvas from 'react-bootstrap/Offcanvas';
+import { Offcanvas, Accordion, Container, Row, Col } from 'react-bootstrap';
 import { VatsimPilot } from '../App';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 
 const Panel: React.FC<{
   show: boolean;
@@ -50,12 +47,38 @@ const Panel: React.FC<{
             </Row>
           </Container>
           <Container>
-            <Row>Alternate: {selectedClient?.flight_plan.alternate}</Row>
-            <Row>Altitude: {selectedClient?.altitude}</Row>
-            <Row>Ground speed: {selectedClient?.groundspeed}</Row>
-            <Row>Transponder: {selectedClient?.transponder}</Row>
-            <Row>Server: {selectedClient?.server}</Row>
+            <Row>
+              <Col>Altitude (MSL): {selectedClient?.altitude} feet</Col>
+              <Col>Speed (GS): {selectedClient?.groundspeed} knots</Col>
+            </Row>
+            <Row>
+              <Col>Latitude: {selectedClient?.latitude}</Col>
+              <Col>Longitude: {selectedClient?.longitude}</Col>
+            </Row>
+            <Row>
+              <Col>
+                Flight rules:{' '}
+                {selectedClient?.flight_plan.flight_rules === 'I'
+                  ? 'IFR'
+                  : 'VFR'}
+              </Col>
+              <Col>Squawk: {selectedClient?.transponder}</Col>
+            </Row>
           </Container>
+          <Accordion>
+            <Accordion.Item eventKey='0'>
+              <Accordion.Header>Filed flight plan route</Accordion.Header>
+              <Accordion.Body>
+                {selectedClient?.flight_plan.route}
+              </Accordion.Body>
+            </Accordion.Item>
+            <Accordion.Item eventKey='1'>
+              <Accordion.Header>Remarks</Accordion.Header>
+              <Accordion.Body>
+                {selectedClient?.flight_plan.remarks}
+              </Accordion.Body>
+            </Accordion.Item>
+          </Accordion>
         </Offcanvas.Body>
       </Offcanvas>
     </>
