@@ -14,7 +14,10 @@ const Panel: React.FC<{
         <Offcanvas.Header closeButton={false}>
           <Offcanvas.Title as={'h5'}>
             {selectedClient?.callsign} (
-            {selectedClient?.flight_plan.aircraft_short})
+            {selectedClient?.flight_plan?.aircraft_short
+              ? selectedClient?.flight_plan.aircraft_short
+              : 'Unknown'}
+            )
           </Offcanvas.Title>
           <Offcanvas.Title as={'h6'}>
             CID: {selectedClient?.cid}
@@ -41,9 +44,17 @@ const Panel: React.FC<{
               </Col>
             </Row>
             <Row>
-              <Col>{selectedClient?.flight_plan.departure}</Col>
+              <Col>
+                {selectedClient?.flight_plan?.departure
+                  ? selectedClient?.flight_plan?.departure
+                  : 'Not specified'}
+              </Col>
               <Col></Col>
-              <Col>{selectedClient?.flight_plan.arrival}</Col>
+              <Col>
+                {selectedClient?.flight_plan?.arrival
+                  ? selectedClient?.flight_plan?.arrival
+                  : 'Not specified'}
+              </Col>
             </Row>
           </Container>
           <Container>
@@ -58,7 +69,7 @@ const Panel: React.FC<{
             <Row>
               <Col>
                 Flight rules:{' '}
-                {selectedClient?.flight_plan.flight_rules === 'I'
+                {selectedClient?.flight_plan?.flight_rules === 'I'
                   ? 'IFR'
                   : 'VFR'}
               </Col>
@@ -69,13 +80,17 @@ const Panel: React.FC<{
             <Accordion.Item eventKey='0'>
               <Accordion.Header>Filed flight plan route</Accordion.Header>
               <Accordion.Body>
-                {selectedClient?.flight_plan.route}
+                {selectedClient?.flight_plan?.route
+                  ? selectedClient?.flight_plan?.route
+                  : 'No flight plan filed'}
               </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey='1'>
               <Accordion.Header>Remarks</Accordion.Header>
               <Accordion.Body>
-                {selectedClient?.flight_plan.remarks}
+                {selectedClient?.flight_plan?.remarks
+                  ? selectedClient?.flight_plan?.remarks
+                  : 'No remarks'}
               </Accordion.Body>
             </Accordion.Item>
           </Accordion>

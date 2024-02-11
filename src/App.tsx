@@ -12,7 +12,7 @@ export interface VatsimData {
       altitude: number;
       callsign: string;
       cid: number;
-      flight_plan: {
+      flight_plan?: {
         aircraft: string;
         aircraft_faa: string;
         aircraft_short: string;
