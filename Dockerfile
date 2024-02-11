@@ -14,6 +14,6 @@ RUN npm run build
 RUN npm install -g serve
 RUN pip install gunicorn
 
-CMD serve -s build & gunicorn -w 2 -b :5000 app:app
+CMD serve -s dist & gunicorn -w 2 -b :5000 api:app
 EXPOSE 3000
 EXPOSE 5000
