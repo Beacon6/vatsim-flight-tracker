@@ -72,7 +72,7 @@ function App() {
 
   useEffect(() => {
     if (requestAllowed === true) {
-      fetch('http://localhost:5000/vatsim_data')
+      fetch('https://express-server-ux7ne3anoq-lz.a.run.app/vatsim_data')
         .then((response) => response.json())
         .then((data: VatsimData) => {
           if (data.requestSuccessful === true) {
