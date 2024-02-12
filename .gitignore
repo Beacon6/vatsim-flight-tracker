@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/server/node_modules
 /.pnp
 .pnp.js
 .venv
@@ -12,6 +13,7 @@
 # production
 /build
 /dist
+/server/app.js
 
 # misc
 .DS_Store
@@ -21,6 +23,7 @@
 .env.production.local
 __pycache__
 .idea
+.firebase
 
 npm-debug.log*
 yarn-debug.log*

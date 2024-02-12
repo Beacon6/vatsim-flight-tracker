@@ -6,8 +6,8 @@ import Panel from './components/Panel';
 import { NmScale } from '@marfle/react-leaflet-nmscale';
 
 export interface VatsimData {
-  request_successful: boolean;
-  vatsim_data: {
+  requestSuccessful: boolean;
+  vatsimData: {
     pilots: {
       altitude: number;
       callsign: string;
@@ -41,12 +41,12 @@ export interface VatsimData {
       transponder: number;
     }[];
   };
-  pilots_count: number;
-  atc_count: number;
+  pilotsCount: number;
+  atcCount: number;
 }
 
 export interface VatsimPilot {
-  vatsimPilot: VatsimData['vatsim_data']['pilots'][number];
+  vatsimPilot: VatsimData['vatsimData']['pilots'][number];
 }
 
 function App() {
@@ -72,10 +72,10 @@ function App() {
 
   useEffect(() => {
     if (requestAllowed === true) {
-      fetch('http://localhost:5000/vatsim_data')
+      fetch('https://express-server-ux7ne3anoq-lz.a.run.app/vatsim_data')
         .then((response) => response.json())
         .then((data: VatsimData) => {
-          if (data.request_successful === true) {
+          if (data.requestSuccessful === true) {
             setVatsimData(data);
           } else {
             console.log('API timeout');
@@ -102,8 +102,8 @@ function App() {
     <>
       <div className='navbar-container'>
         <Navbar
-          pilotsCount={vatsimData?.pilots_count}
-          atcCount={vatsimData?.atc_count}
+          pilotsCount={vatsimData?.pilotsCount}
+          atcCount={vatsimData?.atcCount}
         />
       </div>
       <MapContainer
