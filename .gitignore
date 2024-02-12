@@ -23,6 +23,7 @@
 .env.production.local
 __pycache__
 .idea
+.firebase
 
 npm-debug.log*
 yarn-debug.log*
