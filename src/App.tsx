@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Aircraft from './components/Aircraft';
 import Panel from './components/Panel';
 import { NmScale } from '@marfle/react-leaflet-nmscale';
+import { initializeApp } from 'firebase/app';
 
 export interface VatsimData {
   requestSuccessful: boolean;
@@ -47,6 +48,20 @@ export interface VatsimData {
 
 export interface VatsimPilot {
   vatsimPilot: VatsimData['vatsimData']['pilots'][number];
+}
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyCOm3zhndPTuWbU0KLd3Jp6pZh2yXsfD24',
+  authDomain: 'vatsim-flight-tracker.firebaseapp.com',
+  projectId: 'vatsim-flight-tracker',
+  storageBucket: 'vatsim-flight-tracker.appspot.com',
+  messagingSenderId: '260478397514',
+  appId: '1:260478397514:web:fe1e4ff32c012aab608ab3',
+};
+
+const app = initializeApp(firebaseConfig);
+if (app) {
+  console.log('Firebase App initialized');
 }
 
 function App() {
