@@ -15,3 +15,7 @@ _NOTE: This is a personal project which is being continously developed and expan
 The frontend code of the application is written in TypeScript and uses the React framework. It is hosted on Firebase Hosting.
 
 The backend code, responsible for fetching data from VATSIM, is also written in TypeScript and uses Express to handle request routing. It is hosted as a serverless API with Docker and Google Cloud Run.
+
+## Credits
+
+FIR Boundaries Data: [VAT-Spy Data Project](https://github.com/vatsimnetwork/vatspy-data-project)
