@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import axios from 'axios';
+import * as fs from 'node:fs';
 
 const app = express();
 app.use(cors());
@@ -49,6 +50,24 @@ app.get('/vatsim_data', async (req: Request, res: Response) => {
       pilotsCount: 0,
       atcCount: 0,
     });
+  }
+});
+
+app.get('/fir_boundaries', async (req: Request, res: Response) => {
+  try {
+    fs.readFile('fir_boundaries.json', 'utf-8', (err, data) => {
+      if (err) {
+        console.log('Something went wrong when reading the file');
+        res.status(500).json({ fir_boundaries: {} });
+        return;
+      }
+
+      const jsonData = JSON.parse(data);
+      res.json({ fir_boundaries: { jsonData } });
+    });
+  } catch (error) {
+    console.log('Something went wrong', error);
+    res.status(500).json({ fir_boundaries: {} });
   }
 });
 
