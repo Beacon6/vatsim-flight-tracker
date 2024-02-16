@@ -89,11 +89,17 @@ function App() {
   }, [timer]);
 
   // Fetching VATSIM aircraft data from the Flask backend
+  const dev = false;
+
+  const fetch_endpoint = dev
+    ? 'http://localhost:5000/vatsim_data'
+    : 'https://express-server-ux7ne3anoq-lz.a.run.app/vatsim_data';
+
   const [vatsimData, setVatsimData] = useState<VatsimData>();
 
   useEffect(() => {
     if (requestAllowed === true) {
-      fetch('https://express-server-ux7ne3anoq-lz.a.run.app/vatsim_data')
+      fetch(fetch_endpoint)
         .then((response) => response.json())
         .then((data: VatsimData) => {
           if (data.requestSuccessful === true) {
@@ -104,7 +110,7 @@ function App() {
         });
       setRequestAllowed(false);
     }
-  }, [requestAllowed]);
+  }, [requestAllowed, fetch_endpoint]);
 
   // Displaying selected Client info
   const [clientInfo, setClientInfo] = useState<VatsimPilot['vatsimPilot']>();
