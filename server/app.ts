@@ -34,7 +34,7 @@ app.get('/vatsim_data', async (req: Request, res: Response) => {
 
     console.log(`Request status: ${requestStatus}`);
     console.log(`Pilots online: ${pilotsCount}`);
-    console.log(`Request status: ${atcCount}`);
+    console.log(`ATC online: ${atcCount}`);
 
     res.json({
       requestSuccessful: requestStatus,
@@ -73,5 +73,5 @@ app.get('/fir_boundaries', async (req: Request, res: Response) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () =>
-  console.log(`Server is running on http://localhost:${PORT}/vatsim_data`)
+  console.log(`Server is running on http://localhost:${PORT}/`)
 );

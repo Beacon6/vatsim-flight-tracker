@@ -88,18 +88,18 @@ function App() {
     return () => clearInterval(interval);
   }, [timer]);
 
-  // Fetching VATSIM aircraft data from the Flask backend
+  // Fetching VATSIM aircraft data from the Express backend
   const dev = false;
 
   const fetch_endpoint = dev
-    ? 'http://localhost:5000/vatsim_data'
-    : 'https://express-server-ux7ne3anoq-lz.a.run.app/vatsim_data';
+    ? 'http://localhost:5000/'
+    : 'https://express-server-ux7ne3anoq-lz.a.run.app/';
 
   const [vatsimData, setVatsimData] = useState<VatsimData>();
 
   useEffect(() => {
     if (requestAllowed === true) {
-      fetch(fetch_endpoint)
+      fetch(fetch_endpoint + 'vatsim_data')
         .then((response) => response.json())
         .then((data: VatsimData) => {
           if (data.requestSuccessful === true) {
@@ -112,6 +112,15 @@ function App() {
     }
   }, [requestAllowed, fetch_endpoint]);
 
+  // Fetching FIR boundaries data from the Express backend
+  const [firBoundaries, setFirBoundaries] = useState();
+
+  useEffect(() => {
+    fetch(fetch_endpoint + 'fir_boundaries')
+      .then((res) => res.json())
+      .then((data) => setFirBoundaries(data));
+  }, [fetch_endpoint]);
+
   // Displaying selected Client info
   const [clientInfo, setClientInfo] = useState<VatsimPilot['vatsimPilot']>();
   const [showPanel, setShowPanel] = useState(false);
@@ -119,6 +128,7 @@ function App() {
   const handleShow = (selected: VatsimPilot['vatsimPilot']) => {
     setClientInfo(selected);
     setShowPanel(true);
+    console.log(firBoundaries);
   };
 
   const handleClose = () => {
