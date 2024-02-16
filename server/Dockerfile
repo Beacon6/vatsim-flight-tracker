@@ -12,4 +12,4 @@ COPY . ./
 
 RUN npx tsc -p .
 
-CMD ["node", "app.js"]
+CMD ["node", "server.js"]
