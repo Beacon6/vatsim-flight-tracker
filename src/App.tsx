@@ -5,6 +5,7 @@ import Aircraft from './components/Aircraft';
 import Panel from './components/Panel';
 import { NmScale } from '@marfle/react-leaflet-nmscale';
 import { initializeApp } from 'firebase/app';
+import { getPerformance } from 'firebase/performance';
 
 export interface VatsimData {
   requestSuccessful: boolean;
@@ -62,6 +63,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 if (app) {
   console.log('Firebase App initialized');
+}
+
+const perf = getPerformance(app);
+if (perf) {
+  console.log('Firebase performance monitoring initialized');
 }
 
 function App() {
