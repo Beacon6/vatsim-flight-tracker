@@ -6,6 +6,7 @@ import Panel from './components/Panel';
 import { NmScale } from '@marfle/react-leaflet-nmscale';
 import { initializeApp } from 'firebase/app';
 import { getPerformance } from 'firebase/performance';
+import Controllers from './components/Controllers';
 
 export interface VatsimData {
   requestSuccessful: boolean;
@@ -146,6 +147,7 @@ function App() {
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ></TileLayer>
         <Aircraft vatsimData={vatsimData} onClick={handleShow} />
+        <Controllers vatsimData={vatsimData} />
         <Panel
           show={showPanel}
           onHide={handleClose}
