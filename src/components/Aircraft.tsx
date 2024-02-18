@@ -1,5 +1,5 @@
 import { Marker } from 'react-leaflet';
-import { VatsimData, VatsimPilot } from '../App';
+import { VatsimData, VatsimPilot } from '../typings/VatsimData';
 import { LatLngBounds, LatLngExpression, icon } from 'leaflet';
 import { useMapEvent, useMap } from 'react-leaflet';
 import { useEffect, useState } from 'react';

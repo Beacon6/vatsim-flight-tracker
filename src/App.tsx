@@ -7,50 +7,7 @@ import { NmScale } from '@marfle/react-leaflet-nmscale';
 import { initializeApp } from 'firebase/app';
 import { getPerformance } from 'firebase/performance';
 import Controllers from './components/Controllers';
-
-export interface VatsimData {
-  requestSuccessful: boolean;
-  vatsimData: {
-    pilots: {
-      altitude: number;
-      callsign: string;
-      cid: number;
-      flight_plan?: {
-        aircraft: string;
-        aircraft_faa: string;
-        aircraft_short: string;
-        alternate: string;
-        altitude: number;
-        arrival: number;
-        assigned_transponder: number;
-        cruise_tas: number;
-        departure: string;
-        deptime: number;
-        enroute_time: number;
-        flight_rules: string;
-        fuel_time: number;
-        remarks: string;
-        revision_id: number;
-        route: string;
-      };
-      groundspeed: number;
-      heading: number;
-      latitude: number;
-      longitude: number;
-      name: string;
-      qnh_i_hq: number;
-      qnh_mb: number;
-      server: string;
-      transponder: number;
-    }[];
-  };
-  pilotsCount: number;
-  atcCount: number;
-}
-
-export interface VatsimPilot {
-  vatsimPilot: VatsimData['vatsimData']['pilots'][number];
-}
+import { VatsimData, VatsimPilot } from './typings/VatsimData';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCOm3zhndPTuWbU0KLd3Jp6pZh2yXsfD24',

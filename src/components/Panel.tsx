@@ -1,5 +1,5 @@
 import { Offcanvas, Accordion, Container, Row, Col } from 'react-bootstrap';
-import { VatsimPilot } from '../App';
+import { VatsimPilot } from '../typings/VatsimData';
 
 const Panel: React.FC<{
   show: boolean;
