@@ -33,6 +33,14 @@ export interface VatsimData {
       server: string;
       transponder: number;
     }[];
+    controllers: {
+      cid: number;
+      callsign: string;
+      frequency: string;
+      facility: number;
+      text_atis: string[];
+      sector?: [number, number][];
+    }[];
   };
   pilotsCount: number;
   atcCount: number;
@@ -40,4 +48,8 @@ export interface VatsimData {
 
 export interface VatsimPilot {
   vatsimPilot: VatsimData['vatsimData']['pilots'][number];
+}
+
+export interface CenterBoundaries {
+  [centerId: string]: [number, number][];
 }

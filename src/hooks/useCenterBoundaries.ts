@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { CenterBoundaries } from '../typings/VatsimData';
 
 export default function useCenterBoundaries() {
   const [boundariesRaw, setBoundariesRaw] = useState<{
@@ -16,24 +17,22 @@ export default function useCenterBoundaries() {
       .then((data) => setBoundariesRaw(data));
   }, []);
 
-  const [boundaries, setBoundaries] = useState<{
-    [stationId: string]: [number, number][];
-  }>();
+  const [centerBoundaries, setCenterBoundaries] = useState<CenterBoundaries>();
 
   useEffect(() => {
     if (boundariesRaw) {
-      const centerStations: { [stationId: string]: [number, number][] } = {};
+      const sectors: CenterBoundaries = {};
 
       for (let i = 0; i < boundariesRaw?.features.length; i++) {
-        const stationId = boundariesRaw.features[i].properties.id;
-        centerStations[stationId] = boundariesRaw.features[
+        const centerId = boundariesRaw.features[i].properties.id;
+        sectors[centerId] = boundariesRaw.features[
           i
         ].geometry.coordinates[0][0].map((coord) => [coord[1], coord[0]]);
       }
 
-      setBoundaries(centerStations);
+      setCenterBoundaries(sectors);
     }
   }, [boundariesRaw]);
 
-  return { boundaries };
+  return centerBoundaries;
 }
