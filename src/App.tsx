@@ -95,8 +95,9 @@ function App() {
         center={[50, 10]}
         zoom={6}
         minZoom={3}
-        scrollWheelZoom={true}
+        boxZoom={true}
         zoomControl={false}
+        worldCopyJump={true}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
