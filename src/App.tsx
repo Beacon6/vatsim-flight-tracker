@@ -46,7 +46,7 @@ function App() {
   }, [timer]);
 
   // Fetching VATSIM aircraft data from the Express backend
-  const dev = false;
+  const dev = true;
 
   const fetch_endpoint = dev
     ? 'http://localhost:5000/vatsim_data'

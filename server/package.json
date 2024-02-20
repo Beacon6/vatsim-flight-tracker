@@ -1,14 +1,12 @@
 {
-  "name": "server",
+  "name": "express-server",
+  "private": true,
   "version": "1.0.0",
-  "description": "",
-  "main": "app.ts",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "tsc": "tsc -p .",
+    "watch": "tsc -p . --noEmit --watch"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "axios": "^1.6.7",
     "cors": "^2.8.5",
