@@ -1,58 +1,36 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
+import { Server } from 'socket.io';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+const server = app.listen(process.env.PORT || 5000);
+const io = new Server(server, { cors: { origin: '*' } });
 
 const vatsimDataUrl = 'https://data.vatsim.net/v3/vatsim-data.json';
 
-app.get('/vatsim_data', async (req: Request, res: Response) => {
+const getVatsimData = async () => {
   try {
     const response = await axios.get(vatsimDataUrl);
-    const responseData = response.data;
-
-    let vatsimData = { general: {}, pilots: [{}], controllers: [{}] };
-    let pilotsCount = 0;
-    let atcCount = 0;
-    let requestStatus = true;
-
-    if (responseData) {
-      vatsimData = {
-        general: responseData.general,
-        pilots: responseData.pilots,
-        controllers: responseData.controllers,
-      };
-      pilotsCount = vatsimData.pilots.length;
-      atcCount = vatsimData.controllers.length;
-    } else {
-      console.log('Something went wrong');
-      requestStatus = false;
-    }
-
-    console.log(`Request status: ${requestStatus}`);
-    console.log(`Pilots online: ${pilotsCount}`);
-    console.log(`ATC online: ${atcCount}`);
-
-    res.json({
-      requestSuccessful: requestStatus,
-      vatsimData: vatsimData,
-      pilotsCount: pilotsCount,
-      atcCount: atcCount,
-    });
-  } catch (error) {
-    console.error('Something went wrong', error);
-    res.status(500).json({
-      requestSuccessful: false,
-      vatsimData: {},
-      pilotsCount: 0,
-      atcCount: 0,
-    });
+    io.emit('vatsimData', response.data);
+  } catch (err) {
+    console.error('Encountered an error when fetching VATSIM data:', err);
   }
+};
+
+io.on('connection', (socket) => {
+  console.log('New client connected');
+  getVatsimData();
+  const interval = setInterval(getVatsimData, 15000);
+  console.log(`Clients connected: ${io.engine.clientsCount}`);
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+    clearInterval(interval);
+    console.log(`Clients connected: ${io.engine.clientsCount}`);
+  });
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
-  console.log(`Server is running on http://localhost:${PORT}/vatsim_data`)
-);
+console.log(`Server is running on http://localhost:${PORT}`);
