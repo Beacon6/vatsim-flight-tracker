@@ -29,11 +29,11 @@ if (perf) {
 }
 
 function App() {
-  const dev = true;
+  const dev = false;
 
   const fetch_endpoint = dev
     ? 'http://localhost:5000'
-    : 'https://express-server-ux7ne3anoq-lz.a.run.app/vatsim_data';
+    : 'https://express-server-ux7ne3anoq-lz.a.run.app';
 
   const [vatsimData, setVatsimData] = useState<VatsimData>();
 
