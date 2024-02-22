@@ -7,6 +7,7 @@ import { NmScale } from '@marfle/react-leaflet-nmscale';
 import { initializeApp } from 'firebase/app';
 import { getPerformance } from 'firebase/performance';
 import { VatsimData, VatsimPilot } from './typings/VatsimData';
+import { io } from 'socket.io-client';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCOm3zhndPTuWbU0KLd3Jp6pZh2yXsfD24',
@@ -28,46 +29,21 @@ if (perf) {
 }
 
 function App() {
-  // API call timer
-  const [timer, setTimer] = useState(15);
-  const [requestAllowed, setRequestAllowed] = useState(true);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimer(timer - 1);
-    }, 1000);
-
-    if (timer === 0) {
-      setTimer(15);
-      setRequestAllowed(true);
-    }
-
-    return () => clearInterval(interval);
-  }, [timer]);
-
-  // Fetching VATSIM aircraft data from the Express backend
-  const dev = false;
+  const dev = true;
 
   const fetch_endpoint = dev
-    ? 'http://localhost:5000/vatsim_data'
+    ? 'http://localhost:5000'
     : 'https://express-server-ux7ne3anoq-lz.a.run.app/vatsim_data';
 
   const [vatsimData, setVatsimData] = useState<VatsimData>();
 
   useEffect(() => {
-    if (requestAllowed === true) {
-      fetch(fetch_endpoint)
-        .then((response) => response.json())
-        .then((data: VatsimData) => {
-          if (data.requestSuccessful === true) {
-            setVatsimData(data);
-          } else {
-            console.log('API timeout');
-          }
-        });
-      setRequestAllowed(false);
-    }
-  }, [requestAllowed, fetch_endpoint]);
+    const socket = io(fetch_endpoint);
+
+    socket.on('vatsimData', (data) => {
+      setVatsimData(data);
+    });
+  }, [fetch_endpoint]);
 
   // Displaying selected Client info
   const [clientInfo, setClientInfo] = useState<VatsimPilot['vatsimPilot']>();
@@ -86,8 +62,8 @@ function App() {
     <>
       <div className='navbar-container'>
         <Navbar
-          pilotsCount={vatsimData?.pilotsCount}
-          atcCount={vatsimData?.atcCount}
+          pilotsCount={vatsimData?.pilots.length}
+          atcCount={vatsimData?.controllers.length}
         />
       </div>
       <MapContainer
@@ -95,8 +71,9 @@ function App() {
         center={[50, 10]}
         zoom={6}
         minZoom={3}
-        scrollWheelZoom={true}
+        boxZoom={true}
         zoomControl={false}
+        worldCopyJump={true}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

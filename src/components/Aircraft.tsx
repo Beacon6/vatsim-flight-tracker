@@ -24,20 +24,20 @@ const Aircraft: React.FC<{
   });
 
   const [filteredAircraft, setFilteredAircraft] =
-    useState<VatsimData['vatsimData']['pilots']>();
+    useState<VatsimData['pilots']>();
 
   useEffect(() => {
-    if (vatsimData?.requestSuccessful) {
+    if (vatsimData) {
       const displayedAircraft = [];
 
-      for (let i = 0; i < vatsimData?.vatsimData.pilots.length; i++) {
+      for (let i = 0; i < vatsimData?.pilots.length; i++) {
         const aircraftPosition = [
-          vatsimData?.vatsimData.pilots[i].latitude,
-          vatsimData?.vatsimData.pilots[i].longitude,
+          vatsimData?.pilots[i].latitude,
+          vatsimData?.pilots[i].longitude,
         ];
 
         if (viewportBounds?.contains(aircraftPosition as LatLngExpression)) {
-          displayedAircraft.push(vatsimData?.vatsimData.pilots[i]);
+          displayedAircraft.push(vatsimData?.pilots[i]);
         }
 
         // Find better performance solution than slicing

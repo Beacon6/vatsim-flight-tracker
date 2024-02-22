@@ -6,10 +6,10 @@ ENV PORT 5000
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci
 
 COPY . ./
 
-RUN npx tsc -p .
+RUN npx tsc
 
 CMD ["node", "server.js"]
