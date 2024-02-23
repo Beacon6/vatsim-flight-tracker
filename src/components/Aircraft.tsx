@@ -1,8 +1,7 @@
-import { Marker } from 'react-leaflet';
+import { useEffect, useState } from 'react';
 import { VatsimData, VatsimPilot } from '../typings/VatsimData';
 import { LatLngBounds, LatLngExpression, icon } from 'leaflet';
-import { useMapEvent, useMap } from 'react-leaflet';
-import { useEffect, useState } from 'react';
+import { Marker, useMapEvent, useMap } from 'react-leaflet';
 import 'leaflet-rotatedmarker';
 
 const Aircraft: React.FC<{
