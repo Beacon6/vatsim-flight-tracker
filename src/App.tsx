@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
 import { MapContainer, TileLayer } from 'react-leaflet';
-import Navbar from './components/Navbar';
-import Aircraft from './components/Aircraft';
-import Panel from './components/Panel';
+import Navbar from './components/Navbar.tsx';
+import Aircraft from './components/Aircraft.tsx';
+import Panel from './components/Panel.tsx';
+import { VatsimData, VatsimPilot } from './typings/VatsimData';
 import { NmScale } from '@marfle/react-leaflet-nmscale';
 import { initializeApp } from 'firebase/app';
 import { getPerformance } from 'firebase/performance';
-import { VatsimData, VatsimPilot } from './typings/VatsimData';
-import { io } from 'socket.io-client';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCOm3zhndPTuWbU0KLd3Jp6pZh2yXsfD24',
@@ -39,6 +39,7 @@ function App() {
 
   useEffect(() => {
     const socket = io(fetch_endpoint);
+    console.log('Connected to WebSocket');
 
     socket.on('vatsimData', (data) => {
       setVatsimData(data);
@@ -71,7 +72,6 @@ function App() {
         center={[50, 10]}
         zoom={6}
         minZoom={3}
-        boxZoom={true}
         zoomControl={false}
         worldCopyJump={true}
       >
