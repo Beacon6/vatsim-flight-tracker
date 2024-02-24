@@ -12,6 +12,15 @@ let interval: NodeJS.Timeout;
 
 const vatsimDataUrl = 'https://data.vatsim.net/v3/vatsim-data.json';
 
+app.get('/vatsim_data', async (req, res) => {
+  try {
+    const response = await axios.get(vatsimDataUrl);
+    res.json(response.data);
+  } catch (err) {
+    console.error('Encountered an error when fetching VATSIM data:', err);
+  }
+});
+
 const getVatsimData = async () => {
   try {
     const response = await axios.get(vatsimDataUrl);
@@ -41,4 +50,5 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 5000;
-console.log(`Server is running on http://localhost:${PORT}`);
+console.log(`WebSocket available on http://localhost:${PORT}`);
+console.log(`HTTP endpoint available on http://localhost:${PORT}/vatsim_data`);
