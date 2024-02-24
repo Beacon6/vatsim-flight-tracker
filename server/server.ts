@@ -8,6 +8,7 @@ app.use(cors());
 app.use(express.json());
 const server = app.listen(process.env.PORT || 5000);
 const io = new Server(server, { cors: { origin: '*' } });
+let interval: NodeJS.Timeout;
 
 const vatsimDataUrl = 'https://data.vatsim.net/v3/vatsim-data.json';
 
@@ -22,13 +23,20 @@ const getVatsimData = async () => {
 
 io.on('connection', (socket) => {
   console.log('New client connected');
-  getVatsimData();
-  const interval = setInterval(getVatsimData, 15000);
   console.log(`Clients connected: ${io.engine.clientsCount}`);
+
+  if (io.engine.clientsCount === 1) {
+    getVatsimData();
+    interval = setInterval(getVatsimData, 15000);
+  }
+
   socket.on('disconnect', () => {
     console.log('Client disconnected');
-    clearInterval(interval);
     console.log(`Clients connected: ${io.engine.clientsCount}`);
+
+    if (io.engine.clientsCount === 0) {
+      clearInterval(interval);
+    }
   });
 });
 
