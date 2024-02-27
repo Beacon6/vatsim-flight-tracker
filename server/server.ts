@@ -7,7 +7,7 @@ import { VatsimData } from '../src/typings/VatsimData';
 
 const app = express();
 const webSocketServer = createServer(app);
-const io = new Server(webSocketServer);
+const io = new Server(webSocketServer, { cors: { origin: '*' } });
 app.use(cors());
 app.use(express.json());
 app.use(express.static('dist'));
