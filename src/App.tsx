@@ -32,7 +32,7 @@ function App() {
   const [vatsimData, setVatsimData] = useState<VatsimData>();
 
   useEffect(() => {
-    const socket = io('http://localhost:3000');
+    const socket = io('http://localhost:5000');
     console.log('Connected to WebSocket');
 
     socket.on('vatsimData', (data) => {

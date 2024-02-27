@@ -1,11 +1,13 @@
 import express from 'express';
+import { createServer } from 'node:http';
 import cors from 'cors';
 import axios from 'axios';
 import { Server } from 'socket.io';
 import { VatsimData } from '../src/typings/VatsimData';
 
 const app = express();
-const webSocket = express();
+const webSocketServer = createServer(app);
+const io = new Server(webSocketServer);
 app.use(cors());
 app.use(express.json());
 app.use(express.static('dist'));
@@ -21,11 +23,7 @@ app.get('/vatsim_data', async (_, res) => {
   }
 });
 
-app.listen(process.env.PORT || 5000);
-
-const webSocketServer = webSocket.listen(3000);
-const io = new Server(webSocketServer, { cors: { origin: '*' } });
-let interval: NodeJS.Timeout;
+let interval: NodeJS.Timeout | undefined;
 let vatsimData: VatsimData;
 
 const getVatsimData = async () => {
@@ -46,6 +44,7 @@ io.on('connection', async (socket) => {
     io.emit('vatsimData', vatsimData);
   }
 
+  console.log(interval);
   if (!interval) {
     console.log('Creating new fetch interval');
     interval = setInterval(getVatsimData, 15000);
@@ -59,9 +58,11 @@ io.on('connection', async (socket) => {
     if (io.engine.clientsCount === 0) {
       console.log('Clearing fetch interval');
       clearInterval(interval);
+      interval = undefined;
     }
   });
 });
 
 const PORT = process.env.PORT || 5000;
+webSocketServer.listen(PORT);
 console.log(`Server listening on http://localhost:${PORT}`);
