@@ -27,9 +27,8 @@ jobs:
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_VATSIM_FLIGHT_TRACKER }}
 
-  jobs:
-    gcloud-deploy:
-      runs-on: ubuntu-latest
+  gcloud-deploy:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
