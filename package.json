@@ -4,7 +4,8 @@
   "version": "0.3.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "start": "tsx server/server.ts",
+    "dev": "concurrently \"vite build --watch\" \"tsx watch server/server.ts\"",
     "build": "tsc && vite build",
     "watch": "tsc --noEmit --watch",
     "preview": "vite preview"
