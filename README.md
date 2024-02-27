@@ -12,9 +12,9 @@ _NOTE: This is a personal project which is being continously developed and expan
 
 ## Used Technologies
 
-The frontend code of the application is written in TypeScript and uses the React framework. It is hosted on Firebase Hosting.
+The frontend code of the application is written in TypeScript and uses the React framework. It is served directly from the backend server.
 
-The backend code, responsible for fetching data from VATSIM, is also written in TypeScript and uses Express together with Socket.IO to handle backend <-> frontend communication with WebSockets. It is hosted as a serverless API with Docker and Google Cloud Run.
+The backend code, responsible for fetching data from VATSIM and serving the frontend, is also written in TypeScript and uses Express together with Socket.IO to handle backend <-> frontend communication with WebSockets. It is hosted as a Docker container on Google Cloud Run and linked to Firebase Hosting.
 
 ## Credits
 

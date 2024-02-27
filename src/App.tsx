@@ -30,7 +30,7 @@ if (perf) {
 
 function App() {
   // Remember to switch to 'false' before deploying
-  const dev = true;
+  const dev = false;
 
   const fetch_endpoint = dev
     ? 'http://localhost:5000'
