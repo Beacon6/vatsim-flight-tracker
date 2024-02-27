@@ -29,16 +29,24 @@ if (perf) {
 }
 
 function App() {
+  // Remember to switch to 'false' before deploying
+  const dev = true;
+
+  const fetch_endpoint = dev
+    ? 'http://localhost:5000'
+    : 'https://vatsim-flight-tracker-ux7ne3anoq-lz.a.run.app';
+
   const [vatsimData, setVatsimData] = useState<VatsimData>();
 
   useEffect(() => {
-    const socket = io('http://localhost:5000');
+    const socket = io(fetch_endpoint);
     console.log('Connected to WebSocket');
+    console.log('Using latest version');
 
     socket.on('vatsimData', (data) => {
       setVatsimData(data);
     });
-  }, []);
+  }, [fetch_endpoint]);
 
   // Displaying selected Client info
   const [clientInfo, setClientInfo] = useState<VatsimPilot['vatsimPilot']>();
