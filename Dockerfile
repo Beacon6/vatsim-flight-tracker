@@ -10,6 +10,6 @@ RUN npm ci
 
 COPY . ./
 
-RUN npx tsc
+RUN npm run build
 
-CMD ["node", "server.js"]
+CMD ["npm", "start"]

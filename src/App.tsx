@@ -29,6 +29,7 @@ if (perf) {
 }
 
 function App() {
+  // Remember to switch to 'false' before deploying
   const dev = false;
 
   const fetch_endpoint = dev
@@ -40,6 +41,7 @@ function App() {
   useEffect(() => {
     const socket = io(fetch_endpoint);
     console.log('Connected to WebSocket');
+    console.log('Using latest version');
 
     socket.on('vatsimData', (data) => {
       setVatsimData(data);
