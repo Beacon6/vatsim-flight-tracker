@@ -29,22 +29,16 @@ if (perf) {
 }
 
 function App() {
-  const dev = false;
-
-  const fetch_endpoint = dev
-    ? 'http://localhost:5000'
-    : 'https://vatsim-flight-tracker-ux7ne3anoq-lz.a.run.app';
-
   const [vatsimData, setVatsimData] = useState<VatsimData>();
 
   useEffect(() => {
-    const socket = io(fetch_endpoint);
+    const socket = io('http://localhost:3000');
     console.log('Connected to WebSocket');
 
     socket.on('vatsimData', (data) => {
       setVatsimData(data);
     });
-  }, [fetch_endpoint]);
+  }, []);
 
   // Displaying selected Client info
   const [clientInfo, setClientInfo] = useState<VatsimPilot['vatsimPilot']>();
