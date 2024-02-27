@@ -33,7 +33,7 @@ function App() {
 
   const fetch_endpoint = dev
     ? 'http://localhost:5000'
-    : 'https://express-server-ux7ne3anoq-lz.a.run.app';
+    : 'https://vatsim-flight-tracker-ux7ne3anoq-lz.a.run.app';
 
   const [vatsimData, setVatsimData] = useState<VatsimData>();
 
