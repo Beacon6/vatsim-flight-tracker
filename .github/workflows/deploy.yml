@@ -26,3 +26,21 @@ jobs:
           args: deploy
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_VATSIM_FLIGHT_TRACKER }}
+
+  jobs:
+    gcloud-deploy:
+      runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4.1.1
+      - name: Authenticate gcloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCLOUD_SERVICE_ACCOUNT_VATSIM_FLIGHT_TRACKER }}
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+      - name: Select gcloud project
+        run: gcloud config set project vatsim-flight-tracker
+      - name: Deploy to gcloud
+        run: gcloud builds submit --tag gcr.io/vatsim-flight-tracker/express-server
