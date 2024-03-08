@@ -1,37 +1,13 @@
-import { useEffect, useState } from 'react';
 import { VatsimData, VatsimPilot } from '../typings/VatsimData';
-import { LatLngExpression, icon } from 'leaflet';
 import { Marker } from 'react-leaflet';
+import { icon } from 'leaflet';
 import 'leaflet-rotatedmarker';
 
 const Aircraft: React.FC<{
-  vatsimData?: VatsimData;
+  visibleAircraft?: VatsimData['pilots'];
   onClick: (selected: VatsimPilot['vatsimPilot']) => void;
 }> = (props) => {
-  const { vatsimData, onClick } = props;
-
-  const [filteredAircraft, setFilteredAircraft] =
-    useState<VatsimData['pilots']>();
-
-  useEffect(() => {
-    if (vatsimData) {
-      const displayedAircraft = [];
-
-      for (let i = 0; i < vatsimData?.pilots.length; i++) {
-        const aircraftPosition = [
-          vatsimData?.pilots[i].latitude,
-          vatsimData?.pilots[i].longitude,
-        ];
-
-        if (viewportBounds?.contains(aircraftPosition as LatLngExpression)) {
-          displayedAircraft.push(vatsimData?.pilots[i]);
-        }
-
-        // Find better performance solution than slicing
-        setFilteredAircraft(displayedAircraft.slice(0, 1000));
-      }
-    }
-  }, [viewportBounds, vatsimData]);
+  const { visibleAircraft, onClick } = props;
 
   const airplaneIcon = icon({
     iconUrl: '../assets/airplane-dark.svg',
@@ -40,7 +16,7 @@ const Aircraft: React.FC<{
 
   return (
     <>
-      {filteredAircraft?.map((item) => (
+      {visibleAircraft?.map((item) => (
         <Marker
           icon={airplaneIcon}
           position={[item.latitude, item.longitude]}

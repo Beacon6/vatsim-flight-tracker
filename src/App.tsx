@@ -74,7 +74,8 @@ function App() {
         visibleAircraft.push(vatsimData.pilots[i]);
       }
     }
-    setVisibleObjects(visibleAircraft);
+
+    setVisibleObjects(visibleAircraft.slice(0, 1000));
   }, [vatsimData, viewportBounds]);
 
   // Displaying selected Client info
@@ -111,6 +112,10 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ></TileLayer>
+        <Aircraft
+          visibleAircraft={visibleObjects}
+          onClick={handleShow}
+        />
         <Panel
           show={showPanel}
           onHide={handleClose}
