@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { VatsimData, VatsimPilot } from '../typings/VatsimData';
-import { LatLngBounds, LatLngExpression, icon } from 'leaflet';
-import { Marker, useMapEvent, useMap } from 'react-leaflet';
+import { LatLngExpression, icon } from 'leaflet';
+import { Marker } from 'react-leaflet';
 import 'leaflet-rotatedmarker';
 
 const Aircraft: React.FC<{
@@ -9,18 +9,6 @@ const Aircraft: React.FC<{
   onClick: (selected: VatsimPilot['vatsimPilot']) => void;
 }> = (props) => {
   const { vatsimData, onClick } = props;
-  const [viewportBounds, setViewportBounds] = useState<LatLngBounds>();
-  const map = useMap();
-
-  if (!viewportBounds) {
-    setViewportBounds(map.getBounds());
-  }
-
-  const mapEvent = useMapEvent('moveend', () => {
-    const mapBounds = mapEvent.getBounds();
-
-    setViewportBounds(mapBounds);
-  });
 
   const [filteredAircraft, setFilteredAircraft] =
     useState<VatsimData['pilots']>();

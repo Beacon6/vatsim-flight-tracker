@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { MapContainer, TileLayer } from 'react-leaflet';
-import Navbar from './components/Navbar.tsx';
-import Aircraft from './components/Aircraft.tsx';
-import Panel from './components/Panel.tsx';
-import { VatsimData, VatsimPilot } from './typings/VatsimData';
-import { NmScale } from '@marfle/react-leaflet-nmscale';
+import { LatLngBounds, LatLngExpression } from 'leaflet';
 import { initializeApp } from 'firebase/app';
 import { getPerformance } from 'firebase/performance';
+import MapHandler from './components/MapHandler.ts';
+import Aircraft from './components/Aircraft.tsx';
+import Navbar from './components/Navbar.tsx';
+import Panel from './components/Panel.tsx';
+import { VatsimData, VatsimPilot } from './typings/VatsimData';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCOm3zhndPTuWbU0KLd3Jp6pZh2yXsfD24',
@@ -30,23 +31,51 @@ if (perf) {
 
 function App() {
   // Remember to switch to 'false' before deploying
-  const dev = false;
+  const dev = true;
 
-  const fetch_endpoint = dev
+  const server = dev
     ? 'http://localhost:5000'
     : 'https://vatsim-flight-tracker-ux7ne3anoq-lz.a.run.app';
 
   const [vatsimData, setVatsimData] = useState<VatsimData>();
 
   useEffect(() => {
-    const socket = io(fetch_endpoint);
+    if (dev) { console.log('Running on a development server'); }
+
+    const socket = io(server);
     console.log('Connected to WebSocket');
     console.log('Using latest version');
 
     socket.on('vatsimData', (data) => {
       setVatsimData(data);
     });
-  }, [fetch_endpoint]);
+  }, [server, dev]);
+
+  const [viewportBounds, setViewportBounds] = useState<LatLngBounds>();
+  const getViewportBounds = (bounds?: LatLngBounds) => {
+    setViewportBounds(bounds);
+    console.log(viewportBounds);
+  }
+
+  const [visibleObjects, setVisibleObjects] = useState<VatsimData['pilots']>();
+
+  useEffect(() => {
+    if (!vatsimData || !viewportBounds) { return; }
+
+    const visibleAircraft: VatsimData['pilots'] = [];
+
+    for (let i = 0; i < vatsimData.pilots.length; i++) {
+      const position: LatLngExpression = [
+        vatsimData.pilots[i].latitude,
+        vatsimData.pilots[i].longitude,
+      ];
+
+      if (viewportBounds.contains(position)) {
+        visibleAircraft.push(vatsimData.pilots[i]);
+      }
+    }
+    setVisibleObjects(visibleAircraft);
+  }, [vatsimData, viewportBounds]);
 
   // Displaying selected Client info
   const [clientInfo, setClientInfo] = useState<VatsimPilot['vatsimPilot']>();
@@ -77,17 +106,16 @@ function App() {
         zoomControl={false}
         worldCopyJump={true}
       >
+        <MapHandler passData={getViewportBounds} />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ></TileLayer>
-        <Aircraft vatsimData={vatsimData} onClick={handleShow} />
         <Panel
           show={showPanel}
           onHide={handleClose}
           selectedClient={clientInfo}
         />
-        <NmScale />
       </MapContainer>
     </>
   );
