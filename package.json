@@ -8,10 +8,10 @@
     "dev": "concurrently \"vite build --watch\" \"tsx watch server/server.ts\"",
     "build": "tsc && vite build",
     "watch": "tsc --noEmit --watch",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier . --write"
   },
   "dependencies": {
-    "@marfle/react-leaflet-nmscale": "^3.0.0",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.2",
     "cors": "^2.8.5",
@@ -39,8 +39,10 @@
     "@vitejs/plugin-react": "^4.2.1",
     "concurrently": "^8.2.2",
     "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "prettier": "^3.2.5",
     "tsx": "^4.7.1",
     "typescript": "^5.2.2",
     "vite": "^5.0.8"

@@ -2,12 +2,10 @@ import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import Navbar from './components/Navbar.tsx';
-import Aircraft from './components/Aircraft.tsx';
-import Panel from './components/Panel.tsx';
-import { VatsimData, VatsimPilot } from './typings/VatsimData';
-import { NmScale } from '@marfle/react-leaflet-nmscale';
+import VatsimLayer from './components/VatsimLayer.tsx';
 import { initializeApp } from 'firebase/app';
 import { getPerformance } from 'firebase/performance';
+import { VatsimData } from './typings/VatsimData';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCOm3zhndPTuWbU0KLd3Jp6pZh2yXsfD24',
@@ -32,34 +30,24 @@ function App() {
   // Remember to switch to 'false' before deploying
   const dev = false;
 
-  const fetch_endpoint = dev
+  const server = dev
     ? 'http://localhost:5000'
     : 'https://vatsim-flight-tracker-ux7ne3anoq-lz.a.run.app';
 
   const [vatsimData, setVatsimData] = useState<VatsimData>();
 
   useEffect(() => {
-    const socket = io(fetch_endpoint);
+    if (dev) {
+      console.log('Running on a development server');
+    }
+
+    const socket = io(server);
     console.log('Connected to WebSocket');
-    console.log('Using latest version');
 
     socket.on('vatsimData', (data) => {
       setVatsimData(data);
     });
-  }, [fetch_endpoint]);
-
-  // Displaying selected Client info
-  const [clientInfo, setClientInfo] = useState<VatsimPilot['vatsimPilot']>();
-  const [showPanel, setShowPanel] = useState(false);
-
-  const handleShow = (selected: VatsimPilot['vatsimPilot']) => {
-    setClientInfo(selected);
-    setShowPanel(true);
-  };
-
-  const handleClose = () => {
-    setShowPanel(false);
-  };
+  }, [server, dev]);
 
   return (
     <>
@@ -81,13 +69,7 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ></TileLayer>
-        <Aircraft vatsimData={vatsimData} onClick={handleShow} />
-        <Panel
-          show={showPanel}
-          onHide={handleClose}
-          selectedClient={clientInfo}
-        />
-        <NmScale />
+        <VatsimLayer vatsimData={vatsimData} />
       </MapContainer>
     </>
   );
