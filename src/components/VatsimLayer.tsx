@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useMap, useMapEvent } from 'react-leaflet';
-import { LatLngBounds, LatLngExpression } from 'leaflet';
-import { VatsimData, VatsimPilot } from '../typings/VatsimData';
 import Aircraft from './Aircraft';
 import Panel from './Panel';
+import { LatLngBounds, LatLngExpression } from 'leaflet';
+import { VatsimData, VatsimPilot } from '../typings/VatsimData';
 
 const VatsimLayer: React.FC<{
   vatsimData?: VatsimData;
@@ -15,12 +15,10 @@ const VatsimLayer: React.FC<{
 
   if (!viewportBounds) {
     setViewportBounds(map.getBounds());
-    console.log('Setting initial bounds');
   }
 
   const mapEventHandler = useMapEvent('moveend', () => {
     setViewportBounds(mapEventHandler.getBounds());
-    console.log('Updating bounds');
   });
 
   const [visibleObjects, setVisibleObjects] = useState<VatsimData['pilots']>();
@@ -44,7 +42,6 @@ const VatsimLayer: React.FC<{
     }
 
     setVisibleObjects(visibleAircraft.slice(0, 1000));
-    console.log(viewportBounds);
   }, [vatsimData, viewportBounds]);
 
   // Displaying selected Client info

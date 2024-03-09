@@ -8,7 +8,8 @@
     "dev": "concurrently \"vite build --watch\" \"tsx watch server/server.ts\"",
     "build": "tsc && vite build",
     "watch": "tsc --noEmit --watch",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier . --write"
   },
   "dependencies": {
     "axios": "^1.6.7",

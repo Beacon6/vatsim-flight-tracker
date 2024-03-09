@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { MapContainer, TileLayer } from 'react-leaflet';
+import Navbar from './components/Navbar.tsx';
+import VatsimLayer from './components/VatsimLayer.tsx';
 import { initializeApp } from 'firebase/app';
 import { getPerformance } from 'firebase/performance';
-import Navbar from './components/Navbar.tsx';
 import { VatsimData } from './typings/VatsimData';
-import VatsimLayer from './components/VatsimLayer.tsx';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCOm3zhndPTuWbU0KLd3Jp6pZh2yXsfD24',
@@ -28,7 +28,7 @@ if (perf) {
 
 function App() {
   // Remember to switch to 'false' before deploying
-  const dev = true;
+  const dev = false;
 
   const server = dev
     ? 'http://localhost:5000'

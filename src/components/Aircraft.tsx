@@ -1,7 +1,7 @@
-import { VatsimData, VatsimPilot } from '../typings/VatsimData';
 import { Marker } from 'react-leaflet';
 import { icon } from 'leaflet';
 import 'leaflet-rotatedmarker';
+import { VatsimData, VatsimPilot } from '../typings/VatsimData';
 
 const Aircraft: React.FC<{
   visibleAircraft?: VatsimData['pilots'];
