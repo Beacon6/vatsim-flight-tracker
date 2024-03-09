@@ -21,7 +21,7 @@ const VatsimLayer: React.FC<{
   const mapEventHandler = useMapEvent('moveend', () => {
     setViewportBounds(mapEventHandler.getBounds());
     console.log('Updating bounds');
-  })
+  });
 
   const [visibleObjects, setVisibleObjects] = useState<VatsimData['pilots']>();
 
@@ -63,9 +63,13 @@ const VatsimLayer: React.FC<{
   return (
     <>
       <Aircraft visibleAircraft={visibleObjects} onClick={handleShow} />
-      <Panel show={showPanel} selectedClient={clientInfo} onHide={handleClose} />
+      <Panel
+        show={showPanel}
+        selectedClient={clientInfo}
+        onHide={handleClose}
+      />
     </>
   );
-}
+};
 
 export default VatsimLayer;
