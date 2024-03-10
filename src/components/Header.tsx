@@ -1,4 +1,6 @@
-const Navbar: React.FC<{
+import { Navbar } from 'react-bootstrap';
+
+const Header: React.FC<{
   pilotsCount?: number;
   atcCount?: number;
 }> = (props) => {
@@ -6,7 +8,7 @@ const Navbar: React.FC<{
 
   return (
     <>
-      <nav className='navbar'>
+      <Navbar>
         <a href='/'>VATSIM Flight Tracker</a>
         <span>
           <img src='../assets/flights-light.svg' height={32} width={32} />
@@ -14,9 +16,9 @@ const Navbar: React.FC<{
           <img src='../assets/radar-light.svg' height={32} width={32} /> ATC
           connected: {atcCount}
         </span>
-      </nav>
+      </Navbar>
     </>
   );
 };
 
-export default Navbar;
+export default Header;

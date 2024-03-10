@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { MapContainer, TileLayer } from 'react-leaflet';
-import Navbar from './components/Navbar.tsx';
+import Header from './components/Header.tsx';
 import VatsimLayer from './components/VatsimLayer.tsx';
 import { initializeApp } from 'firebase/app';
 import { getPerformance } from 'firebase/performance';
@@ -28,7 +28,7 @@ if (perf) {
 
 function App() {
   // Remember to switch to 'false' before deploying
-  const dev = false;
+  const dev = true;
 
   const server = dev
     ? 'http://localhost:5000'
@@ -51,12 +51,10 @@ function App() {
 
   return (
     <>
-      <div className='navbar-container'>
-        <Navbar
-          pilotsCount={vatsimData?.pilots.length}
-          atcCount={vatsimData?.controllers.length}
-        />
-      </div>
+      <Header
+        pilotsCount={vatsimData?.pilots.length}
+        atcCount={vatsimData?.controllers.length}
+      />
       <MapContainer
         className='map'
         center={[50, 10]}
