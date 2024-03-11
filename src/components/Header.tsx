@@ -16,10 +16,12 @@ const Header: React.FC<{
             <Navbar.Brand href='#'>VATSIM Flight Tracker</Navbar.Brand>
           </Container>
           <Container className='header-container'>
-            <img src='../assets/flights-light.svg' height={32} width={32} />
-            Pilots connected: {pilotsCount} |{' '}
-            <img src='../assets/radar-light.svg' height={32} width={32} /> ATC
-            connected: {atcCount}
+            <Navbar.Text>
+              Pilots connected: {pilotsCount}
+            </Navbar.Text>
+            <Navbar.Text>
+              ATC connected: {atcCount}
+            </Navbar.Text>
           </Container>
           <Container className='header-container'>
             <Form className='d-flex'>

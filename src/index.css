@@ -20,7 +20,7 @@
 
 .header {
   font-family: 'Cairo Play', sans-serif;
-  font-size: 1.5rem;
+  font-size: 1rem;
   background-color: var(--background);
   box-shadow: var(--shadow);
   color: var(--font-color);
@@ -33,6 +33,28 @@
 
 .header-container {
   width: auto;
+  margin: 0px;
+}
+
+.navbar-brand {
+  font-family: 'Cairo Play', sans-serif;
+  font-size: 1.5rem;
+  color: var(--font-color);
+  margin: 0px;
+  padding: 0px;
+}
+
+.navbar-brand:hover {
+  color: inherit;
+}
+
+.navbar-brand:focus {
+  color: inherit;
+}
+
+.navbar-text {
+  padding: 0 1rem 0 0;
+  color: var(--font-color);
 }
 
 .offcanvas.offcanvas-start {
