@@ -10,18 +10,18 @@ const Header: React.FC<{
 
   return (
     <>
-      <Container className='navbar-container'>
-        <Navbar className='navbar'>
-          <Container>
+      <Container className='header-container-main'>
+        <Navbar className='header'>
+          <Container className='header-container'>
             <Navbar.Brand href='#'>VATSIM Flight Tracker</Navbar.Brand>
           </Container>
-          <Container>
+          <Container className='header-container'>
             <img src='../assets/flights-light.svg' height={32} width={32} />
             Pilots connected: {pilotsCount} |{' '}
             <img src='../assets/radar-light.svg' height={32} width={32} /> ATC
             connected: {atcCount}
           </Container>
-          <Container>
+          <Container className='header-container'>
             <Form className='d-flex'>
               <Form.Control type='text' placeholder='Placeholder' />
             </Form>

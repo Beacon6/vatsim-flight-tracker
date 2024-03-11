@@ -6,20 +6,19 @@
   --background: #202426;
   --font-color: aliceblue;
   --shadow: 1px 1px 13px #03030390;
-  --nav-show: nav-show 600ms ease;
-  --offcanvas-show: offcanvas-show 600ms ease;
 }
 
-.navbar-container {
+.header-container-main {
   position: absolute;
   display: flex;
   justify-content: center;
   width: 100vw;
+  max-width: none;
   margin-top: 0.5rem;
   z-index: 9999;
 }
 
-.navbar {
+.header {
   font-family: 'Cairo Play', sans-serif;
   font-size: 1.5rem;
   background-color: var(--background);
@@ -28,8 +27,12 @@
   border-radius: var(--radius);
   padding: 0.5rem 2rem;
   display: flex;
+  width: 100%;
   justify-content: space-between;
-  animation: var(--nav-show);
+}
+
+.header-container {
+  width: auto;
 }
 
 .offcanvas.offcanvas-start {
@@ -46,8 +49,6 @@
   color: var(--font-color);
   border-radius: var(--radius);
   font-family: 'Cairo', sans-serif;
-  animation: var(--offcanvas-show);
-  transition: none;
   bottom: 20vh;
   z-index: 99999;
 }
@@ -79,26 +80,4 @@
 
 .map {
   height: 100vh;
-}
-
-@keyframes nav-show {
-  from {
-    opacity: 0;
-    transform: scale(0.5);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes offcanvas-show {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
 }
