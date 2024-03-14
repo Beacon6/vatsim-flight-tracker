@@ -1,4 +1,9 @@
-import { Offcanvas, Accordion, Container, Row, Col } from 'react-bootstrap';
+import Offcanvas from 'react-bootstrap/Offcanvas';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Accordion from 'react-bootstrap/Accordion';
+import CloseButton from 'react-bootstrap/CloseButton';
 import { VatsimPilot } from '../typings/VatsimData';
 
 const Panel: React.FC<{
@@ -22,6 +27,7 @@ const Panel: React.FC<{
           <Offcanvas.Title as={'h6'}>
             CID: {selectedClient?.cid}
           </Offcanvas.Title>
+          <CloseButton className='panel-close' onClick={onHide} />
         </Offcanvas.Header>
         <Offcanvas.Body>
           <Container>
