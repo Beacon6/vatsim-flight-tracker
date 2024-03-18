@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -9,6 +10,13 @@ const Header: React.FC<{
   atcCount?: number;
 }> = (props) => {
   const { pilotsCount, atcCount } = props;
+
+  const [inputValue, setInputValue] = useState('');
+
+  const changeInput = (value: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(value.target.value);
+    console.log(inputValue);
+  };
 
   return (
     <>
@@ -24,7 +32,11 @@ const Header: React.FC<{
           <Container className='header-element'>
             <InputGroup className='d-flex'>
               <InputGroup.Text>CID / Callsign</InputGroup.Text>
-              <Form.Control type='text' placeholder='1590612 / AUA546' />
+              <Form.Control
+                type='text'
+                placeholder='1590612 / AUA546'
+                onChange={changeInput}
+              />
               <Button variant='outline-success' id='search-button'>
                 Search
               </Button>
