@@ -1,6 +1,8 @@
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Button from 'react-bootstrap/Button';
 
 const Header: React.FC<{
   pilotsCount?: number;
@@ -20,9 +22,13 @@ const Header: React.FC<{
             <Navbar.Text>ATC connected: {atcCount}</Navbar.Text>
           </Container>
           <Container className='header-container'>
-            <Form className='d-flex'>
-              <Form.Control type='text' placeholder='Placeholder' />
-            </Form>
+            <InputGroup className='d-flex'>
+              <InputGroup.Text>CID / Callsign</InputGroup.Text>
+              <Form.Control type='text' placeholder='1590612 / AUA546' />
+              <Button variant='outline-success' id='search-button'>
+                Search
+              </Button>
+            </InputGroup>
           </Container>
         </Navbar>
       </Container>

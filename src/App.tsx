@@ -28,7 +28,7 @@ if (perf) {
 
 function App() {
   // Remember to switch to 'false' before deploying
-  const dev = false;
+  const dev = true;
 
   const server = dev
     ? 'http://localhost:5000'
