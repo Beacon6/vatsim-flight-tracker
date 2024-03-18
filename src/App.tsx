@@ -56,7 +56,7 @@ function App() {
         atcCount={vatsimData?.controllers.length}
       />
       <MapContainer
-        className='map'
+        className='map-container'
         center={[50, 10]}
         zoom={6}
         minZoom={3}
