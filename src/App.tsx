@@ -49,11 +49,24 @@ function App() {
     });
   }, [server, dev]);
 
+  const [searchValue, setSearchValue] = useState<string>();
+
+  const searchSubmit = (value?: string) => {
+    setSearchValue(value);
+  };
+
+  useEffect(() => {
+    if (searchValue) {
+      console.log(`Searching for ${searchValue}`);
+    }
+  }, [searchValue]);
+
   return (
     <>
       <Header
         pilotsCount={vatsimData?.pilots.length}
         atcCount={vatsimData?.controllers.length}
+        onSearch={searchSubmit}
       />
       <MapContainer
         className='map-container'

@@ -8,14 +8,14 @@ import Button from 'react-bootstrap/Button';
 const Header: React.FC<{
   pilotsCount?: number;
   atcCount?: number;
+  onSearch: (value?: string) => void;
 }> = (props) => {
-  const { pilotsCount, atcCount } = props;
+  const { pilotsCount, atcCount, onSearch } = props;
 
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState<string>();
 
-  const changeInput = (value: React.ChangeEvent<HTMLInputElement>) => {
+  const changeInputValue = (value: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(value.target.value);
-    console.log(inputValue);
   };
 
   return (
@@ -35,9 +35,15 @@ const Header: React.FC<{
               <Form.Control
                 type='text'
                 placeholder='1590612 / AUA546'
-                onChange={changeInput}
+                onChange={changeInputValue}
               />
-              <Button variant='outline-success' id='search-button'>
+              <Button
+                variant='outline-success'
+                id='search-button'
+                onClick={() => {
+                  onSearch(inputValue);
+                }}
+              >
                 Search
               </Button>
             </InputGroup>
