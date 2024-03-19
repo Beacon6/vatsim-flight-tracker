@@ -7,8 +7,9 @@ import { VatsimData, VatsimPilot } from '../typings/VatsimData';
 
 const VatsimLayer: React.FC<{
   vatsimData?: VatsimData;
+  searchValue?: string;
 }> = (props) => {
-  const { vatsimData } = props;
+  const { vatsimData, searchValue } = props;
   const map = useMap();
 
   const [viewportBounds, setViewportBounds] = useState<LatLngBounds>();
@@ -56,6 +57,16 @@ const VatsimLayer: React.FC<{
   const handleClose = () => {
     setShowPanel(false);
   };
+
+  useEffect(() => {
+    if (searchValue && vatsimData) {
+      const filteredClient = vatsimData.pilots.filter((client) => {
+        return client.cid === Number(searchValue);
+      })
+      handleShow(filteredClient[0]);
+      map.flyTo([filteredClient[0].latitude, filteredClient[0].longitude]);
+    }
+  }, [searchValue, vatsimData, map]);
 
   return (
     <>
