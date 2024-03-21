@@ -49,6 +49,24 @@ const VatsimLayer: React.FC<{
   const [clientInfo, setClientInfo] = useState<VatsimPilot['vatsimPilot']>();
   const [showPanel, setShowPanel] = useState(false);
 
+  useEffect(() => {
+    if (!searchValue) {
+      return;
+    }
+    console.log(searchValue);
+
+    if (vatsimData?.pilots.some((client) => client.callsign === searchValue)) {
+      console.log('found matching callsign');
+    } else if (
+      vatsimData?.pilots.some((client) => client.cid === Number(searchValue))
+    ) {
+      console.log('found matching cid');
+    } else {
+      console.log('no match');
+      return;
+    }
+  }, [searchValue, vatsimData]);
+
   const handleShow = (selected: VatsimPilot['vatsimPilot']) => {
     setClientInfo(selected);
     setShowPanel(true);
@@ -57,16 +75,6 @@ const VatsimLayer: React.FC<{
   const handleClose = () => {
     setShowPanel(false);
   };
-
-  useEffect(() => {
-    if (searchValue && vatsimData) {
-      const filteredClient = vatsimData.pilots.filter((client) => {
-        return client.cid === Number(searchValue);
-      })
-      handleShow(filteredClient[0]);
-      map.flyTo([filteredClient[0].latitude, filteredClient[0].longitude]);
-    }
-  }, [searchValue, vatsimData, map]);
 
   return (
     <>
