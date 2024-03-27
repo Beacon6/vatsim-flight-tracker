@@ -53,10 +53,18 @@ const VatsimLayer: React.FC<{
     if (!searchValue) {
       return;
     }
+
+  }, [searchValue]);
+
+  useEffect(() => {
+    if (!searchValue) {
+      return;
+    }
     console.log(searchValue);
 
     if (vatsimData?.pilots.some((client) => client.callsign === searchValue)) {
       console.log('found matching callsign');
+      handleShow(vatsimData?.pilots.find((client) => client.callsign === searchValue));
     } else if (
       vatsimData?.pilots.some((client) => client.cid === Number(searchValue))
     ) {
@@ -65,15 +73,18 @@ const VatsimLayer: React.FC<{
       console.log('no match');
       return;
     }
-  }, [searchValue, vatsimData]);
+  }, [searchValue]);
 
   const handleShow = (selected: VatsimPilot['vatsimPilot']) => {
     setClientInfo(selected);
+    map.flyTo([selected.latitude, selected.longitude]);
     setShowPanel(true);
   };
 
   const handleClose = () => {
     setShowPanel(false);
+    setClientInfo(undefined);
+    console.log(clientInfo);
   };
 
   return (
