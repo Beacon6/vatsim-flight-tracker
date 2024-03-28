@@ -2,31 +2,31 @@ import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import Header from './components/Header.tsx';
-import VatsimLayer from './components/VatsimLayer.tsx';
+import Aircraft from './components/Aircraft.tsx';
+import Panel from './components/Panel.tsx';
 import { initializeApp } from 'firebase/app';
 import { getPerformance } from 'firebase/performance';
-import { VatsimData } from './typings/VatsimData';
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyCOm3zhndPTuWbU0KLd3Jp6pZh2yXsfD24',
-  authDomain: 'vatsim-flight-tracker.firebaseapp.com',
-  projectId: 'vatsim-flight-tracker',
-  storageBucket: 'vatsim-flight-tracker.appspot.com',
-  messagingSenderId: '260478397514',
-  appId: '1:260478397514:web:fe1e4ff32c012aab608ab3',
-};
-
-const app = initializeApp(firebaseConfig);
-if (app) {
-  console.log('Firebase App initialized');
-}
-
-const perf = getPerformance(app);
-if (perf) {
-  console.log('Firebase performance monitoring initialized');
-}
+import { VatsimData, VatsimPilot } from './typings/VatsimData';
 
 function App() {
+  useEffect(() => {
+    const firebaseConfig = {
+      apiKey: 'AIzaSyCOm3zhndPTuWbU0KLd3Jp6pZh2yXsfD24',
+      authDomain: 'vatsim-flight-tracker.firebaseapp.com',
+      projectId: 'vatsim-flight-tracker',
+      storageBucket: 'vatsim-flight-tracker.appspot.com',
+      messagingSenderId: '260478397514',
+      appId: '1:260478397514:web:fe1e4ff32c012aab608ab3',
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const perf = getPerformance(app);
+
+    if (app && perf) {
+      console.log('Firebase App initialized successfully');
+    }
+  }, []);
+
   // Remember to switch to 'false' before deploying
   const dev = true;
 
@@ -37,18 +37,27 @@ function App() {
   const [vatsimData, setVatsimData] = useState<VatsimData>();
 
   useEffect(() => {
-    if (dev) {
-      console.log('Running on a development server');
-    }
-
     const socket = io(server);
-    console.log('Connected to WebSocket');
 
     socket.on('vatsimData', (data) => {
       setVatsimData(data);
     });
-  }, [server, dev]);
+  }, [server]);
 
+  // Displaying selected Client info
+  const [clientInfo, setClientInfo] = useState<VatsimPilot['vatsimPilot']>();
+  const [showPanel, setShowPanel] = useState(false);
+
+  const handleShow = (selected: VatsimPilot['vatsimPilot']) => {
+    setClientInfo(selected);
+    setShowPanel(true);
+  };
+
+  const handleClose = () => {
+    setShowPanel(false);
+  };
+
+  // Search functionality
   const [searchValue, setSearchValue] = useState<string>();
 
   const searchSubmit = (value?: string) => {
@@ -67,6 +76,7 @@ function App() {
         pilotsCount={vatsimData?.pilots.length}
         atcCount={vatsimData?.controllers.length}
         onSearch={searchSubmit}
+        isDev={dev}
       />
       <MapContainer
         className='map-container'
@@ -80,8 +90,13 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ></TileLayer>
-        <VatsimLayer vatsimData={vatsimData} searchValue={searchValue} />
+        <Aircraft vatsimPilots={vatsimData?.pilots} onClick={handleShow} />
       </MapContainer>
+      <Panel
+        show={showPanel}
+        selectedClient={clientInfo}
+        onHide={handleClose}
+      />
     </>
   );
 }
