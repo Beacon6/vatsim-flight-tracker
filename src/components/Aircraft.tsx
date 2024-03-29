@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { Marker, useMap, useMapEvent } from 'react-leaflet';
 import { icon, LatLngBounds, LatLngExpression } from 'leaflet';
 import 'leaflet-rotatedmarker';
-import { VatsimData, VatsimPilot } from '../typings/VatsimData';
+import { VatsimData } from '../typings/VatsimData';
 
 const Aircraft: React.FC<{
   vatsimPilots?: VatsimData['pilots'];
-  onClick: (selected: VatsimPilot['vatsimPilot']) => void;
+  onClick: (client: string | number) => void;
 }> = (props) => {
   const { vatsimPilots, onClick } = props;
 
@@ -60,7 +60,7 @@ const Aircraft: React.FC<{
           key={item.cid}
           rotationAngle={item.heading}
           eventHandlers={{
-            click: () => onClick(item),
+            click: () => onClick(item.cid),
           }}
         ></Marker>
       ))}

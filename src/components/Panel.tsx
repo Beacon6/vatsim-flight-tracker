@@ -1,32 +1,47 @@
+import { useEffect, useState } from 'react';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Accordion from 'react-bootstrap/Accordion';
 import CloseButton from 'react-bootstrap/CloseButton';
-import { VatsimPilot } from '../typings/VatsimData';
+import { VatsimData, VatsimPilot } from '../typings/VatsimData';
 
 const Panel: React.FC<{
-  show: boolean;
+  panelActive: boolean;
   onHide: () => void;
-  selectedClient?: VatsimPilot['vatsimPilot'];
+  selectedClient?: string | number;
+  vatsimData?: VatsimData;
 }> = (props) => {
-  const { show, onHide, selectedClient } = props;
+  const { panelActive, onHide, selectedClient, vatsimData } = props;
+
+  const [clientDetails, setClientDetails] =
+    useState<VatsimPilot['vatsimPilot']>();
+
+  useEffect(() => {
+    if (!selectedClient || !vatsimData) {
+      return;
+    }
+
+    const filteredClient = vatsimData?.pilots.filter((client) => {
+      return client.cid === Number(selectedClient);
+    });
+
+    setClientDetails(filteredClient[0]);
+  }, [selectedClient, vatsimData]);
 
   return (
     <>
-      <Offcanvas show={show} onHide={onHide} backdrop={true}>
+      <Offcanvas show={panelActive} onHide={onHide} backdrop={true}>
         <Offcanvas.Header closeButton={false}>
           <Offcanvas.Title as={'h5'}>
-            {selectedClient?.callsign} (
-            {selectedClient?.flight_plan?.aircraft_short
-              ? selectedClient?.flight_plan.aircraft_short
+            {clientDetails?.callsign} (
+            {clientDetails?.flight_plan?.aircraft_short
+              ? clientDetails?.flight_plan.aircraft_short
               : 'Unknown'}
             )
           </Offcanvas.Title>
-          <Offcanvas.Title as={'h6'}>
-            CID: {selectedClient?.cid}
-          </Offcanvas.Title>
+          <Offcanvas.Title as={'h6'}>CID: {clientDetails?.cid}</Offcanvas.Title>
           <CloseButton className='panel-close' onClick={onHide} />
         </Offcanvas.Header>
         <Offcanvas.Body>
@@ -51,51 +66,51 @@ const Panel: React.FC<{
             </Row>
             <Row>
               <Col>
-                {selectedClient?.flight_plan?.departure
-                  ? selectedClient?.flight_plan?.departure
+                {clientDetails?.flight_plan?.departure
+                  ? clientDetails?.flight_plan?.departure
                   : 'Not specified'}
               </Col>
               <Col></Col>
               <Col>
-                {selectedClient?.flight_plan?.arrival
-                  ? selectedClient?.flight_plan?.arrival
+                {clientDetails?.flight_plan?.arrival
+                  ? clientDetails?.flight_plan?.arrival
                   : 'Not specified'}
               </Col>
             </Row>
           </Container>
           <Container>
             <Row>
-              <Col>Altitude (MSL): {selectedClient?.altitude} feet</Col>
-              <Col>Speed (GS): {selectedClient?.groundspeed} knots</Col>
+              <Col>Altitude (MSL): {clientDetails?.altitude} feet</Col>
+              <Col>Speed (GS): {clientDetails?.groundspeed} knots</Col>
             </Row>
             <Row>
-              <Col>Latitude: {selectedClient?.latitude}</Col>
-              <Col>Longitude: {selectedClient?.longitude}</Col>
+              <Col>Latitude: {clientDetails?.latitude}</Col>
+              <Col>Longitude: {clientDetails?.longitude}</Col>
             </Row>
             <Row>
               <Col>
                 Flight rules:{' '}
-                {selectedClient?.flight_plan?.flight_rules === 'I'
+                {clientDetails?.flight_plan?.flight_rules === 'I'
                   ? 'IFR'
                   : 'VFR'}
               </Col>
-              <Col>Squawk: {selectedClient?.transponder}</Col>
+              <Col>Squawk: {clientDetails?.transponder}</Col>
             </Row>
           </Container>
           <Accordion>
             <Accordion.Item eventKey='0'>
               <Accordion.Header>Filed flight plan route</Accordion.Header>
               <Accordion.Body>
-                {selectedClient?.flight_plan?.route
-                  ? selectedClient?.flight_plan?.route
+                {clientDetails?.flight_plan?.route
+                  ? clientDetails?.flight_plan?.route
                   : 'No flight plan filed'}
               </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey='1'>
               <Accordion.Header>Remarks</Accordion.Header>
               <Accordion.Body>
-                {selectedClient?.flight_plan?.remarks
-                  ? selectedClient?.flight_plan?.remarks
+                {clientDetails?.flight_plan?.remarks
+                  ? clientDetails?.flight_plan?.remarks
                   : 'No remarks'}
               </Accordion.Body>
             </Accordion.Item>

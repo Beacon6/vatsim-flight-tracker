@@ -6,7 +6,7 @@ import Aircraft from './components/Aircraft.tsx';
 import Panel from './components/Panel.tsx';
 import { initializeApp } from 'firebase/app';
 import { getPerformance } from 'firebase/performance';
-import { VatsimData, VatsimPilot } from './typings/VatsimData';
+import { VatsimData } from './typings/VatsimData';
 
 function App() {
   useEffect(() => {
@@ -45,16 +45,25 @@ function App() {
   }, [server]);
 
   // Displaying selected Client info
-  const [clientInfo, setClientInfo] = useState<VatsimPilot['vatsimPilot']>();
-  const [showPanel, setShowPanel] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<string | number>();
 
-  const handleShow = (selected: VatsimPilot['vatsimPilot']) => {
-    setClientInfo(selected);
-    setShowPanel(true);
+  const getSelectedClient = (client: string | number) => {
+    setSelectedClient(client);
   };
 
+  const [panelActive, setPanelActive] = useState(false);
+
+  useEffect(() => {
+    if (!selectedClient) {
+      return;
+    }
+
+    setPanelActive(true);
+  }, [selectedClient]);
+
   const handleClose = () => {
-    setShowPanel(false);
+    setPanelActive(false);
+    setSelectedClient(undefined);
   };
 
   // Search functionality
@@ -90,12 +99,16 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ></TileLayer>
-        <Aircraft vatsimPilots={vatsimData?.pilots} onClick={handleShow} />
+        <Aircraft
+          vatsimPilots={vatsimData?.pilots}
+          onClick={getSelectedClient}
+        />
       </MapContainer>
       <Panel
-        show={showPanel}
-        selectedClient={clientInfo}
+        panelActive={panelActive}
         onHide={handleClose}
+        selectedClient={selectedClient}
+        vatsimData={vatsimData}
       />
     </>
   );
