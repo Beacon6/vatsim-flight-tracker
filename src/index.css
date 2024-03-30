@@ -2,13 +2,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo+Play&display=swap');
 
 :root {
+  font-size: 16px;
+  --font-title: 'Cairo Play', sans-serif;
+  --font-body: 'Cairo', sans-serif;
   --radius: 0.5rem;
   --background: #202426;
   --font-color: aliceblue;
   --shadow: 1px 1px 13px #03030390;
 }
 
-.header-container-main {
+.map-container {
+  height: 100vh;
+}
+
+.header-container {
   position: absolute;
   display: flex;
   justify-content: center;
@@ -19,8 +26,7 @@
 }
 
 .header {
-  font-family: 'Cairo Play', sans-serif;
-  font-size: 1rem;
+  font-family: var(--font-body);
   background-color: var(--background);
   box-shadow: var(--shadow);
   color: var(--font-color);
@@ -31,13 +37,13 @@
   justify-content: space-between;
 }
 
-.header-container {
+.header-element {
   width: auto;
   margin: 0px;
 }
 
 .navbar-brand {
-  font-family: 'Cairo Play', sans-serif;
+  font-family: var(--font-title);
   font-size: 1.5rem;
   color: var(--font-color);
   margin: 0px;
@@ -53,8 +59,19 @@
 }
 
 .navbar-text {
+  font-family: var(--font-title);
   padding: 0 1rem 0 0;
   color: var(--font-color);
+}
+
+.input-group-text {
+  color: var(--font-color);
+}
+
+.form-control:focus {
+  z-index: inherit;
+  border-color: inherit;
+  box-shadow: inherit;
 }
 
 .offcanvas.offcanvas-start {
@@ -105,8 +122,4 @@
   color: var(--font-color);
   font-size: 14px;
   padding: 14px;
-}
-
-.map {
-  height: 100vh;
 }
