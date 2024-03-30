@@ -28,7 +28,7 @@ function App() {
   }, []);
 
   // Remember to switch to 'false' before deploying
-  const dev = true;
+  const dev = false;
 
   const server = dev
     ? 'http://localhost:5000'
@@ -47,7 +47,7 @@ function App() {
   // Displaying selected Client info
   const [selectedClient, setSelectedClient] = useState<string | number>();
 
-  const getSelectedClient = (client: string | number) => {
+  const getSelectedClient = (client?: string | number) => {
     setSelectedClient(client);
   };
 
@@ -66,25 +66,12 @@ function App() {
     setSelectedClient(undefined);
   };
 
-  // Search functionality
-  const [searchValue, setSearchValue] = useState<string>();
-
-  const searchSubmit = (value?: string) => {
-    setSearchValue(value);
-  };
-
-  useEffect(() => {
-    if (searchValue) {
-      console.log(`Searching for ${searchValue}`);
-    }
-  }, [searchValue]);
-
   return (
     <>
       <Header
         pilotsCount={vatsimData?.pilots.length}
         atcCount={vatsimData?.controllers.length}
-        onSearch={searchSubmit}
+        onSearch={getSelectedClient}
         isDev={dev}
       />
       <MapContainer

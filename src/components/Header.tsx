@@ -8,12 +8,12 @@ import Button from 'react-bootstrap/Button';
 const Header: React.FC<{
   pilotsCount?: number;
   atcCount?: number;
-  onSearch: (value?: string) => void;
+  onSearch: (value?: string | number) => void;
   isDev: boolean;
 }> = (props) => {
   const { pilotsCount, atcCount, onSearch, isDev } = props;
 
-  const [inputValue, setInputValue] = useState<string>();
+  const [inputValue, setInputValue] = useState<string | number>();
 
   const changeInputValue = (value: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(value.target.value);

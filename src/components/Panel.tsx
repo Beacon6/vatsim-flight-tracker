@@ -23,16 +23,35 @@ const Panel: React.FC<{
       return;
     }
 
-    const filteredClient = vatsimData?.pilots.filter((client) => {
+    const containsCID = vatsimData?.pilots.some((client) => {
       return client.cid === Number(selectedClient);
     });
+    const containsCallsign = vatsimData?.pilots.some((client) => {
+      return client.callsign === String(selectedClient);
+    });
 
-    setClientDetails(filteredClient[0]);
+    if (containsCID) {
+      const filteredClient = vatsimData?.pilots.find((client) => {
+        return client.cid === Number(selectedClient);
+      });
+      setClientDetails(filteredClient);
+    } else if (containsCallsign) {
+      const filteredClient = vatsimData?.pilots.find((client) => {
+        return client.callsign === String(selectedClient);
+      });
+      setClientDetails(filteredClient);
+    } else {
+      setClientDetails(undefined);
+    }
   }, [selectedClient, vatsimData]);
 
   return (
     <>
-      <Offcanvas show={panelActive} onHide={onHide} backdrop={true}>
+      <Offcanvas
+        show={panelActive && clientDetails}
+        onHide={onHide}
+        backdrop={true}
+      >
         <Offcanvas.Header closeButton={false}>
           <Offcanvas.Title as={'h5'}>
             {clientDetails?.callsign} (
