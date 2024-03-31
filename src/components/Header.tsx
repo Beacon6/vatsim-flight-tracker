@@ -33,23 +33,25 @@ const Header: React.FC<{
             <Navbar.Text>ATC connected: {atcCount}</Navbar.Text>
           </Container>
           <Container className='header-element'>
-            <InputGroup className='d-flex'>
-              <InputGroup.Text>CID / Callsign</InputGroup.Text>
-              <Form.Control
-                type='text'
-                placeholder='1590612 / AUA546'
-                onChange={changeInputValue}
-              />
-              <Button
-                variant='outline-success'
-                id='search-button'
-                onClick={() => {
-                  onSearch(inputValue);
-                }}
-              >
-                Search
-              </Button>
-            </InputGroup>
+            <Container className='header-element'>
+              <InputGroup className='d-flex'>
+                <InputGroup.Text>CID / Callsign</InputGroup.Text>
+                <Form.Control
+                  type='text'
+                  placeholder='1590612 / AUA546'
+                  onChange={changeInputValue}
+                />
+              </InputGroup>
+            </Container>
+            <Button
+              variant='outline-primary'
+              id='search-button'
+              onClick={() => {
+                onSearch(inputValue);
+              }}
+            >
+              Search
+            </Button>
           </Container>
         </Navbar>
       </Container>
