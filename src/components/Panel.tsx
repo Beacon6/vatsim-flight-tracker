@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Accordion from 'react-bootstrap/Accordion';
-import CloseButton from 'react-bootstrap/CloseButton';
+import Button from 'react-bootstrap/Button';
 import { VatsimData, VatsimPilot } from '../typings/VatsimData';
 
 const Panel: React.FC<{
@@ -50,7 +50,7 @@ const Panel: React.FC<{
       <Offcanvas
         show={panelActive && clientDetails}
         onHide={onHide}
-        backdrop={true}
+        backdrop={false}
       >
         <Offcanvas.Header closeButton={false}>
           <Offcanvas.Title as={'h5'}>
@@ -61,7 +61,13 @@ const Panel: React.FC<{
             )
           </Offcanvas.Title>
           <Offcanvas.Title as={'h6'}>CID: {clientDetails?.cid}</Offcanvas.Title>
-          <CloseButton className='panel-close' onClick={onHide} />
+          <Button
+            className='panel-close'
+            variant='outline-primary'
+            onClick={onHide}
+          >
+            Hide
+          </Button>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <Container>
