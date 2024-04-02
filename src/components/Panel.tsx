@@ -79,14 +79,14 @@ const Panel: React.FC<{
             <Row>
               <Col>
                 <img
-                  src='../assets/departure-light.svg'
+                  src='../assets/departure.svg'
                   height={48}
                   width={48}
                 />
               </Col>
               <Col></Col>
               <Col>
-                <img src='../assets/arrival-light.svg' height={48} width={48} />
+                <img src='../assets/arrival.svg' height={48} width={48} />
               </Col>
             </Row>
             <Row>

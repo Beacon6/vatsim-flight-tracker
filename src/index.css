@@ -192,3 +192,12 @@
 .accordion-button:focus {
   box-shadow: none;
 }
+
+.accordion-button::after {
+  background-image: url('/assets/chevron-down.svg');
+}
+
+.accordion-button:not(.collapsed)::after {
+  background-image: url('/assets/chevron-up.svg');
+  transform: none;
+}

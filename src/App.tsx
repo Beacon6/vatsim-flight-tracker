@@ -28,7 +28,7 @@ function App() {
   }, []);
 
   // Remember to switch to 'false' before deploying
-  const dev = true;
+  const dev = false;
 
   const server = dev
     ? 'http://localhost:5000'
