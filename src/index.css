@@ -2,17 +2,39 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo+Play&display=swap');
 
 :root {
-  font-size: 16px;
+  --ctp-mocha-base: #1e1e2e;
+  --ctp-mocha-mantle: #181825;
+  --ctp-mocha-crust: #11111b;
+  --ctp-mocha-surface-0: #313244;
+  --ctp-mocha-surface-1: #45475a;
+  --ctp-mocha-surface-2: #585b70;
+  --ctp-mocha-overlay-0: #6c7086;
+  --ctp-mocha-overlay-1: #7f849c;
+  --ctp-mocha-overlay-2: #9399b2;
+  --ctp-mocha-subtext-0: #a6adc8;
+  --ctp-mocha-subtext-1: #bac2de;
+  --ctp-mocha-text: #cdd6f4;
+  --ctp-mocha-lavender: #b4befe;
+  --ctp-mocha-blue: #89b4fa;
+  --ctp-mocha-sapphire: #74c7ec;
+  --ctp-mocha-sky: #89dceb;
+  --ctp-mocha-teal: #94e2d5;
+  --ctp-mocha-green: #a6e3a1;
+  --ctp-mocha-yellow: #f9e2af;
+  --ctp-mocha-peach: #fab387;
+  --ctp-mocha-maroon: #eba0ac;
+  --ctp-mocha-red: #f38ba8;
+  --ctp-mocha-mauve: #cba6f7;
+  --ctp-mocha-pink: #f5c2e7;
+  --ctp-mocha-flamingo: #f2cdcd;
+  --ctp-mocha-rosewater: #f5e0dc;
   --font-title: 'Cairo Play', sans-serif;
   --font-body: 'Cairo', sans-serif;
-  --radius: 0.5rem;
-  --background: #202426;
-  --font-color: aliceblue;
-  --shadow: 1px 1px 13px #03030390;
 }
 
 .map-container {
   height: 100vh;
+  background-color: var(--ctp-mocha-crust);
 }
 
 .header-container {
@@ -26,11 +48,10 @@
 }
 
 .header {
-  font-family: var(--font-body);
-  background-color: var(--background);
-  box-shadow: var(--shadow);
-  color: var(--font-color);
-  border-radius: var(--radius);
+  box-shadow: 1px 1px 14px var(--ctp-mocha-mantle);
+  color: var(--ctp-mocha-text);
+  background-color: var(--ctp-mocha-base);
+  border-radius: 0.5rem;
   padding: 0.5rem 2rem;
   display: flex;
   width: 100%;
@@ -45,7 +66,7 @@
 .navbar-brand {
   font-family: var(--font-title);
   font-size: 1.5rem;
-  color: var(--font-color);
+  color: var(--ctp-mocha-text);
   margin: 0px;
   padding: 0px;
 }
@@ -61,17 +82,55 @@
 .navbar-text {
   font-family: var(--font-title);
   padding: 0 1rem 0 0;
-  color: var(--font-color);
+  color: var(--ctp-mocha-text);
 }
 
 .input-group-text {
-  color: var(--font-color);
+  color: var(--ctp-mocha-text);
+  background-color: var(--ctp-mocha-mantle);
+  border-color: var(--ctp-mocha-mauve);
+}
+
+.form-control {
+  color: var(--ctp-mocha-text);
+  background-color: var(--ctp-mocha-mantle);
+  border-color: var(--ctp-mocha-mauve);
+}
+
+.form-control::placeholder {
+  color: var(--ctp-mocha-subtext-0);
 }
 
 .form-control:focus {
-  z-index: inherit;
-  border-color: inherit;
+  color: var(--ctp-mocha-text);
+  background-color: var(--ctp-mocha-mantle);
+  border-color: var(--ctp-mocha-mauve);
+  caret-color: var(--ctp-mocha-peach);
   box-shadow: inherit;
+}
+
+.btn-outline-primary {
+  color: var(--ctp-mocha-peach);
+  border-color: var(--ctp-mocha-peach);
+}
+
+.btn:hover {
+  background-color: var(--ctp-mocha-peach);
+  border-color: var(--ctp-mocha-peach);
+  color: var(--ctp-mocha-base);
+}
+
+.btn.btn-outline-primary:active {
+  background-color: var(--ctp-mocha-peach);
+  border-color: var(--ctp-mocha-peach);
+  color: var(--ctp-mocha-base);
+}
+
+.btn.btn-outline-primary:focus-visible {
+  background-color: var(--ctp-mocha-peach);
+  border-color: var(--ctp-mocha-peach);
+  color: var(--ctp-mocha-base);
+  box-shadow: none;
 }
 
 .offcanvas.offcanvas-start {
@@ -83,13 +142,13 @@
 }
 
 .offcanvas {
+  background-color: var(--ctp-mocha-base);
   position: absolute;
   display: flex;
-  background-color: var(--background);
-  box-shadow: var(--shadow);
-  color: var(--font-color);
-  border-radius: var(--radius);
-  font-family: 'Cairo', sans-serif;
+  box-shadow: 1px 1px 14px var(--ctp-mocha-mantle);
+  color: var(--ctp-mocha-text);
+  border-radius: 0.5rem;
+  font-family: var(--font-body);
   z-index: 99999;
 }
 
@@ -99,13 +158,10 @@
 }
 
 .panel-close {
+  background-color: var(--ctp-mocha-base);
   position: absolute;
   top: 16px;
   right: 16px;
-}
-
-.offcanvas-backdrop.show {
-  opacity: 0;
 }
 
 .col {
@@ -114,12 +170,34 @@
   padding: 0 0 16px 0;
 }
 
-.accordion-button.collapsed {
-  color: var(--font-color);
+.accordion-item {
+  color: var(--ctp-mocha-text);
+  background-color: var(--ctp-mocha-mantle);
+  border-color: var(--ctp-mocha-mauve);
 }
 
-.accordion-body {
-  color: var(--font-color);
-  font-size: 14px;
-  padding: 14px;
+.accordion-button {
+  color: var(--ctp-mocha-text);
+  background-color: var(--ctp-mocha-mantle);
+  border-color: var(--ctp-mocha-mauve);
+}
+
+.accordion-button:not(.collapsed) {
+  color: var(--ctp-mocha-text);
+  background-color: var(--ctp-mocha-mantle);
+  border-color: var(--ctp-mocha-mauve);
+  box-shadow: none;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+}
+
+.accordion-button::after {
+  background-image: url('/assets/chevron-down.svg');
+}
+
+.accordion-button:not(.collapsed)::after {
+  background-image: url('/assets/chevron-up.svg');
+  transform: none;
 }
