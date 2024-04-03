@@ -90,13 +90,13 @@ function App() {
           vatsimPilots={vatsimData?.pilots}
           onClick={getSelectedClient}
         />
+        <Panel
+          panelActive={panelActive}
+          onHide={handleClose}
+          selectedClient={selectedClient}
+          vatsimData={vatsimData}
+        />
       </MapContainer>
-      <Panel
-        panelActive={panelActive}
-        onHide={handleClose}
-        selectedClient={selectedClient}
-        vatsimData={vatsimData}
-      />
     </>
   );
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useMap } from 'react-leaflet';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -14,6 +15,8 @@ const Panel: React.FC<{
   vatsimData?: VatsimData;
 }> = (props) => {
   const { panelActive, onHide, selectedClient, vatsimData } = props;
+
+  const map = useMap();
 
   const [clientDetails, setClientDetails] =
     useState<VatsimPilot['vatsimPilot']>();
@@ -45,6 +48,17 @@ const Panel: React.FC<{
     }
   }, [selectedClient, vatsimData]);
 
+  const locateClient = () => {
+    const clientLat = clientDetails?.latitude;
+    const clientLon = clientDetails?.longitude;
+
+    if (!clientLat || !clientLon) {
+      return;
+    } else {
+      map.flyTo([clientLat, clientLon]);
+    }
+  }
+
   return (
     <>
       <Offcanvas
@@ -61,6 +75,13 @@ const Panel: React.FC<{
             )
           </Offcanvas.Title>
           <Offcanvas.Title as={'h6'}>CID: {clientDetails?.cid}</Offcanvas.Title>
+          <Button
+            className='panel-locate'
+            variant='outline-primary'
+            onClick={locateClient}
+          >
+            <img src='../assets/crosshair.svg' height={24} width={24} />
+          </Button>
           <Button
             className='panel-close'
             variant='outline-primary'
