@@ -1,0 +1,173 @@
+@use 'colors';
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo+Play&display=swap');
+
+.map-container {
+  height: 100vh;
+  background-color: colors.$mocha-crust;
+}
+
+.header-container {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  max-width: none;
+  margin-top: 0.5rem;
+  z-index: 9999;
+}
+
+.header {
+  box-shadow: 1px 1px 14px colors.$mocha-mantle;
+  color: colors.$mocha-text;
+  background-color: colors.$mocha-base;
+  border-radius: 0.5rem;
+  padding: 0.5rem 2rem;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.header-element {
+  width: auto;
+  margin: 0px;
+}
+
+.navbar-brand {
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  color: colors.$mocha-text;
+  margin: 0px;
+  padding: 0px;
+}
+
+.navbar-brand:hover {
+  color: inherit;
+}
+
+.navbar-brand:focus {
+  color: inherit;
+}
+
+.navbar-text {
+  font-family: var(--font-title);
+  padding: 0 1rem 0 0;
+  color: colors.$mocha-text;
+}
+
+.input-group-text {
+  color: colors.$mocha-text;
+  background-color: colors.$mocha-mantle;
+  border-color: colors.$mocha-mauve;
+}
+
+.form-control {
+  color: colors.$mocha-text;
+  background-color: colors.$mocha-mantle;
+  border-color: colors.$mocha-mauve;
+}
+
+.form-control::placeholder {
+  color: colors.$mocha-subtext-1;
+}
+
+.form-control:focus {
+  color: colors.$mocha-text;
+  background-color: colors.$mocha-mantle;
+  border-color: colors.$mocha-mauve;
+  caret-color: colors.$mocha-peach;
+  box-shadow: inherit;
+}
+
+.btn-outline-primary {
+  color: colors.$mocha-peach;
+  border-color: colors.$mocha-peach;
+}
+
+.btn:hover {
+  background-color: colors.$mocha-peach;
+  border-color: colors.$mocha-peach;
+  color: colors.$mocha-base;
+}
+
+.btn.btn-outline-primary:active {
+  background-color: colors.$mocha-peach;
+  border-color: colors.$mocha-peach;
+  color: colors.$mocha-base;
+}
+
+.btn.btn-outline-primary:focus-visible {
+  background-color: colors.$mocha-peach;
+  border-color: colors.$mocha-peach;
+  color: colors.$mocha-base;
+  box-shadow: none;
+}
+
+.offcanvas.offcanvas-start {
+  top: 5rem;
+  left: 1rem;
+  height: fit-content;
+  max-height: 80vh;
+}
+
+.offcanvas {
+  background-color: colors.$mocha-base;
+  position: absolute;
+  display: flex;
+  box-shadow: 1px 1px 14px colors.$mocha-mantle;
+  color: colors.$mocha-text;
+  border-radius: 0.5rem;
+  font-family: var(--font-body);
+  z-index: 99999;
+}
+
+.offcanvas-header {
+  flex-direction: column;
+  padding-bottom: 0px;
+}
+
+.panel-close {
+  background-color: colors.$mocha-base;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.col {
+  display: flex;
+  justify-content: center;
+  padding: 0 0 16px 0;
+}
+
+.accordion-item {
+  color: colors.$mocha-text;
+  background-color: colors.$mocha-mantle;
+  border-color: colors.$mocha-mauve;
+}
+
+.accordion-button {
+  color: colors.$mocha-text;
+  background-color: colors.$mocha-mantle;
+  border-color: colors.$mocha-mauve;
+}
+
+.accordion-button:not(.collapsed) {
+  color: colors.$mocha-text;
+  background-color: colors.$mocha-mantle;
+  border-color: colors.$mocha-mauve;
+  box-shadow: none;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+}
+
+.accordion-button::after {
+  background-image: url('/assets/chevron-down.svg');
+}
+
+.accordion-button:not(.collapsed)::after {
+  background-image: url('/assets/chevron-up.svg');
+  transform: none;
+}
