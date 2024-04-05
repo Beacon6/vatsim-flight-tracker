@@ -70,7 +70,7 @@ const Panel: React.FC<{
         <Offcanvas.Header className='panel-header' closeButton={false}>
           <Container>
             <Row>
-              <Col>
+              <Col className='panel-title'>
                 <Offcanvas.Title as={'h5'}>
                   {clientDetails?.callsign} (
                   {clientDetails?.flight_plan?.aircraft_short
@@ -79,27 +79,21 @@ const Panel: React.FC<{
                   )
                 </Offcanvas.Title>
               </Col>
-              <Col>
-                <Button
-                  className='panel-locate'
-                  variant='outline-primary'
-                  onClick={locateClient}
-                >
+              <Col className='panel-controls'>
+                <Button variant='outline-primary' onClick={locateClient}>
                   <img src='../assets/crosshair.svg' height={24} width={24} />
                 </Button>
-                <Button
-                  className='panel-close'
-                  variant='outline-primary'
-                  onClick={onHide}
-                >
+                <Button variant='outline-primary' onClick={onHide}>
                   Hide
                 </Button>
               </Col>
             </Row>
             <Row>
-              <Offcanvas.Title as={'h6'}>
-                CID: {clientDetails?.cid}
-              </Offcanvas.Title>
+              <Col className='panel-subtitle'>
+                <Offcanvas.Title as={'h6'}>
+                  CID: {clientDetails?.cid}
+                </Offcanvas.Title>
+              </Col>
             </Row>
           </Container>
         </Offcanvas.Header>

@@ -108,24 +108,6 @@ $font-primary: 'Cairo', sans-serif;
   box-shadow: none;
 }
 
-.offcanvas {
-  background-color: colors.$mocha-base;
-  position: absolute;
-  display: flex;
-  box-shadow: 1px 1px 14px colors.$mocha-mantle;
-  color: colors.$mocha-text;
-  border-radius: 0.5rem;
-  font-family: $font-primary;
-  z-index: 99999;
-}
-
-.panel-close {
-  background-color: colors.$mocha-base;
-  position: absolute;
-  top: 16px;
-  right: 16px;
-}
-
 .col {
   display: flex;
   justify-content: center;

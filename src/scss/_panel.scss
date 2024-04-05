@@ -1,9 +1,42 @@
 @use 'colors';
 
+$font-title: 'Cairo Play', sans-serif;
+$font-primary: 'Cairo', sans-serif;
+
 .panel {
+  display: flex;
+  position: absolute;
+  background-color: colors.$mocha-base;
+  box-shadow: 1px 1px 14px colors.$mocha-mantle;
+  color: colors.$mocha-text;
+  font-family: $font-primary;
+  border-radius: 0.5rem;
+  z-index: 99999;
+
   .panel-header {
     flex-direction: column;
     padding-bottom: 0px;
+  }
+
+  .panel-controls {
+    display: flex;
+    justify-content: end;
+    column-gap: 0.5rem;
+    padding: 0px;
+  }
+
+  .panel-title {
+    display: flex;
+    justify-content: start;
+    column-gap: 0.5rem;
+    padding: 0px;
+  }
+
+  .panel-subtitle {
+    display: flex;
+    justify-content: start;
+    column-gap: 0.5rem;
+    padding: 0px;
   }
 }
 
