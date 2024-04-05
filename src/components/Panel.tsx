@@ -57,38 +57,51 @@ const Panel: React.FC<{
     } else {
       map.flyTo([clientLat, clientLon]);
     }
-  }
+  };
 
   return (
     <>
       <Offcanvas
+        className='panel'
         show={panelActive && clientDetails}
         onHide={onHide}
         backdrop={false}
       >
-        <Offcanvas.Header closeButton={false}>
-          <Offcanvas.Title as={'h5'}>
-            {clientDetails?.callsign} (
-            {clientDetails?.flight_plan?.aircraft_short
-              ? clientDetails?.flight_plan.aircraft_short
-              : 'Unknown'}
-            )
-          </Offcanvas.Title>
-          <Offcanvas.Title as={'h6'}>CID: {clientDetails?.cid}</Offcanvas.Title>
-          <Button
-            className='panel-locate'
-            variant='outline-primary'
-            onClick={locateClient}
-          >
-            <img src='../assets/crosshair.svg' height={24} width={24} />
-          </Button>
-          <Button
-            className='panel-close'
-            variant='outline-primary'
-            onClick={onHide}
-          >
-            Hide
-          </Button>
+        <Offcanvas.Header className='panel-header' closeButton={false}>
+          <Container>
+            <Row>
+              <Col>
+                <Offcanvas.Title as={'h5'}>
+                  {clientDetails?.callsign} (
+                  {clientDetails?.flight_plan?.aircraft_short
+                    ? clientDetails?.flight_plan.aircraft_short
+                    : 'Unknown'}
+                  )
+                </Offcanvas.Title>
+              </Col>
+              <Col>
+                <Button
+                  className='panel-locate'
+                  variant='outline-primary'
+                  onClick={locateClient}
+                >
+                  <img src='../assets/crosshair.svg' height={24} width={24} />
+                </Button>
+                <Button
+                  className='panel-close'
+                  variant='outline-primary'
+                  onClick={onHide}
+                >
+                  Hide
+                </Button>
+              </Col>
+            </Row>
+            <Row>
+              <Offcanvas.Title as={'h6'}>
+                CID: {clientDetails?.cid}
+              </Offcanvas.Title>
+            </Row>
+          </Container>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <Container>
@@ -99,11 +112,7 @@ const Panel: React.FC<{
             </Row>
             <Row>
               <Col>
-                <img
-                  src='../assets/departure.svg'
-                  height={48}
-                  width={48}
-                />
+                <img src='../assets/departure.svg' height={48} width={48} />
               </Col>
               <Col></Col>
               <Col>
