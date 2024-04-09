@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Marker, useMap, useMapEvent } from 'react-leaflet';
+import { Marker, Tooltip, useMap, useMapEvent } from 'react-leaflet';
 import { icon, LatLngBounds, LatLngExpression } from 'leaflet';
 import 'leaflet-rotatedmarker';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import { VatsimData } from '../typings/VatsimData';
 
 const Aircraft: React.FC<{
@@ -62,7 +65,26 @@ const Aircraft: React.FC<{
           eventHandlers={{
             click: () => onClick(item.cid),
           }}
-        ></Marker>
+        >
+          <Tooltip
+            className='label'
+            direction='right'
+            sticky={true}
+            opacity={1}
+          >
+            <Container>
+              <Row>
+                <Col className='label-info'>
+                  {item.callsign} (
+                  {item.flight_plan?.aircraft_short
+                    ? item.flight_plan.aircraft_short
+                    : 'N/A'}
+                  )
+                </Col>
+              </Row>
+            </Container>
+          </Tooltip>
+        </Marker>
       ))}
     </>
   );
