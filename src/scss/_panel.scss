@@ -14,6 +14,7 @@ $font-primary: 'Cairo', sans-serif;
   z-index: 99999;
 
   .panel-header {
+    display: flex;
     flex-direction: column;
     padding-bottom: 0px;
   }
@@ -28,15 +29,31 @@ $font-primary: 'Cairo', sans-serif;
   .panel-title {
     display: flex;
     justify-content: start;
+    align-items: center;
     column-gap: 0.5rem;
     padding: 0px;
+    font-size: 1.5rem;
   }
 
   .panel-subtitle {
     display: flex;
     justify-content: start;
+    align-items: center;
     column-gap: 0.5rem;
     padding: 0px;
+    font-size: 1rem;
+  }
+
+  .panel-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panel-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 0 1rem;
   }
 }
 
@@ -46,4 +63,36 @@ $font-primary: 'Cairo', sans-serif;
   height: fit-content;
   max-height: 80vh;
   border-right: none;
+}
+
+.accordion-item {
+  color: colors.$mocha-text;
+  background-color: colors.$mocha-mantle;
+  border-color: colors.$mocha-mauve;
+}
+
+.accordion-button {
+  color: colors.$mocha-text;
+  background-color: colors.$mocha-mantle;
+  border-color: colors.$mocha-mauve;
+}
+
+.accordion-button:not(.collapsed) {
+  color: colors.$mocha-text;
+  background-color: colors.$mocha-mantle;
+  border-color: colors.$mocha-mauve;
+  box-shadow: none;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+}
+
+.accordion-button::after {
+  background-image: url('/assets/chevron-down.svg');
+}
+
+.accordion-button:not(.collapsed)::after {
+  background-image: url('/assets/chevron-up.svg');
+  transform: none;
 }

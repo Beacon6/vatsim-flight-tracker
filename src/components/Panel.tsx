@@ -71,17 +71,20 @@ const Panel: React.FC<{
           <Container>
             <Row>
               <Col className='panel-title'>
-                <Offcanvas.Title as={'h5'}>
+                <Offcanvas.Title className='panel-title'>
                   {clientDetails?.callsign} (
                   {clientDetails?.flight_plan?.aircraft_short
                     ? clientDetails?.flight_plan.aircraft_short
-                    : 'Unknown'}
+                    : 'N/A'}
                   )
                 </Offcanvas.Title>
               </Col>
               <Col className='panel-controls'>
                 <Button variant='outline-primary' onClick={locateClient}>
-                  <img src='../assets/crosshair.svg' height={24} width={24} />
+                  <i
+                    className='bi bi-crosshair'
+                    style={{ fontSize: '1.25rem' }}
+                  ></i>
                 </Button>
                 <Button variant='outline-primary' onClick={onHide}>
                   Hide
@@ -90,37 +93,34 @@ const Panel: React.FC<{
             </Row>
             <Row>
               <Col className='panel-subtitle'>
-                <Offcanvas.Title as={'h6'}>
+                <Offcanvas.Title className={'panel-subtitle'}>
                   CID: {clientDetails?.cid}
                 </Offcanvas.Title>
               </Col>
             </Row>
           </Container>
         </Offcanvas.Header>
-        <Offcanvas.Body>
+        <Offcanvas.Body className='panel-body'>
           <Container>
             <Row>
-              <Col>Departure</Col>
-              <Col></Col>
-              <Col>Arrival</Col>
+              <Col className='panel-info'>Departure</Col>
+              <Col className='panel-info'>Arrival</Col>
             </Row>
             <Row>
-              <Col>
+              <Col className='panel-info'>
                 <img src='../assets/departure.svg' height={48} width={48} />
               </Col>
-              <Col></Col>
-              <Col>
+              <Col className='panel-info'>
                 <img src='../assets/arrival.svg' height={48} width={48} />
               </Col>
             </Row>
             <Row>
-              <Col>
+              <Col className='panel-info'>
                 {clientDetails?.flight_plan?.departure
                   ? clientDetails?.flight_plan?.departure
                   : 'Not specified'}
               </Col>
-              <Col></Col>
-              <Col>
+              <Col className='panel-info'>
                 {clientDetails?.flight_plan?.arrival
                   ? clientDetails?.flight_plan?.arrival
                   : 'Not specified'}
@@ -129,21 +129,31 @@ const Panel: React.FC<{
           </Container>
           <Container>
             <Row>
-              <Col>Altitude (MSL): {clientDetails?.altitude} feet</Col>
-              <Col>Speed (GS): {clientDetails?.groundspeed} knots</Col>
+              <Col className='panel-info'>
+                Altitude (MSL): {clientDetails?.altitude} feet
+              </Col>
+              <Col className='panel-info'>
+                Speed (GS): {clientDetails?.groundspeed} knots
+              </Col>
             </Row>
             <Row>
-              <Col>Latitude: {clientDetails?.latitude}</Col>
-              <Col>Longitude: {clientDetails?.longitude}</Col>
+              <Col className='panel-info'>
+                Latitude: {clientDetails?.latitude}
+              </Col>
+              <Col className='panel-info'>
+                Longitude: {clientDetails?.longitude}
+              </Col>
             </Row>
             <Row>
-              <Col>
+              <Col className='panel-info'>
                 Flight rules:{' '}
                 {clientDetails?.flight_plan?.flight_rules === 'I'
                   ? 'IFR'
                   : 'VFR'}
               </Col>
-              <Col>Squawk: {clientDetails?.transponder}</Col>
+              <Col className='panel-info'>
+                Squawk: {clientDetails?.transponder}
+              </Col>
             </Row>
           </Container>
           <Accordion>

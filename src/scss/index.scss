@@ -3,6 +3,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Cairo+Play&display=swap');
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
 
 $font-title: 'Cairo Play', sans-serif;
 $font-primary: 'Cairo', sans-serif;
@@ -106,42 +107,4 @@ $font-primary: 'Cairo', sans-serif;
   border-color: colors.$mocha-peach;
   color: colors.$mocha-base;
   box-shadow: none;
-}
-
-.col {
-  display: flex;
-  justify-content: center;
-  padding: 0 0 16px 0;
-}
-
-.accordion-item {
-  color: colors.$mocha-text;
-  background-color: colors.$mocha-mantle;
-  border-color: colors.$mocha-mauve;
-}
-
-.accordion-button {
-  color: colors.$mocha-text;
-  background-color: colors.$mocha-mantle;
-  border-color: colors.$mocha-mauve;
-}
-
-.accordion-button:not(.collapsed) {
-  color: colors.$mocha-text;
-  background-color: colors.$mocha-mantle;
-  border-color: colors.$mocha-mauve;
-  box-shadow: none;
-}
-
-.accordion-button:focus {
-  box-shadow: none;
-}
-
-.accordion-button::after {
-  background-image: url('/assets/chevron-down.svg');
-}
-
-.accordion-button:not(.collapsed)::after {
-  background-image: url('/assets/chevron-up.svg');
-  transform: none;
 }
