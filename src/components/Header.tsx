@@ -21,28 +21,26 @@ const Header: React.FC<{
 
   return (
     <>
-      <Container className='header-container'>
-        <Navbar className='header'>
-          <Container className='header-element'>
-            <Navbar.Brand href='#'>
+      <Container className='header'>
+        <Navbar className='header-topbar'>
+          <Container className='header-item'>
+            <Navbar.Brand className='header-brand' href='#'>
               {isDev ? 'Vatsim Flight Tracker Dev' : 'Vatsim Flight Tracker'}
             </Navbar.Brand>
           </Container>
-          <Container className='header-element'>
+          <Container className='header-item'>
             <Navbar.Text>Pilots connected: {pilotsCount}</Navbar.Text>
             <Navbar.Text>ATC connected: {atcCount}</Navbar.Text>
           </Container>
-          <Container className='header-element'>
-            <Container className='header-element'>
-              <InputGroup className='d-flex'>
-                <InputGroup.Text>CID / Callsign</InputGroup.Text>
-                <Form.Control
-                  type='text'
-                  placeholder='1590612 / AUA546'
-                  onChange={changeInputValue}
-                />
-              </InputGroup>
-            </Container>
+          <Container className='header-item'>
+            <InputGroup className='d-flex'>
+              <InputGroup.Text>CID / Callsign</InputGroup.Text>
+              <Form.Control
+                type='text'
+                placeholder='1590612 / AUA546'
+                onChange={changeInputValue}
+              />
+            </InputGroup>
             <Button
               variant='outline-primary'
               id='search-button'
@@ -50,7 +48,7 @@ const Header: React.FC<{
                 onSearch(inputValue);
               }}
             >
-              Search
+              <i className='bi bi-search'></i>
             </Button>
           </Container>
         </Navbar>

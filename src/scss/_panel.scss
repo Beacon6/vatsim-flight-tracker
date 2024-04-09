@@ -1,7 +1,5 @@
 @use 'colors';
-
-$font-title: 'Cairo Play', sans-serif;
-$font-primary: 'Cairo', sans-serif;
+@use 'fonts';
 
 .panel {
   display: flex;
@@ -9,7 +7,7 @@ $font-primary: 'Cairo', sans-serif;
   background-color: colors.$mocha-base;
   box-shadow: 1px 1px 14px colors.$mocha-mantle;
   color: colors.$mocha-text;
-  font-family: $font-primary;
+  font-family: fonts.$font-primary;
   border-radius: 0.5rem;
   z-index: 99999;
 

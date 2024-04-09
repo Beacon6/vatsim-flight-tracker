@@ -1,0 +1,68 @@
+@use 'colors';
+@use 'fonts';
+
+.header {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  max-width: none;
+  z-index: 9999;
+
+  .header-topbar {
+    display: flex;
+    justify-content: space-between;
+    width: fit-content;
+    max-width: 100%;
+    padding: 0.5rem 2rem;
+    margin-top: 0.5rem;
+    border-radius: 0.5rem;
+    column-gap: 6rem;
+    box-shadow: 1px 1px 14px colors.$mocha-mantle;
+    color: colors.$mocha-text;
+    background-color: colors.$mocha-base;
+  }
+
+  .header-item {
+    width: auto;
+    column-gap: 1rem;
+  }
+
+  .header-brand {
+    font-family: fonts.$font-title;
+    font-size: 1.5rem;
+    color: colors.$mocha-text;
+    margin: 0px;
+    padding: 0px;
+  }
+}
+
+.navbar-text {
+  font-family: fonts.$font-title;
+  color: colors.$mocha-text;
+  padding: 0px;
+}
+
+.input-group-text {
+  color: colors.$mocha-text;
+  background-color: colors.$mocha-mantle;
+  border-color: colors.$mocha-mauve;
+}
+
+.form-control {
+  color: colors.$mocha-text;
+  background-color: colors.$mocha-mantle;
+  border-color: colors.$mocha-mauve;
+}
+
+.form-control::placeholder {
+  color: colors.$mocha-subtext-1;
+}
+
+.form-control:focus {
+  color: colors.$mocha-text;
+  background-color: colors.$mocha-mantle;
+  border-color: colors.$mocha-mauve;
+  caret-color: colors.$mocha-peach;
+  box-shadow: inherit;
+}
