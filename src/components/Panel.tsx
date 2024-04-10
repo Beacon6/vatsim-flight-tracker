@@ -59,6 +59,29 @@ const Panel: React.FC<{
     }
   };
 
+  const [skyVectorUrl, setSkyVectorUrl] = useState<string | undefined>();
+
+  useEffect(() => {
+    if (
+      !clientDetails?.flight_plan ||
+      clientDetails.flight_plan.flight_rules === 'V'
+    ) {
+      setSkyVectorUrl(undefined);
+      return;
+    }
+
+    const clientDeparture = clientDetails.flight_plan.departure;
+    const clientArrival = clientDetails.flight_plan.arrival;
+    const clientRoute = clientDetails.flight_plan.route;
+
+    const encodedFlightPlan = encodeURIComponent(
+      clientDeparture + ' ' + clientRoute + ' ' + clientArrival,
+    );
+    setSkyVectorUrl(
+      `https://skyvector.com/?chart=304&fpl=${encodedFlightPlan}`,
+    );
+  }, [clientDetails]);
+
   return (
     <>
       <Offcanvas
@@ -80,14 +103,41 @@ const Panel: React.FC<{
                 </Offcanvas.Title>
               </Col>
               <Col className='panel-controls'>
-                <Button variant='outline-primary' onClick={locateClient}>
+                <Button
+                  variant='outline-primary'
+                  onClick={locateClient}
+                  style={{ height: 44, width: 44 }}
+                >
                   <i
                     className='bi bi-crosshair'
                     style={{ fontSize: '1.25rem' }}
                   ></i>
                 </Button>
-                <Button variant='outline-primary' onClick={onHide}>
-                  Hide
+                <Button
+                  variant='outline-primary'
+                  style={{ height: 44, width: 44 }}
+                >
+                  <a
+                    href={skyVectorUrl}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    style={{ color: 'inherit' }}
+                  >
+                    <i
+                      className='bi bi-map'
+                      style={{ fontSize: '1.25 rem' }}
+                    ></i>
+                  </a>
+                </Button>
+                <Button
+                  variant='outline-primary'
+                  onClick={onHide}
+                  style={{ height: 44, width: 44 }}
+                >
+                  <i
+                    className='bi bi-x-circle'
+                    style={{ fontSize: '1.25rem' }}
+                  ></i>
                 </Button>
               </Col>
             </Row>

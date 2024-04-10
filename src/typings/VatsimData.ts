@@ -9,7 +9,7 @@ export interface VatsimData {
       aircraft_short: string;
       alternate: string;
       altitude: number;
-      arrival: number;
+      arrival: string;
       assigned_transponder: number;
       cruise_tas: number;
       departure: string;
