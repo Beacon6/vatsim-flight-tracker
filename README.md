@@ -18,4 +18,5 @@ The backend code, responsible for fetching data from VATSIM and serving the fron
 
 ## Credits
 
+Flight plan route mapping: [SkyVector](https://skyvector.com)
 Airport and FIR Data: [VAT-Spy Data Project](https://github.com/vatsimnetwork/vatspy-data-project)
