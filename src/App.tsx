@@ -89,6 +89,7 @@ function App() {
         <Aircraft
           vatsimPilots={vatsimData?.pilots}
           onClick={getSelectedClient}
+          selectedClient={selectedClient}
         />
         <Panel
           panelActive={panelActive}

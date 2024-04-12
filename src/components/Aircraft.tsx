@@ -10,8 +10,9 @@ import { VatsimData } from '../typings/VatsimData';
 const Aircraft: React.FC<{
   vatsimPilots?: VatsimData['pilots'];
   onClick: (client: string | number) => void;
+  selectedClient?: string | number;
 }> = (props) => {
-  const { vatsimPilots, onClick } = props;
+  const { vatsimPilots, onClick, selectedClient } = props;
 
   const map = useMap();
 
@@ -54,11 +55,22 @@ const Aircraft: React.FC<{
     iconSize: [24, 24],
   });
 
+  const airplaneIconFocus = icon({
+    iconUrl: '../assets/airplane-focus.svg',
+    iconSize: [24, 24],
+  });
+
   return (
     <>
       {displayedAircraft?.map((item) => (
         <Marker
-          icon={airplaneIcon}
+          icon={
+            item.cid === selectedClient
+              ? airplaneIconFocus
+              : item.callsign === selectedClient
+                ? airplaneIconFocus
+                : airplaneIcon
+          }
           position={[item.latitude, item.longitude]}
           key={item.cid}
           rotationAngle={item.heading}
