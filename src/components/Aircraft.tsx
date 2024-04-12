@@ -65,9 +65,9 @@ const Aircraft: React.FC<{
       {displayedAircraft?.map((item) => (
         <Marker
           icon={
-            item.cid === selectedClient
+            item.cid === Number(selectedClient)
               ? airplaneIconFocus
-              : item.callsign === selectedClient
+              : item.callsign === String(selectedClient)
                 ? airplaneIconFocus
                 : airplaneIcon
           }
