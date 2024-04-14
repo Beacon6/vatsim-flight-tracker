@@ -71,6 +71,13 @@ const Aircraft: React.FC<{
                 ? airplaneIconFocus
                 : airplaneIcon
           }
+          zIndexOffset={
+            item.cid === Number(selectedClient)
+              ? 9000
+              : item.callsign === String(selectedClient)
+                ? 9000
+                : 0
+          }
           position={[item.latitude, item.longitude]}
           key={item.cid}
           rotationAngle={item.heading}
