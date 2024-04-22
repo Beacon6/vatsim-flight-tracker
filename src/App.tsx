@@ -6,7 +6,8 @@ import Aircraft from './components/Aircraft.tsx';
 import Panel from './components/Panel.tsx';
 import { initializeApp } from 'firebase/app';
 import { getPerformance } from 'firebase/performance';
-import { VatsimData } from './typings/VatsimData';
+import { VatsimData, VatsimAirports } from './typings/VatsimData';
+import Airports from './components/Airports.tsx';
 
 function App() {
   useEffect(() => {
@@ -28,19 +29,23 @@ function App() {
   }, []);
 
   // Remember to switch to 'false' before deploying
-  const dev = false;
+  const dev = true;
 
   const server = dev
     ? 'http://localhost:5000'
     : 'https://vatsim-flight-tracker-ux7ne3anoq-lz.a.run.app';
 
   const [vatsimData, setVatsimData] = useState<VatsimData>();
+  const [airportsData, setAirportsData] = useState<VatsimAirports>();
 
   useEffect(() => {
     const socket = io(server);
 
     socket.on('vatsimData', (data) => {
       setVatsimData(data);
+    });
+    socket.on('airportsData', (data) => {
+      setAirportsData(data);
     });
   }, [server]);
 
@@ -91,6 +96,7 @@ function App() {
           onClick={getSelectedClient}
           selectedClient={selectedClient}
         />
+        <Airports airportsData={airportsData} />
         <Panel
           panelActive={panelActive}
           onHide={handleClose}

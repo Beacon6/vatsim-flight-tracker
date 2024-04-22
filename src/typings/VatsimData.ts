@@ -45,6 +45,11 @@ export interface VatsimPilot {
   vatsimPilot: VatsimData['pilots'][number];
 }
 
-export interface CenterBoundaries {
-  [centerId: string]: [number, number][];
+export interface VatsimAirports {
+  airports: {
+    icao: string;
+    airport_name: string;
+    latitude: number;
+    longitude: number;
+  }[];
 }
