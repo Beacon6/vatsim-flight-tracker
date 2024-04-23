@@ -2,12 +2,11 @@ import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import Header from './components/Header.tsx';
-import Aircraft from './components/Aircraft.tsx';
+import VatsimLayer from './components/VatsimLayer.tsx';
 import Panel from './components/Panel.tsx';
 import { initializeApp } from 'firebase/app';
 import { getPerformance } from 'firebase/performance';
 import { VatsimData, VatsimAirports } from './typings/VatsimData';
-import Airports from './components/Airports.tsx';
 
 function App() {
   useEffect(() => {
@@ -91,12 +90,12 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ></TileLayer>
-        <Aircraft
+        <VatsimLayer
           vatsimPilots={vatsimData?.pilots}
+          vatsimAirports={airportsData?.airports}
           onClick={getSelectedClient}
           selectedClient={selectedClient}
         />
-        <Airports airportsData={airportsData} />
         <Panel
           panelActive={panelActive}
           onHide={handleClose}
