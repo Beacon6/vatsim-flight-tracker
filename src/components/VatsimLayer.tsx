@@ -4,6 +4,7 @@ import { useMap, useMapEvent } from "react-leaflet";
 import { VatsimAirports, VatsimData } from "../typings/VatsimData";
 import Aircraft from "./Aircraft";
 import Airports from "./Airports";
+import { shuffleArray } from "../helpers/shuffleArray";
 
 const VatsimLayer: React.FC<{
   vatsimPilots?: VatsimData['pilots'];
@@ -60,8 +61,8 @@ const VatsimLayer: React.FC<{
       }
     }
 
-    setDisplayedAircraft(aircraftOnScreen.slice(0, 1000));
-    setDisplayedAirports(airportsOnScreen.slice(0, 1000));
+    setDisplayedAircraft(shuffleArray(aircraftOnScreen).slice(0, 1000));
+    setDisplayedAirports(shuffleArray(airportsOnScreen).slice(0, 50));
   }, [vatsimPilots, vatsimAirports, viewportBounds]);
 
   return (
