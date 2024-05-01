@@ -27,11 +27,10 @@ function App() {
     }
   }, []);
 
-  // Remember to switch to 'false' before deploying
   const dev = true;
 
   const server = dev
-    ? 'http://localhost:5000'
+    ? 'http://127.0.0.1:5000'
     : 'https://vatsim-flight-tracker-ux7ne3anoq-lz.a.run.app';
 
   const [vatsimData, setVatsimData] = useState<VatsimData>();
@@ -43,10 +42,13 @@ function App() {
     socket.on('vatsimData', (data) => {
       setVatsimData(data);
     });
-    socket.on('airportsData', (data) => {
-      setAirportsData(data);
-    });
   }, [server]);
+
+  useEffect(() => {
+    fetch('/vatsim_airports')
+      .then((res) => res.json())
+      .then((data) => setAirportsData(data));
+  }, []);
 
   // Displaying selected Client info
   const [selectedClient, setSelectedClient] = useState<string | number>();
