@@ -1,9 +1,9 @@
 import express from 'express';
+import { Server } from 'socket.io';
 import { createServer } from 'node:http';
 import { open } from 'node:fs/promises';
 import cors from 'cors';
 import axios from 'axios';
-import { Server } from 'socket.io';
 import { VatsimData, VatsimAirports } from '../src/typings/VatsimData';
 
 const app = express();
@@ -13,41 +13,43 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('dist'));
 
-const vatsimDataUrl = 'https://data.vatsim.net/v3/vatsim-data.json';
-
 let interval: NodeJS.Timeout | undefined;
 let vatsimData: VatsimData;
 
 const getVatsimData = async () => {
   try {
-    const response = await axios.get(vatsimDataUrl);
+    const response = await axios.get(
+      'https://data.vatsim.net/v3/vatsim-data.json',
+    );
     io.emit('vatsimData', response.data);
     vatsimData = response.data;
   } catch (err) {
-    console.error('Encountered an error when fetching VATSIM data:', err);
+    console.error('Error: ', err.message);
   }
 };
 
-const airportsDataUrl = './public/data/VATSpyAirports.dat';
-const airportsData: VatsimAirports = { airports: [] };
-
-const getAirportData = async () => {
+app.get('/vatsim_airports', async (_, res) => {
   try {
-    const file = await open(airportsDataUrl);
+    const vatsimAirports: VatsimAirports = { airports: [] };
+    const file = await open('./public/data/VATSpyAirports.dat');
+
     for await (const line of file.readLines()) {
       const airportDetails = line.split('|');
-      const airportData = {
-        icao: airportDetails[0],
-        airport_name: airportDetails[1],
+      const airportObject = {
+        airport_name: airportDetails[0],
+        icao: airportDetails[1],
         latitude: Number(airportDetails[2]),
         longitude: Number(airportDetails[3]),
       };
-      airportsData.airports.push(airportData);
+
+      vatsimAirports.airports.push(airportObject);
     }
+
+    res.status(200).send(vatsimAirports);
   } catch (err) {
-    console.error('Encountered an error when fetching airport data:', err);
+    res.status(500).send({ error: err.message });
   }
-};
+});
 
 io.on('connection', async (socket) => {
   console.log('New client connected');
@@ -55,15 +57,12 @@ io.on('connection', async (socket) => {
 
   if (vatsimData) {
     io.emit('vatsimData', vatsimData);
-    io.emit('airportsData', airportsData);
   }
 
-  console.log(interval);
   if (!interval) {
     console.log('Creating new fetch interval');
     interval = setInterval(getVatsimData, 15000);
     await getVatsimData();
-    await getAirportData();
   }
 
   socket.on('disconnect', () => {
