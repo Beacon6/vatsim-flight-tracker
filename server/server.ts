@@ -4,7 +4,8 @@ import { createServer } from 'node:http';
 import { open } from 'node:fs/promises';
 import cors from 'cors';
 import axios from 'axios';
-import { VatsimData, VatsimAirports } from '../src/typings/VatsimData';
+import { VatsimDataInterface } from '../src/typings/VatsimDataInterface';
+import { AirportsInterface } from '../src/typings/AirportsInterface';
 
 const app = express();
 const webSocketServer = createServer(app);
@@ -14,7 +15,7 @@ app.use(express.json());
 app.use(express.static('dist'));
 
 let interval: NodeJS.Timeout | undefined;
-let vatsimData: VatsimData;
+let vatsimData: VatsimDataInterface;
 
 const getVatsimData = async () => {
   try {
@@ -28,9 +29,9 @@ const getVatsimData = async () => {
   }
 };
 
-app.get('/vatsim_airports', async (_, res) => {
+app.get('/airports', async (_, res) => {
   try {
-    const vatsimAirports: VatsimAirports = { airports: [] };
+    const airports: AirportsInterface = { airports: [] };
     const file = await open('./public/data/VATSpyAirports.dat');
 
     for await (const line of file.readLines()) {
@@ -42,10 +43,10 @@ app.get('/vatsim_airports', async (_, res) => {
         longitude: Number(airportDetails[3]),
       };
 
-      vatsimAirports.airports.push(airportObject);
+      airports.airports.push(airportObject);
     }
 
-    res.status(200).send(vatsimAirports);
+    res.status(200).send(airports);
   } catch (err) {
     res.status(500).send({ error: err.message });
   }

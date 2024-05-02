@@ -6,20 +6,21 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
-import { VatsimData, VatsimPilot } from '../typings/VatsimData';
+import { VatsimDataInterface } from '../typings/VatsimDataInterface';
+import { VatsimPilotInterface } from '../typings/VatsimDataInterface';
 
 const Panel: React.FC<{
   panelActive: boolean;
   onHide: () => void;
   selectedClient?: string | number;
-  vatsimData?: VatsimData;
+  vatsimData?: VatsimDataInterface;
 }> = (props) => {
   const { panelActive, onHide, selectedClient, vatsimData } = props;
 
   const map = useMap();
 
   const [clientDetails, setClientDetails] =
-    useState<VatsimPilot['vatsimPilot']>();
+    useState<VatsimPilotInterface['vatsimPilot']>();
 
   useEffect(() => {
     if (!selectedClient || !vatsimData) {

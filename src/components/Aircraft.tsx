@@ -1,17 +1,27 @@
+import { useState } from 'react';
 import { Marker, Tooltip } from 'react-leaflet';
 import { icon } from 'leaflet';
 import 'leaflet-rotatedmarker';
+import Airports from './Airports';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { VatsimData } from '../typings/VatsimData';
+import { VatsimDataInterface } from '../typings/VatsimDataInterface.ts';
+import { AirportsInterface } from '../typings/AirportsInterface.ts';
 
 const Aircraft: React.FC<{
-  displayedAircraft?: VatsimData['pilots'];
+  displayedAircraft?: VatsimDataInterface['pilots'];
+  airportsData?: AirportsInterface['airports'];
   onClick: (client: string | number) => void;
   selectedClient?: string | number;
 }> = (props) => {
-  const { displayedAircraft, onClick, selectedClient } = props;
+  const { displayedAircraft, onClick, selectedClient, airportsData } = props;
+
+  const [showAirports, setShowAirports] = useState(false);
+
+  const switchActive = () => {
+    setShowAirports(!showAirports);
+  };
 
   const airplaneIcon = icon({
     iconUrl: '../assets/airplane.svg',
@@ -45,7 +55,9 @@ const Aircraft: React.FC<{
           key={item.cid}
           rotationAngle={item.heading}
           eventHandlers={{
-            click: () => onClick(item.cid),
+            click: () => {
+              onClick(item.cid), switchActive();
+            },
           }}
         >
           <Tooltip
@@ -68,6 +80,11 @@ const Aircraft: React.FC<{
           </Tooltip>
         </Marker>
       ))}
+      <Airports
+        isActive={showAirports}
+        departure={airportsData![0]}
+        arrival={airportsData![1]}
+      />
     </>
   );
 };

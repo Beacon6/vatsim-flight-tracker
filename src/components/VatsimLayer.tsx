@@ -1,18 +1,18 @@
-import { LatLngBounds, LatLngExpression } from "leaflet";
-import { useEffect, useState } from "react";
-import { useMap, useMapEvent } from "react-leaflet";
-import { VatsimAirports, VatsimData } from "../typings/VatsimData";
-import Aircraft from "./Aircraft";
-import Airports from "./Airports";
-import { shuffleArray } from "../helpers/shuffleArray";
+import { LatLngBounds, LatLngExpression } from 'leaflet';
+import { useEffect, useState } from 'react';
+import { useMap, useMapEvent } from 'react-leaflet';
+import { VatsimDataInterface } from '../typings/VatsimDataInterface.ts';
+import { AirportsInterface } from '../typings/AirportsInterface.ts';
+import Aircraft from './Aircraft';
+import { shuffleArray } from '../helpers/shuffleArray';
 
 const VatsimLayer: React.FC<{
-  vatsimPilots?: VatsimData['pilots'];
-  vatsimAirports?: VatsimAirports['airports'];
+  vatsimPilots?: VatsimDataInterface['pilots'];
+  airportsData?: AirportsInterface['airports'];
   onClick: (client: string | number) => void;
   selectedClient?: string | number;
 }> = (props) => {
-  const { vatsimPilots, vatsimAirports, onClick, selectedClient } = props;
+  const { vatsimPilots, airportsData, onClick, selectedClient } = props;
 
   const map = useMap();
 
@@ -27,17 +27,14 @@ const VatsimLayer: React.FC<{
   });
 
   const [displayedAircraft, setDisplayedAircraft] =
-    useState<VatsimData['pilots']>();
-  const [displayedAirports, setDisplayedAirports] =
-    useState<VatsimAirports['airports']>();
+    useState<VatsimDataInterface['pilots']>();
 
   useEffect(() => {
-    if (!vatsimPilots || !vatsimAirports || !viewportBounds) {
+    if (!vatsimPilots || !viewportBounds) {
       return;
     }
 
-    const aircraftOnScreen: VatsimData['pilots'] = [];
-    const airportsOnScreen: VatsimAirports['airports'] = [];
+    const aircraftOnScreen: VatsimDataInterface['pilots'] = [];
 
     for (let i = 0; i < vatsimPilots.length; i++) {
       const position: LatLngExpression = [
@@ -50,27 +47,19 @@ const VatsimLayer: React.FC<{
       }
     }
 
-    for (let i = 0; i < vatsimAirports.length; i++) {
-      const position: LatLngExpression = [
-        vatsimAirports[i].latitude,
-        vatsimAirports[i].longitude,
-      ];
-
-      if (viewportBounds.contains(position)) {
-        airportsOnScreen.push(vatsimAirports[i]);
-      }
-    }
-
     setDisplayedAircraft(shuffleArray(aircraftOnScreen).slice(0, 1000));
-    setDisplayedAirports(shuffleArray(airportsOnScreen).slice(0, 50));
-  }, [vatsimPilots, vatsimAirports, viewportBounds]);
+  }, [vatsimPilots, viewportBounds]);
 
   return (
     <>
-      <Aircraft displayedAircraft={displayedAircraft} onClick={onClick} selectedClient={selectedClient} />
-      <Airports displayedAirports={displayedAirports} />
+      <Aircraft
+        displayedAircraft={displayedAircraft}
+        airportsData={airportsData}
+        onClick={onClick}
+        selectedClient={selectedClient}
+      />
     </>
   );
-}
+};
 
 export default VatsimLayer;

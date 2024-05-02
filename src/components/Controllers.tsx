@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { VatsimData } from '../typings/VatsimData';
+import { VatsimData } from '../typings/VatsimDataInterface';
 import { LatLngBounds } from 'leaflet';
 import { useMap, useMapEvent } from 'react-leaflet';
 

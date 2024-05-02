@@ -1,4 +1,4 @@
-export interface VatsimData {
+export interface VatsimDataInterface {
   pilots: {
     altitude: number;
     callsign: string;
@@ -41,15 +41,6 @@ export interface VatsimData {
   }[];
 }
 
-export interface VatsimPilot {
-  vatsimPilot: VatsimData['pilots'][number];
-}
-
-export interface VatsimAirports {
-  airports: {
-    icao: string;
-    airport_name: string;
-    latitude: number;
-    longitude: number;
-  }[];
+export interface VatsimPilotInterface {
+  vatsimPilot: VatsimDataInterface['pilots'][number];
 }

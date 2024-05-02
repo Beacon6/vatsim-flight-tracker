@@ -6,7 +6,8 @@ import VatsimLayer from './components/VatsimLayer.tsx';
 import Panel from './components/Panel.tsx';
 import { initializeApp } from 'firebase/app';
 import { getPerformance } from 'firebase/performance';
-import { VatsimData, VatsimAirports } from './typings/VatsimData';
+import { VatsimDataInterface } from './typings/VatsimDataInterface.ts';
+import { AirportsInterface } from './typings/AirportsInterface.ts';
 
 function App() {
   useEffect(() => {
@@ -33,8 +34,8 @@ function App() {
     ? 'http://127.0.0.1:5000'
     : 'https://vatsim-flight-tracker-ux7ne3anoq-lz.a.run.app';
 
-  const [vatsimData, setVatsimData] = useState<VatsimData>();
-  const [airportsData, setAirportsData] = useState<VatsimAirports>();
+  const [vatsimData, setVatsimData] = useState<VatsimDataInterface>();
+  const [airportsData, setAirportsData] = useState<AirportsInterface>();
 
   useEffect(() => {
     const socket = io(server);
@@ -45,7 +46,7 @@ function App() {
   }, [server]);
 
   useEffect(() => {
-    fetch('/vatsim_airports')
+    fetch('/airports')
       .then((res) => res.json())
       .then((data) => setAirportsData(data));
   }, []);
@@ -94,7 +95,7 @@ function App() {
         ></TileLayer>
         <VatsimLayer
           vatsimPilots={vatsimData?.pilots}
-          vatsimAirports={airportsData?.airports}
+          airportsData={airportsData?.airports}
           onClick={getSelectedClient}
           selectedClient={selectedClient}
         />
