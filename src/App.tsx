@@ -95,7 +95,7 @@ function App() {
         ></TileLayer>
         <VatsimLayer
           vatsimPilots={vatsimData?.pilots}
-          airportsData={airportsData?.airports}
+          airportsData={airportsData}
           onClick={getSelectedClient}
           selectedClient={selectedClient}
         />

@@ -4,11 +4,12 @@ import { useMap, useMapEvent } from 'react-leaflet';
 import { VatsimDataInterface } from '../typings/VatsimDataInterface.ts';
 import { AirportsInterface } from '../typings/AirportsInterface.ts';
 import Aircraft from './Aircraft';
+import Airports from './Airports.tsx';
 import { shuffleArray } from '../helpers/shuffleArray';
 
 const VatsimLayer: React.FC<{
   vatsimPilots?: VatsimDataInterface['pilots'];
-  airportsData?: AirportsInterface['airports'];
+  airportsData?: AirportsInterface;
   onClick: (client: string | number) => void;
   selectedClient?: string | number;
 }> = (props) => {
@@ -54,9 +55,13 @@ const VatsimLayer: React.FC<{
     <>
       <Aircraft
         displayedAircraft={displayedAircraft}
-        airportsData={airportsData}
         onClick={onClick}
         selectedClient={selectedClient}
+      />
+      <Airports
+        selectedClient={selectedClient}
+        airportsData={airportsData}
+        vatsimData={vatsimPilots}
       />
     </>
   );

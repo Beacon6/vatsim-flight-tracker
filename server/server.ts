@@ -37,8 +37,8 @@ app.get('/airports', async (_, res) => {
     for await (const line of file.readLines()) {
       const airportDetails = line.split('|');
       const airportObject = {
-        airport_name: airportDetails[0],
-        icao: airportDetails[1],
+        icao: airportDetails[0],
+        airport_name: airportDetails[1],
         latitude: Number(airportDetails[2]),
         longitude: Number(airportDetails[3]),
       };
