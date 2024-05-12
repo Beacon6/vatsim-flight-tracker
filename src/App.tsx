@@ -28,7 +28,7 @@ function App() {
     }
   }, []);
 
-  const dev = true;
+  const dev = false;
 
   const server = dev
     ? 'http://127.0.0.1:5000'
@@ -67,9 +67,12 @@ function App() {
 
   const [selectedClient, setSelectedClient] =
     useState<VatsimDataInterface['pilots'][number]>();
+  const [selectedClientCallsign, setSelectedClientCallsign] =
+    useState<string>();
 
   const selectClient = (client: VatsimDataInterface['pilots'][number]) => {
     setSelectedClient(client);
+    setSelectedClientCallsign(client.callsign);
   };
 
   const [panelActive, setPanelActive] = useState(false);
@@ -84,6 +87,7 @@ function App() {
 
   const deselectClient = () => {
     setSelectedClient(undefined);
+    setSelectedClientCallsign(undefined);
   };
 
   const searchClient = (searchValue?: string | number) => {
@@ -103,6 +107,18 @@ function App() {
       return;
     }
   };
+
+  useEffect(() => {
+    if (!selectedClientCallsign) {
+      return;
+    }
+
+    const client = vatsimPilots?.find((client) => {
+      return client.callsign === selectedClientCallsign;
+    });
+
+    selectClient(client!);
+  }, [vatsimPilots, selectedClientCallsign]);
 
   return (
     <>

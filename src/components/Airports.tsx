@@ -1,65 +1,42 @@
-import { useEffect, useState } from 'react';
-import {
-  AirportInterface,
-  AirportsInterface,
-} from '../typings/AirportsInterface.ts';
-import { CircleMarker } from 'react-leaflet';
+import { Marker } from 'react-leaflet';
 import { VatsimDataInterface } from '../typings/VatsimDataInterface.ts';
+import { VatsimAirportsInterface } from '../typings/VatsimAirportsInterface.ts';
+import { useEffect, useState } from 'react';
 
 const Airports: React.FC<{
-  selectedClient?: string | number;
-  vatsimData?: VatsimDataInterface['pilots'];
-  airportsData?: AirportsInterface;
+  selectedClient?: VatsimDataInterface['pilots'][number];
+  vatsimAirports?: VatsimAirportsInterface['airports'];
 }> = (props) => {
-  const { selectedClient, vatsimData, airportsData } = props;
+  const { selectedClient, vatsimAirports } = props;
 
-  const [departure, setDeparture] = useState<AirportInterface>();
-  const [arrival, setArrival] = useState<AirportInterface>();
+  const [departureAirport, setDepartureAirport] = useState<[number, number]>();
+  const [arrivalAirport, setArrivalAirport] = useState<[number, number]>();
 
   useEffect(() => {
-    if (!selectedClient || !vatsimData) {
-      setDeparture(undefined);
-      setArrival(undefined);
+    if (!selectedClient || !vatsimAirports) {
+      setDepartureAirport(undefined);
+      setArrivalAirport(undefined);
       return;
     }
 
-    const filteredClient = vatsimData?.find((client) => {
-      return client.cid === Number(selectedClient);
+    const dep = vatsimAirports.find((airport) => {
+      return airport.icao === selectedClient.flight_plan?.departure;
+    });
+    const arr = vatsimAirports.find((airport) => {
+      return airport.icao === selectedClient.flight_plan?.arrival;
     });
 
-    const departureIcao = filteredClient?.flight_plan?.departure;
-    const arrivalIcao = filteredClient?.flight_plan?.arrival;
-
-    const departureAirport = airportsData?.airports.find((client) => {
-      console.log(client.icao);
-      return client.icao === departureIcao;
-    });
-    const arrivalAirport = airportsData?.airports.find((client) => {
-      console.log(client.icao);
-      return client.icao === arrivalIcao;
-    });
-
-    if (filteredClient) {
-      setDeparture(departureAirport);
-      setArrival(arrivalAirport);
+    if (dep && arr) {
+      setDepartureAirport([dep?.latitude, dep?.longitude]);
+      setArrivalAirport([arr?.latitude, arr?.longitude]);
     }
-  }, [selectedClient, vatsimData, airportsData?.airports]);
+  }, [selectedClient, vatsimAirports]);
 
-  useEffect(() => {
-    console.log(departure, arrival);
-  }, [departure, arrival]);
-
-  if (departure && arrival) {
+  if (departureAirport && arrivalAirport) {
     return (
       <>
-        <CircleMarker
-          center={[departure.latitude, departure.longitude]}
-          radius={20}
-        ></CircleMarker>
-        <CircleMarker
-          center={[arrival.latitude, arrival.longitude]}
-          radius={20}
-        ></CircleMarker>
+        <Marker position={departureAirport} />
+        <Marker position={arrivalAirport} />
       </>
     );
   } else {

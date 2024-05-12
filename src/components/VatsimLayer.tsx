@@ -2,6 +2,7 @@ import { LatLngBounds, LatLngExpression } from 'leaflet';
 import { useEffect, useState } from 'react';
 import { useMap, useMapEvent } from 'react-leaflet';
 import Aircraft from './Aircraft';
+import Airports from './Airports.tsx';
 import { shuffleArray } from '../helpers/shuffleArray';
 import { VatsimDataInterface } from '../typings/VatsimDataInterface.ts';
 import { VatsimAirportsInterface } from '../typings/VatsimAirportsInterface.ts';
@@ -12,7 +13,7 @@ const VatsimLayer: React.FC<{
   onClick: (client: VatsimDataInterface['pilots'][number]) => void;
   selectedClient: VatsimDataInterface['pilots'][number] | undefined;
 }> = (props) => {
-  const { vatsimPilots, onClick, selectedClient } = props;
+  const { vatsimPilots, vatsimAirports, onClick, selectedClient } = props;
 
   const map = useMap();
 
@@ -67,6 +68,10 @@ const VatsimLayer: React.FC<{
         displayedAircraft={displayedAircraft}
         onClick={onClick}
         selectedClient={selectedClient}
+      />
+      <Airports
+        selectedClient={selectedClient}
+        vatsimAirports={vatsimAirports}
       />
     </>
   );
