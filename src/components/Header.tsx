@@ -7,16 +7,18 @@ import Button from 'react-bootstrap/Button';
 
 const Header: React.FC<{
   pilotsCount?: number;
-  atcCount?: number;
-  onSearch: (value?: string | number) => void;
+  controllersCount?: number;
+  onSearch: (searchValue?: string | number) => void;
   isDev: boolean;
 }> = (props) => {
-  const { pilotsCount, atcCount, onSearch, isDev } = props;
+  const { pilotsCount, controllersCount, onSearch, isDev } = props;
 
-  const [inputValue, setInputValue] = useState<string | number>();
+  const [searchValue, setSearchValue] = useState<string | number>();
 
-  const changeInputValue = (value: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(value.target.value);
+  const changeInputValue = (
+    inputValue: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setSearchValue(inputValue.target.value);
   };
 
   return (
@@ -30,7 +32,7 @@ const Header: React.FC<{
           </Container>
           <Container className='header-item'>
             <Navbar.Text>Pilots connected: {pilotsCount}</Navbar.Text>
-            <Navbar.Text>ATC connected: {atcCount}</Navbar.Text>
+            <Navbar.Text>ATC connected: {controllersCount}</Navbar.Text>
           </Container>
           <Container className='header-item'>
             <InputGroup className='d-flex'>
@@ -45,7 +47,7 @@ const Header: React.FC<{
               variant='outline-primary'
               id='search-button'
               onClick={() => {
-                onSearch(inputValue);
+                onSearch(searchValue);
               }}
             >
               <i className='bi bi-search'></i>

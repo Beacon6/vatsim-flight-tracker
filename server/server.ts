@@ -5,7 +5,7 @@ import { open } from 'node:fs/promises';
 import cors from 'cors';
 import axios from 'axios';
 import { VatsimDataInterface } from '../src/typings/VatsimDataInterface';
-import { AirportsInterface } from '../src/typings/AirportsInterface';
+import { VatsimAirportsInterface } from '../src/typings/VatsimAirportsInterface';
 
 const app = express();
 const webSocketServer = createServer(app);
@@ -29,9 +29,9 @@ const getVatsimData = async () => {
   }
 };
 
-app.get('/airports', async (_, res) => {
+app.get('/vatsim_airports', async (_, res) => {
   try {
-    const airports: AirportsInterface = { airports: [] };
+    const airports: VatsimAirportsInterface = { airports: [] };
     const file = await open('./public/data/VATSpyAirports.dat');
 
     for await (const line of file.readLines()) {

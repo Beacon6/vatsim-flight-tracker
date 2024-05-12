@@ -7,7 +7,7 @@ import Panel from './components/Panel.tsx';
 import { initializeApp } from 'firebase/app';
 import { getPerformance } from 'firebase/performance';
 import { VatsimDataInterface } from './typings/VatsimDataInterface.ts';
-import { AirportsInterface } from './typings/AirportsInterface.ts';
+import { VatsimAirportsInterface } from './typings/VatsimAirportsInterface.ts';
 
 function App() {
   useEffect(() => {
@@ -35,7 +35,12 @@ function App() {
     : 'https://vatsim-flight-tracker-ux7ne3anoq-lz.a.run.app';
 
   const [vatsimData, setVatsimData] = useState<VatsimDataInterface>();
-  const [airportsData, setAirportsData] = useState<AirportsInterface>();
+  const [vatsimPilots, setVatsimPilots] =
+    useState<VatsimDataInterface['pilots']>();
+  const [vatsimControllers, setVatsimControllers] =
+    useState<VatsimDataInterface['controllers']>();
+  const [vatsimAirports, setVatsimAirports] =
+    useState<VatsimAirportsInterface['airports']>();
 
   useEffect(() => {
     const socket = io(server);
@@ -46,15 +51,24 @@ function App() {
   }, [server]);
 
   useEffect(() => {
-    fetch('/airports')
+    if (!vatsimData) {
+      return;
+    }
+
+    setVatsimPilots(vatsimData['pilots']);
+    setVatsimControllers(vatsimData['controllers']);
+  }, [vatsimData]);
+
+  useEffect(() => {
+    fetch('/vatsim_airports')
       .then((res) => res.json())
-      .then((data) => setAirportsData(data));
+      .then((data) => setVatsimAirports(data['airports']));
   }, []);
 
-  // Displaying selected Client info
-  const [selectedClient, setSelectedClient] = useState<string | number>();
+  const [selectedClient, setSelectedClient] =
+    useState<VatsimDataInterface['pilots'][number]>();
 
-  const getSelectedClient = (client?: string | number) => {
+  const selectClient = (client: VatsimDataInterface['pilots'][number]) => {
     setSelectedClient(client);
   };
 
@@ -62,24 +76,46 @@ function App() {
 
   useEffect(() => {
     if (!selectedClient) {
-      return;
+      setPanelActive(false);
+    } else {
+      setPanelActive(true);
     }
-
-    setPanelActive(true);
   }, [selectedClient]);
 
-  const handleClose = () => {
-    setPanelActive(false);
+  const deselectClient = () => {
     setSelectedClient(undefined);
+  };
+
+  const searchClient = (searchValue?: string | number) => {
+    if (
+      vatsimPilots &&
+      searchValue &&
+      vatsimPilots.some((client) => {
+        return client.callsign === searchValue || client.cid === searchValue;
+      })
+    ) {
+      setSelectedClient(
+        vatsimPilots.find((client) => {
+          return client.callsign === searchValue || client.cid === searchValue;
+        }),
+      );
+    } else {
+      return;
+    }
   };
 
   return (
     <>
       <Header
-        pilotsCount={vatsimData?.pilots.length}
-        atcCount={vatsimData?.controllers.length}
-        onSearch={getSelectedClient}
+        pilotsCount={vatsimPilots?.length}
+        controllersCount={vatsimControllers?.length}
+        onSearch={searchClient}
         isDev={dev}
+      />
+      <Panel
+        panelActive={panelActive}
+        onHide={deselectClient}
+        selectedClient={selectedClient}
       />
       <MapContainer
         className='map-container'
@@ -94,16 +130,10 @@ function App() {
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ></TileLayer>
         <VatsimLayer
-          vatsimPilots={vatsimData?.pilots}
-          airportsData={airportsData}
-          onClick={getSelectedClient}
+          vatsimPilots={vatsimPilots}
+          vatsimAirports={vatsimAirports}
+          onClick={selectClient}
           selectedClient={selectedClient}
-        />
-        <Panel
-          panelActive={panelActive}
-          onHide={handleClose}
-          selectedClient={selectedClient}
-          vatsimData={vatsimData}
         />
       </MapContainer>
     </>

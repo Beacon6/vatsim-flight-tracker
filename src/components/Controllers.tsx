@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { VatsimData } from '../typings/VatsimDataInterface';
 import { LatLngBounds } from 'leaflet';
 import { useMap, useMapEvent } from 'react-leaflet';
+import { VatsimDataInterface } from '../typings/VatsimDataInterface';
 
-const Controllers: React.FC<{ vatsimData?: VatsimData }> = () => {
+const Controllers: React.FC<{
+  vatsimControllers?: VatsimDataInterface['controllers'];
+}> = () => {
   const [viewportBounds, setViewportBounds] = useState<LatLngBounds>();
   const map = useMap();
 

@@ -8,8 +8,8 @@ import { VatsimDataInterface } from '../typings/VatsimDataInterface.ts';
 
 const Aircraft: React.FC<{
   displayedAircraft?: VatsimDataInterface['pilots'];
-  onClick: (client: string | number) => void;
-  selectedClient?: string | number;
+  onClick: (client: VatsimDataInterface['pilots'][number]) => void;
+  selectedClient?: VatsimDataInterface['pilots'][number];
 }> = (props) => {
   const { displayedAircraft, onClick, selectedClient } = props;
 
@@ -27,25 +27,13 @@ const Aircraft: React.FC<{
     <>
       {displayedAircraft?.map((item) => (
         <Marker
-          icon={
-            item.cid === Number(selectedClient)
-              ? airplaneIconFocus
-              : item.callsign === String(selectedClient)
-                ? airplaneIconFocus
-                : airplaneIcon
-          }
-          zIndexOffset={
-            item.cid === Number(selectedClient)
-              ? 9000
-              : item.callsign === String(selectedClient)
-                ? 9000
-                : 0
-          }
+          icon={item === selectedClient ? airplaneIconFocus : airplaneIcon}
+          zIndexOffset={item === selectedClient ? 9000 : 0}
           position={[item.latitude, item.longitude]}
           key={item.cid}
           rotationAngle={item.heading}
           eventHandlers={{
-            click: () => onClick(item.cid),
+            click: () => onClick(item),
           }}
         >
           <Tooltip

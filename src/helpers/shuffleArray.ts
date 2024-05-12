@@ -8,4 +8,4 @@ export const shuffleArray = (arr: Array<any>): Array<any> => {
   }
 
   return arr;
-}
+};

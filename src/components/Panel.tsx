@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useMap } from 'react-leaflet';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -7,73 +6,28 @@ import Col from 'react-bootstrap/Col';
 import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
 import { VatsimDataInterface } from '../typings/VatsimDataInterface';
-import { VatsimPilotInterface } from '../typings/VatsimDataInterface';
 
 const Panel: React.FC<{
   panelActive: boolean;
   onHide: () => void;
-  selectedClient?: string | number;
-  vatsimData?: VatsimDataInterface;
+  selectedClient?: VatsimDataInterface['pilots'][number];
 }> = (props) => {
-  const { panelActive, onHide, selectedClient, vatsimData } = props;
+  const { panelActive, onHide, selectedClient } = props;
 
-  const map = useMap();
-
-  const [clientDetails, setClientDetails] =
-    useState<VatsimPilotInterface['vatsimPilot']>();
-
-  useEffect(() => {
-    if (!selectedClient || !vatsimData) {
-      return;
-    }
-
-    const containsCID = vatsimData?.pilots.some((client) => {
-      return client.cid === Number(selectedClient);
-    });
-    const containsCallsign = vatsimData?.pilots.some((client) => {
-      return client.callsign === String(selectedClient);
-    });
-
-    if (containsCID) {
-      const filteredClient = vatsimData?.pilots.find((client) => {
-        return client.cid === Number(selectedClient);
-      });
-      setClientDetails(filteredClient);
-    } else if (containsCallsign) {
-      const filteredClient = vatsimData?.pilots.find((client) => {
-        return client.callsign === String(selectedClient);
-      });
-      setClientDetails(filteredClient);
-    } else {
-      setClientDetails(undefined);
-    }
-  }, [selectedClient, vatsimData]);
-
-  const locateClient = () => {
-    const clientLat = clientDetails?.latitude;
-    const clientLon = clientDetails?.longitude;
-
-    if (!clientLat || !clientLon) {
-      return;
-    } else {
-      map.flyTo([clientLat, clientLon]);
-    }
-  };
-
-  const [skyVectorUrl, setSkyVectorUrl] = useState<string | undefined>();
+  const [skyVectorUrl, setSkyVectorUrl] = useState<string>();
 
   useEffect(() => {
     if (
-      !clientDetails?.flight_plan ||
-      clientDetails.flight_plan.flight_rules === 'V'
+      !selectedClient?.flight_plan ||
+      selectedClient.flight_plan.flight_rules === 'V'
     ) {
       setSkyVectorUrl(undefined);
       return;
     }
 
-    const clientDeparture = clientDetails.flight_plan.departure;
-    const clientArrival = clientDetails.flight_plan.arrival;
-    const clientRoute = clientDetails.flight_plan.route;
+    const clientDeparture = selectedClient.flight_plan.departure;
+    const clientArrival = selectedClient.flight_plan.arrival;
+    const clientRoute = selectedClient.flight_plan.route;
 
     const encodedFlightPlan = encodeURIComponent(
       clientDeparture + ' ' + clientRoute + ' ' + clientArrival,
@@ -81,13 +35,13 @@ const Panel: React.FC<{
     setSkyVectorUrl(
       `https://skyvector.com/?chart=304&fpl=${encodedFlightPlan}`,
     );
-  }, [clientDetails]);
+  }, [selectedClient]);
 
   return (
     <>
       <Offcanvas
         className='panel'
-        show={panelActive && clientDetails}
+        show={panelActive && selectedClient}
         onHide={onHide}
         backdrop={false}
       >
@@ -96,24 +50,14 @@ const Panel: React.FC<{
             <Row>
               <Col className='panel-title'>
                 <Offcanvas.Title className='panel-title'>
-                  {clientDetails?.callsign} (
-                  {clientDetails?.flight_plan?.aircraft_short
-                    ? clientDetails?.flight_plan.aircraft_short
+                  {selectedClient?.callsign} (
+                  {selectedClient?.flight_plan?.aircraft_short
+                    ? selectedClient?.flight_plan.aircraft_short
                     : 'N/A'}
                   )
                 </Offcanvas.Title>
               </Col>
               <Col className='panel-controls'>
-                <Button
-                  variant='outline-primary'
-                  onClick={locateClient}
-                  style={{ height: 44, width: 44 }}
-                >
-                  <i
-                    className='bi bi-crosshair'
-                    style={{ fontSize: '1.25rem' }}
-                  ></i>
-                </Button>
                 <Button
                   variant='outline-primary'
                   style={{ height: 44, width: 44 }}
@@ -145,7 +89,7 @@ const Panel: React.FC<{
             <Row>
               <Col className='panel-subtitle'>
                 <Offcanvas.Title className={'panel-subtitle'}>
-                  CID: {clientDetails?.cid}
+                  CID: {selectedClient?.cid}
                 </Offcanvas.Title>
               </Col>
             </Row>
@@ -167,13 +111,13 @@ const Panel: React.FC<{
             </Row>
             <Row>
               <Col className='panel-info'>
-                {clientDetails?.flight_plan?.departure
-                  ? clientDetails?.flight_plan?.departure
+                {selectedClient?.flight_plan?.departure
+                  ? selectedClient?.flight_plan?.departure
                   : 'Not specified'}
               </Col>
               <Col className='panel-info'>
-                {clientDetails?.flight_plan?.arrival
-                  ? clientDetails?.flight_plan?.arrival
+                {selectedClient?.flight_plan?.arrival
+                  ? selectedClient?.flight_plan?.arrival
                   : 'Not specified'}
               </Col>
             </Row>
@@ -181,29 +125,29 @@ const Panel: React.FC<{
           <Container>
             <Row>
               <Col className='panel-info'>
-                Altitude (MSL): {clientDetails?.altitude} feet
+                Altitude (MSL): {selectedClient?.altitude} feet
               </Col>
               <Col className='panel-info'>
-                Speed (GS): {clientDetails?.groundspeed} knots
+                Speed (GS): {selectedClient?.groundspeed} knots
               </Col>
             </Row>
             <Row>
               <Col className='panel-info'>
-                Latitude: {clientDetails?.latitude}
+                Latitude: {selectedClient?.latitude}
               </Col>
               <Col className='panel-info'>
-                Longitude: {clientDetails?.longitude}
+                Longitude: {selectedClient?.longitude}
               </Col>
             </Row>
             <Row>
               <Col className='panel-info'>
                 Flight rules:{' '}
-                {clientDetails?.flight_plan?.flight_rules === 'I'
+                {selectedClient?.flight_plan?.flight_rules === 'I'
                   ? 'IFR'
                   : 'VFR'}
               </Col>
               <Col className='panel-info'>
-                Squawk: {clientDetails?.transponder}
+                Squawk: {selectedClient?.transponder}
               </Col>
             </Row>
           </Container>
@@ -211,16 +155,16 @@ const Panel: React.FC<{
             <Accordion.Item eventKey='0'>
               <Accordion.Header>Filed flight plan route</Accordion.Header>
               <Accordion.Body>
-                {clientDetails?.flight_plan?.route
-                  ? clientDetails?.flight_plan?.route
+                {selectedClient?.flight_plan?.route
+                  ? selectedClient?.flight_plan?.route
                   : 'No flight plan filed'}
               </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey='1'>
               <Accordion.Header>Remarks</Accordion.Header>
               <Accordion.Body>
-                {clientDetails?.flight_plan?.remarks
-                  ? clientDetails?.flight_plan?.remarks
+                {selectedClient?.flight_plan?.remarks
+                  ? selectedClient?.flight_plan?.remarks
                   : 'No remarks'}
               </Accordion.Body>
             </Accordion.Item>

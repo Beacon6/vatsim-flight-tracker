@@ -40,7 +40,3 @@ export interface VatsimDataInterface {
     sector?: [number, number][];
   }[];
 }
-
-export interface VatsimPilotInterface {
-  vatsimPilot: VatsimDataInterface['pilots'][number];
-}
