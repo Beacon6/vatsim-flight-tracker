@@ -18,7 +18,7 @@ const Header: React.FC<{
   const changeInputValue = (
     inputValue: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    setSearchValue(inputValue.target.value);
+    setSearchValue(inputValue.target.value.toUpperCase());
   };
 
   return (
