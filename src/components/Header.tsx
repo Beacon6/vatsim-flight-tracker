@@ -9,9 +9,8 @@ const Header: React.FC<{
   pilotsCount?: number;
   controllersCount?: number;
   onSearch: (searchValue?: string | number) => void;
-  isDev: boolean;
 }> = (props) => {
-  const { pilotsCount, controllersCount, onSearch, isDev } = props;
+  const { pilotsCount, controllersCount, onSearch } = props;
 
   const [searchValue, setSearchValue] = useState<string | number>();
 
@@ -26,9 +25,7 @@ const Header: React.FC<{
       <Container className='header'>
         <Navbar className='header-topbar'>
           <Container className='header-item'>
-            <Navbar.Brand className='header-brand' href='#'>
-              {isDev ? 'Vatsim Flight Tracker Dev' : 'Vatsim Flight Tracker'}
-            </Navbar.Brand>
+            <Navbar.Brand className='header-brand' href='#'>{'Vatsim Flight Tracker'}</Navbar.Brand>
           </Container>
           <Container className='header-item'>
             <Navbar.Text>Pilots connected: {pilotsCount}</Navbar.Text>

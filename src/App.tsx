@@ -28,11 +28,10 @@ function App() {
     }
   }, []);
 
-  const dev = false;
+  const PORT = import.meta.env.VITE_PORT;
+  console.log(PORT);
 
-  const server = dev
-    ? 'http://127.0.0.1:5000'
-    : 'https://vatsim-flight-tracker-ux7ne3anoq-lz.a.run.app';
+  const server = `http://127.0.0.1:${PORT}`;
 
   const [vatsimData, setVatsimData] = useState<VatsimDataInterface>();
   const [vatsimPilots, setVatsimPilots] =
@@ -126,7 +125,6 @@ function App() {
         pilotsCount={vatsimPilots?.length}
         controllersCount={vatsimControllers?.length}
         onSearch={searchClient}
-        isDev={dev}
       />
       <Panel
         panelActive={panelActive}
