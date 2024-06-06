@@ -80,4 +80,4 @@ io.on('connection', async (socket) => {
 
 const PORT = process.env.PORT || 5000;
 webSocketServer.listen(PORT);
-console.log(`Server listening on http://127.0.0.1:${PORT}`);
+console.log(`Server listening on http://localhost:${PORT}`);

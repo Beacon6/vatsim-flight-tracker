@@ -29,9 +29,13 @@ function App() {
   }, []);
 
   const PORT = import.meta.env.VITE_PORT;
-  console.log(PORT);
+  const BUILD_TYPE = import.meta.env.VITE_BUILD_TYPE
 
-  const server = `http://127.0.0.1:${PORT}`;
+  let server = 'https://vatsim-flight-tracker-ux7ne3anoq-lz.a.run.app'
+
+  if (BUILD_TYPE === 'dev') {
+    server = `http://localhost:${PORT}`
+  }
 
   const [vatsimData, setVatsimData] = useState<VatsimDataInterface>();
   const [vatsimPilots, setVatsimPilots] =
