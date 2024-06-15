@@ -4,54 +4,22 @@ import { MapContainer, TileLayer } from 'react-leaflet';
 import Header from './components/Header.tsx';
 import VatsimLayer from './components/VatsimLayer.tsx';
 import Panel from './components/Panel.tsx';
-import { initializeApp } from 'firebase/app';
-import { getPerformance } from 'firebase/performance';
 import { VatsimDataInterface } from './typings/VatsimDataInterface.ts';
 import { VatsimAirportsInterface } from './typings/VatsimAirportsInterface.ts';
 
 function App() {
-  useEffect(() => {
-    const firebaseConfig = {
-      apiKey: 'AIzaSyCOm3zhndPTuWbU0KLd3Jp6pZh2yXsfD24',
-      authDomain: 'vatsim-flight-tracker.firebaseapp.com',
-      projectId: 'vatsim-flight-tracker',
-      storageBucket: 'vatsim-flight-tracker.appspot.com',
-      messagingSenderId: '260478397514',
-      appId: '1:260478397514:web:fe1e4ff32c012aab608ab3',
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const perf = getPerformance(app);
-
-    if (app && perf) {
-      console.log('Firebase App initialized successfully');
-    }
-  }, []);
-
-  const PORT = import.meta.env.VITE_PORT;
-  const BUILD_TYPE = import.meta.env.VITE_BUILD_TYPE
-
-  let server = 'https://vatsim-flight-tracker-ux7ne3anoq-lz.a.run.app'
-
-  if (BUILD_TYPE === 'dev') {
-    server = `http://localhost:${PORT}`
-  }
-
   const [vatsimData, setVatsimData] = useState<VatsimDataInterface>();
-  const [vatsimPilots, setVatsimPilots] =
-    useState<VatsimDataInterface['pilots']>();
-  const [vatsimControllers, setVatsimControllers] =
-    useState<VatsimDataInterface['controllers']>();
-  const [vatsimAirports, setVatsimAirports] =
-    useState<VatsimAirportsInterface['airports']>();
+  const [vatsimPilots, setVatsimPilots] = useState<VatsimDataInterface['pilots']>();
+  const [vatsimControllers, setVatsimControllers] = useState<VatsimDataInterface['controllers']>();
+  const [vatsimAirports, setVatsimAirports] = useState<VatsimAirportsInterface['airports']>();
 
   useEffect(() => {
-    const socket = io(server);
+    const socket = io('http://localhost:5000');
 
     socket.on('vatsimData', (data) => {
       setVatsimData(data);
     });
-  }, [server]);
+  }, []);
 
   useEffect(() => {
     if (!vatsimData) {

@@ -78,6 +78,5 @@ io.on('connection', async (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
-webSocketServer.listen(PORT);
-console.log(`Server listening on http://localhost:${PORT}`);
+webSocketServer.listen(5000);
+console.log(`Server listening on http://localhost:5000`);
