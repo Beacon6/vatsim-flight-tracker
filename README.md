@@ -8,13 +8,14 @@ The main focus of VATSIM is providing a convincing and immersive simulation of c
 
 VATSIM Flight Tracker allows for displaying currently logged-in pilots, air traffic controllers and their sectors, as well as some general statistics about the network.
 
+The easiest way to checkout this project in action is through Docker. There are Makefile targets provided for building and running the container.
+
+```
+make build
+make run
+```
+
 _NOTE: This is a personal project which is being continously developed and expanded._
-
-## Used Technologies
-
-The frontend code of the application is written in TypeScript and uses the React framework. It is served directly from the backend server.
-
-The backend code, responsible for fetching data from VATSIM and serving the frontend, is also written in TypeScript and uses Express together with Socket.IO to handle backend <-> frontend communication with WebSockets. It is hosted as a Docker container on Google Cloud Run and linked to Firebase Hosting.
 
 ## Credits
 
