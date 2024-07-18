@@ -19,9 +19,7 @@ let vatsimData: VatsimDataInterface;
 
 const getVatsimData = async () => {
   try {
-    const response = await axios.get(
-      'https://data.vatsim.net/v3/vatsim-data.json',
-    );
+    const response = await axios.get('https://data.vatsim.net/v3/vatsim-data.json');
     io.emit('vatsimData', response.data);
     vatsimData = response.data;
   } catch (err) {

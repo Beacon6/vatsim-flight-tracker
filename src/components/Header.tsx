@@ -14,9 +14,7 @@ const Header: React.FC<{
 
   const [searchValue, setSearchValue] = useState<string | number>();
 
-  const changeInputValue = (
-    inputValue: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const changeInputValue = (inputValue: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(inputValue.target.value.toUpperCase());
   };
 
@@ -25,7 +23,9 @@ const Header: React.FC<{
       <Container className='header'>
         <Navbar className='header-topbar'>
           <Container className='header-item'>
-            <Navbar.Brand className='header-brand' href='#'>{'Vatsim Flight Tracker'}</Navbar.Brand>
+            <Navbar.Brand className='header-brand' href='#'>
+              {'Vatsim Flight Tracker'}
+            </Navbar.Brand>
           </Container>
           <Container className='header-item'>
             <Navbar.Text>Pilots connected: {pilotsCount}</Navbar.Text>
@@ -34,11 +34,7 @@ const Header: React.FC<{
           <Container className='header-item'>
             <InputGroup className='d-flex'>
               <InputGroup.Text>CID / Callsign</InputGroup.Text>
-              <Form.Control
-                type='text'
-                placeholder='1590612 / AUA546'
-                onChange={changeInputValue}
-              />
+              <Form.Control type='text' placeholder='1590612 / AUA546' onChange={changeInputValue} />
             </InputGroup>
             <Button
               variant='outline-primary'

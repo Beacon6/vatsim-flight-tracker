@@ -36,20 +36,11 @@ const Aircraft: React.FC<{
             click: () => onClick(item),
           }}
         >
-          <Tooltip
-            className='label'
-            direction='right'
-            sticky={true}
-            opacity={1}
-          >
+          <Tooltip className='label' direction='right' sticky={true} opacity={1}>
             <Container>
               <Row>
                 <Col className='label-info'>
-                  {item.callsign} (
-                  {item.flight_plan?.aircraft_short
-                    ? item.flight_plan.aircraft_short
-                    : 'N/A'}
-                  )
+                  {item.callsign} ({item.flight_plan?.aircraft_short ? item.flight_plan.aircraft_short : 'N/A'})
                 </Col>
               </Row>
             </Container>

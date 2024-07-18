@@ -38,8 +38,7 @@ const VatsimLayer: React.FC<{
     }
   }, [selectedClient, map]);
 
-  const [displayedAircraft, setDisplayedAircraft] =
-    useState<VatsimDataInterface['pilots']>();
+  const [displayedAircraft, setDisplayedAircraft] = useState<VatsimDataInterface['pilots']>();
 
   useEffect(() => {
     if (!vatsimPilots || !viewportBounds) {
@@ -49,10 +48,7 @@ const VatsimLayer: React.FC<{
     const aircraftOnScreen: VatsimDataInterface['pilots'] = [];
 
     for (let i = 0; i < vatsimPilots.length; i++) {
-      const position: LatLngExpression = [
-        vatsimPilots[i].latitude,
-        vatsimPilots[i].longitude,
-      ];
+      const position: LatLngExpression = [vatsimPilots[i].latitude, vatsimPilots[i].longitude];
 
       if (viewportBounds.contains(position)) {
         aircraftOnScreen.push(vatsimPilots[i]);
@@ -64,15 +60,8 @@ const VatsimLayer: React.FC<{
 
   return (
     <>
-      <Aircraft
-        displayedAircraft={displayedAircraft}
-        onClick={onClick}
-        selectedClient={selectedClient}
-      />
-      <Airports
-        selectedClient={selectedClient}
-        vatsimAirports={vatsimAirports}
-      />
+      <Aircraft displayedAircraft={displayedAircraft} onClick={onClick} selectedClient={selectedClient} />
+      <Airports selectedClient={selectedClient} vatsimAirports={vatsimAirports} />
     </>
   );
 };

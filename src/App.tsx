@@ -36,10 +36,8 @@ function App() {
       .then((data) => setVatsimAirports(data['airports']));
   }, []);
 
-  const [selectedClient, setSelectedClient] =
-    useState<VatsimDataInterface['pilots'][number]>();
-  const [selectedClientCallsign, setSelectedClientCallsign] =
-    useState<string>();
+  const [selectedClient, setSelectedClient] = useState<VatsimDataInterface['pilots'][number]>();
+  const [selectedClientCallsign, setSelectedClientCallsign] = useState<string>();
 
   const selectClient = (client: VatsimDataInterface['pilots'][number]) => {
     setSelectedClient(client);
@@ -93,16 +91,8 @@ function App() {
 
   return (
     <>
-      <Header
-        pilotsCount={vatsimPilots?.length}
-        controllersCount={vatsimControllers?.length}
-        onSearch={searchClient}
-      />
-      <Panel
-        panelActive={panelActive}
-        onHide={deselectClient}
-        selectedClient={selectedClient}
-      />
+      <Header pilotsCount={vatsimPilots?.length} controllersCount={vatsimControllers?.length} onSearch={searchClient} />
+      <Panel panelActive={panelActive} onHide={deselectClient} selectedClient={selectedClient} />
       <MapContainer
         className='map-container'
         center={[50, 10]}
