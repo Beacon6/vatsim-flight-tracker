@@ -1,31 +1,46 @@
+import axios from 'axios';
+import cors from 'cors';
 import express from 'express';
-import { Server } from 'socket.io';
+
 import { createServer } from 'node:http';
 import { open } from 'node:fs/promises';
-import cors from 'cors';
-import axios from 'axios';
-import { VatsimDataInterface } from '../src/typings/VatsimDataInterface';
+import { Server } from 'socket.io';
+
 import { VatsimAirportsInterface } from '../src/typings/VatsimAirportsInterface';
+import { VatsimDataInterface } from '../src/typings/VatsimDataInterface';
 
 const app = express();
 const webSocketServer = createServer(app);
 const io = new Server(webSocketServer, { cors: { origin: '*' } });
+
 app.use(cors());
 app.use(express.json());
 app.use(express.static('dist'));
 
 let interval: NodeJS.Timeout | undefined;
-let vatsimData: VatsimDataInterface;
+let vatsimData: VatsimDataInterface | undefined;
 
-const getVatsimData = async () => {
-  try {
-    const response = await axios.get('https://data.vatsim.net/v3/vatsim-data.json');
-    io.emit('vatsimData', response.data);
+async function getVatsimData() {
+  const response = await axios.get('https://data.vatsim.net/v3/vatsim-data.json');
+
+  if (response.status === 200) {
     vatsimData = response.data;
-  } catch (err) {
-    console.error('Error: ', err.message);
+    return vatsimData;
+  } else {
+    throw Error('Bad response when fetching Vatsim data');
   }
-};
+}
+
+async function sendVatsimData() {
+  try {
+    const vatsimData = await getVatsimData();
+    if (vatsimData) {
+      io.emit('vatsimData', vatsimData);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 app.get('/vatsim_airports', async (_, res) => {
   try {
@@ -60,8 +75,8 @@ io.on('connection', async (socket) => {
 
   if (!interval) {
     console.log('Creating new fetch interval');
-    interval = setInterval(getVatsimData, 15000);
-    await getVatsimData();
+    interval = setInterval(sendVatsimData, 15000);
+    await sendVatsimData();
   }
 
   socket.on('disconnect', () => {
