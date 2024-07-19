@@ -1,4 +1,4 @@
-export interface VatsimDataInterface {
+export interface PilotsInterface {
   pilots: {
     altitude: number;
     callsign: string;
@@ -30,13 +30,5 @@ export interface VatsimDataInterface {
     qnh_mb: number;
     server: string;
     transponder: number;
-  }[];
-  controllers: {
-    cid: number;
-    callsign: string;
-    frequency: string;
-    facility: number;
-    text_atis: string[];
-    sector?: [number, number][];
   }[];
 }

@@ -6,8 +6,8 @@ import { createServer } from 'node:http';
 import { open } from 'node:fs/promises';
 import { Server } from 'socket.io';
 
-import { VatsimAirportsInterface } from '../src/typings/VatsimAirportsInterface';
-import { VatsimDataInterface } from '../src/typings/VatsimDataInterface';
+import { PilotsInterface } from '../types/PilotsInterface.ts';
+import { ControllersInterface } from '../types/ControllersInterface.ts';
 
 const app = express();
 const webSocketServer = createServer(app);
@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(express.static('dist'));
 
 let interval: NodeJS.Timeout | undefined;
-let vatsimData: VatsimDataInterface | undefined;
+let vatsimData: (PilotsInterface & ControllersInterface) | undefined;
 
 async function getVatsimData() {
   const response = await axios.get('https://data.vatsim.net/v3/vatsim-data.json');
@@ -42,41 +42,22 @@ async function sendVatsimData() {
   }
 }
 
-app.get('/vatsim_airports', async (_, res) => {
-  try {
-    const airports: VatsimAirportsInterface = { airports: [] };
-    const file = await open('./public/data/VATSpyAirports.dat');
-
-    for await (const line of file.readLines()) {
-      const airportDetails = line.split('|');
-      const airportObject = {
-        icao: airportDetails[0],
-        airport_name: airportDetails[1],
-        latitude: Number(airportDetails[2]),
-        longitude: Number(airportDetails[3]),
-      };
-
-      airports.airports.push(airportObject);
-    }
-
-    res.status(200).send(airports);
-  } catch (err) {
-    res.status(500).send({ error: err.message });
-  }
-});
-
 io.on('connection', async (socket) => {
   console.log('New client connected');
   console.log(`Clients connected: ${io.engine.clientsCount}`);
 
-  if (vatsimData) {
-    io.emit('vatsimData', vatsimData);
-  }
+  try {
+    if (vatsimData) {
+      io.emit('vatsimData', vatsimData);
+    }
 
-  if (!interval) {
-    console.log('Creating new fetch interval');
-    interval = setInterval(sendVatsimData, 15000);
-    await sendVatsimData();
+    if (!interval) {
+      console.log('Creating new fetch interval');
+      interval = setInterval(sendVatsimData, 15000);
+      await sendVatsimData();
+    }
+  } catch (err) {
+    console.error(err);
   }
 
   socket.on('disconnect', () => {
@@ -85,11 +66,38 @@ io.on('connection', async (socket) => {
 
     if (io.engine.clientsCount === 0) {
       console.log('Clearing fetch interval');
-      clearInterval(interval);
-      interval = undefined;
+      try {
+        clearInterval(interval);
+        interval = undefined;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  });
+
+  app.get('/airports', async (_, res) => {
+    try {
+      const airports = { airports: [] };
+      const file = await open('./public/data/VATSpyAirports.dat');
+
+      for await (const line of file.readLines()) {
+        const airportDetails = line.split('|');
+        const airportObject: any = {
+          icao: airportDetails[0],
+          airport_name: airportDetails[1],
+          latitude: Number(airportDetails[2]),
+          longitude: Number(airportDetails[3]),
+        };
+
+        airports.airports.push(airportObject);
+      }
+
+      res.status(200).send(airports);
+    } catch (err) {
+      res.status(500).send({ error: err.message });
     }
   });
 });
 
 webSocketServer.listen(5000);
-console.log(`Server listening on http://localhost:5000`);
+console.log(`Server listening on http://127.0.0.1:5000`);
