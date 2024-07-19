@@ -3,7 +3,7 @@ import cors from 'cors';
 import express from 'express';
 
 import { createServer } from 'node:http';
-import { open } from 'node:fs/promises';
+// import { open } from 'node:fs/promises';
 import { Server } from 'socket.io';
 
 import { PilotsInterface } from '../types/PilotsInterface.ts';
@@ -74,30 +74,30 @@ io.on('connection', async (socket) => {
       }
     }
   });
-
-  app.get('/airports', async (_, res) => {
-    try {
-      const airports = { airports: [] };
-      const file = await open('./public/data/VATSpyAirports.dat');
-
-      for await (const line of file.readLines()) {
-        const airportDetails = line.split('|');
-        const airportObject: any = {
-          icao: airportDetails[0],
-          airport_name: airportDetails[1],
-          latitude: Number(airportDetails[2]),
-          longitude: Number(airportDetails[3]),
-        };
-
-        airports.airports.push(airportObject);
-      }
-
-      res.status(200).send(airports);
-    } catch (err) {
-      res.status(500).send({ error: err.message });
-    }
-  });
 });
+
+//   app.get('/airports', async (_, res) => {
+//     try {
+//       const airports = { airports: [] };
+//       const file = await open('./public/data/VATSpyAirports.dat');
+//
+//       for await (const line of file.readLines()) {
+//         const airportDetails = line.split('|');
+//         const airportObject: any = {
+//           icao: airportDetails[0],
+//           airport_name: airportDetails[1],
+//           latitude: Number(airportDetails[2]),
+//           longitude: Number(airportDetails[3]),
+//         };
+//
+//         airports.airports.push(airportObject);
+//       }
+//
+//       res.status(200).send(airports);
+//     } catch (err) {
+//       res.status(500).send({ error: err.message });
+//     }
+//   });
 
 webSocketServer.listen(5000);
 console.log(`Server listening on http://127.0.0.1:5000`);
