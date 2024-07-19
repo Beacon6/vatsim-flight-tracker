@@ -1,24 +1,29 @@
 import { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
 import { MapContainer, TileLayer } from 'react-leaflet';
+import { io } from 'socket.io-client';
+
 import Header from './components/Header.tsx';
-import VatsimLayer from './components/VatsimLayer.tsx';
 import Panel from './components/Panel.tsx';
-import { VatsimDataInterface } from './typings/VatsimDataInterface.ts';
-import { VatsimAirportsInterface } from './typings/VatsimAirportsInterface.ts';
+import VatsimLayer from './components/VatsimLayer.tsx';
+
+import { PilotsInterface } from '../types/PilotsInterface.ts';
+import { ControllersInterface } from '../types/ControllersInterface.ts';
 
 function App() {
-  const [vatsimData, setVatsimData] = useState<VatsimDataInterface>();
-  const [vatsimPilots, setVatsimPilots] = useState<VatsimDataInterface['pilots']>();
-  const [vatsimControllers, setVatsimControllers] = useState<VatsimDataInterface['controllers']>();
-  const [vatsimAirports, setVatsimAirports] = useState<VatsimAirportsInterface['airports']>();
+  const [vatsimPilots, setVatsimPilots] = useState<PilotsInterface['pilots']>();
+  const [vatsimControllers, setVatsimControllers] = useState<ControllersInterface['controllers']>();
 
   useEffect(() => {
-    const socket = io('http://localhost:5000');
+    const socket = io('http://127.0.0.1:5000');
 
-    socket.on('vatsimData', (data) => {
-      setVatsimData(data);
-    });
+    try {
+      socket.on('vatsimData', (data: PilotsInterface & ControllersInterface) => {
+        setVatsimPilots(data.pilots);
+        setVatsimControllers(data.controllers);
+      });
+    } catch (err) {
+      console.error(err);
+    }
   }, []);
 
   useEffect(() => {
