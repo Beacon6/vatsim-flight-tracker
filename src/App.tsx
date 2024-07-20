@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { io } from 'socket.io-client';
 
+import Aircraft from './components/Aircraft.tsx';
 import Header from './components/Header.tsx';
 import Panel from './components/Panel.tsx';
 import VatsimLayer from './components/VatsimLayer.tsx';
@@ -24,21 +25,6 @@ function App() {
     } catch (err) {
       console.error(err);
     }
-  }, []);
-
-  useEffect(() => {
-    if (!vatsimData) {
-      return;
-    }
-
-    setVatsimPilots(vatsimData['pilots']);
-    setVatsimControllers(vatsimData['controllers']);
-  }, [vatsimData]);
-
-  useEffect(() => {
-    fetch('/vatsim_airports')
-      .then((res) => res.json())
-      .then((data) => setVatsimAirports(data['airports']));
   }, []);
 
   const [selectedClient, setSelectedClient] = useState<VatsimDataInterface['pilots'][number]>();
@@ -110,12 +96,7 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ></TileLayer>
-        <VatsimLayer
-          vatsimPilots={vatsimPilots}
-          vatsimAirports={vatsimAirports}
-          onClick={selectClient}
-          selectedClient={selectedClient}
-        />
+        <Aircraft vatsimPilots={vatsimPilots} />
       </MapContainer>
     </>
   );

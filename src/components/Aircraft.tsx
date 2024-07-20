@@ -1,17 +1,19 @@
-import { Marker, Tooltip } from 'react-leaflet';
-import { icon } from 'leaflet';
-import 'leaflet-rotatedmarker';
+import { useEffect, useState } from 'react';
+import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import { VatsimDataInterface } from '../typings/VatsimDataInterface.ts';
+import { Marker, Tooltip, useMap, useMapEvent } from 'react-leaflet';
+import { icon, LatLngBounds } from 'leaflet';
+import 'leaflet-rotatedmarker';
 
-const Aircraft: React.FC<{
-  displayedAircraft?: VatsimDataInterface['pilots'];
-  onClick: (client: VatsimDataInterface['pilots'][number]) => void;
-  selectedClient?: VatsimDataInterface['pilots'][number];
-}> = (props) => {
-  const { displayedAircraft, onClick, selectedClient } = props;
+import { PilotsInterface } from '../../types/PilotsInterface.ts';
+
+function Aircraft(props: React.FC<{ vatsimPilots?: PilotsInterface['pilots'] }>) {
+  const { vatsimPilots } = props;
+
+  const map = useMap();
+
+  const [viewportBounds, setViewPortBounds] = useState<LatLngBounds>();
 
   const airplaneIcon = icon({
     iconUrl: '../assets/airplane.svg',
@@ -49,6 +51,6 @@ const Aircraft: React.FC<{
       ))}
     </>
   );
-};
+}
 
 export default Aircraft;

@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useMap, useMapEvent } from 'react-leaflet';
 import Aircraft from './Aircraft';
 import Airports from './Airports.tsx';
-import { shuffleArray } from '../helpers/shuffleArray';
 import { VatsimDataInterface } from '../typings/VatsimDataInterface.ts';
 import { VatsimAirportsInterface } from '../typings/VatsimAirportsInterface.ts';
 
