@@ -1,22 +1,25 @@
 import { useState } from 'react';
-import Navbar from 'react-bootstrap/Navbar';
+
+import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
-import Button from 'react-bootstrap/Button';
+import Navbar from 'react-bootstrap/Navbar';
 
-const Header: React.FC<{
+interface Props {
   pilotsCount?: number;
   controllersCount?: number;
-  onSearch: (searchValue?: string | number) => void;
-}> = (props) => {
+  onSearch: (input?: string | number) => void;
+}
+
+function Header(props: Props) {
   const { pilotsCount, controllersCount, onSearch } = props;
 
   const [searchValue, setSearchValue] = useState<string | number>();
 
-  const changeInputValue = (inputValue: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(inputValue.target.value.toUpperCase());
-  };
+  function submitSearch(input: React.ChangeEvent<HTMLInputElement>) {
+    setSearchValue(input.target.value.toUpperCase());
+  }
 
   return (
     <>
@@ -34,7 +37,7 @@ const Header: React.FC<{
           <Container className='header-item'>
             <InputGroup className='d-flex'>
               <InputGroup.Text>CID / Callsign</InputGroup.Text>
-              <Form.Control type='text' placeholder='1590612 / AUA546' onChange={changeInputValue} />
+              <Form.Control type='text' placeholder='Search' onChange={submitSearch} />
             </InputGroup>
             <Button
               variant='outline-primary'
@@ -50,6 +53,6 @@ const Header: React.FC<{
       </Container>
     </>
   );
-};
+}
 
 export default Header;
