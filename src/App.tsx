@@ -5,7 +5,6 @@ import { io } from 'socket.io-client';
 import Aircraft from './components/Aircraft.tsx';
 import Header from './components/Header.tsx';
 import Panel from './components/Panel.tsx';
-import VatsimLayer from './components/VatsimLayer.tsx';
 
 import { PilotsInterface } from '../types/PilotsInterface.ts';
 import { ControllersInterface } from '../types/ControllersInterface.ts';
@@ -27,10 +26,10 @@ function App() {
     }
   }, []);
 
-  const [selectedClient, setSelectedClient] = useState<VatsimDataInterface['pilots'][number]>();
+  const [selectedClient, setSelectedClient] = useState<PilotsInterface['pilots'][number]>();
   const [selectedClientCallsign, setSelectedClientCallsign] = useState<string>();
 
-  const selectClient = (client: VatsimDataInterface['pilots'][number]) => {
+  const selectClient = (client: PilotsInterface['pilots'][number]) => {
     setSelectedClient(client);
     setSelectedClientCallsign(client.callsign);
   };
