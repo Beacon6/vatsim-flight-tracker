@@ -12,10 +12,11 @@ import { PilotsInterface } from '../../types/PilotsInterface.ts';
 
 interface Props {
   vatsimPilots?: PilotsInterface['pilots'];
+  selectFlight: (flight: PilotsInterface['pilots'][number]) => void;
 }
 
 function Aircraft(props: Props) {
-  const { vatsimPilots } = props;
+  const { vatsimPilots, selectFlight } = props;
 
   const map = useMap();
   const viewportBounds = useViewportBounds(map);
@@ -52,6 +53,7 @@ function Aircraft(props: Props) {
           position={[item.latitude, item.longitude]}
           key={item.cid}
           rotationAngle={item.heading}
+          eventHandlers={{ click: () => selectFlight(item) }}
         >
           <Tooltip className='label' direction='right' sticky={true} opacity={1}>
             <Container>

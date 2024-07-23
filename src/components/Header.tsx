@@ -9,15 +9,15 @@ import Navbar from 'react-bootstrap/Navbar';
 interface Props {
   pilotsCount?: number;
   controllersCount?: number;
-  onSearch: (input?: string | number) => void;
+  handleSearch: (input: string | number) => void;
 }
 
 function Header(props: Props) {
-  const { pilotsCount, controllersCount, onSearch } = props;
+  const { pilotsCount, controllersCount, handleSearch } = props;
 
-  const [searchValue, setSearchValue] = useState<string | number>();
+  const [searchValue, setSearchValue] = useState<string | number>('');
 
-  function submitSearch(input: React.ChangeEvent<HTMLInputElement>) {
+  function updateValue(input: React.ChangeEvent<HTMLInputElement>) {
     setSearchValue(input.target.value.toUpperCase());
   }
 
@@ -37,13 +37,13 @@ function Header(props: Props) {
           <Container className='header-item'>
             <InputGroup className='d-flex'>
               <InputGroup.Text>CID / Callsign</InputGroup.Text>
-              <Form.Control type='text' placeholder='Search' onChange={submitSearch} />
+              <Form.Control type='text' placeholder='Search' onChange={updateValue} />
             </InputGroup>
             <Button
               variant='outline-primary'
               id='search-button'
               onClick={() => {
-                onSearch(searchValue);
+                handleSearch(searchValue);
               }}
             >
               <i className='bi bi-search'></i>

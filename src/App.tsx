@@ -26,63 +26,50 @@ function App() {
     }
   }, []);
 
-  const [selectedClient, setSelectedClient] = useState<PilotsInterface['pilots'][number]>();
-  const [selectedClientCallsign, setSelectedClientCallsign] = useState<string>();
-
-  const selectClient = (client: PilotsInterface['pilots'][number]) => {
-    setSelectedClient(client);
-    setSelectedClientCallsign(client.callsign);
-  };
-
+  // TODO : can probably simplify this
+  const [selectedFlight, setSelectedFlight] = useState<PilotsInterface['pilots'][number]>();
   const [panelActive, setPanelActive] = useState(false);
 
-  useEffect(() => {
-    if (!selectedClient) {
-      setPanelActive(false);
+  function selectFlight(flight: PilotsInterface['pilots'][number]) {
+    if (!selectedFlight) {
+      setSelectedFlight(flight);
+      setPanelActive(true);
     } else {
+      setSelectedFlight(undefined);
+      setPanelActive(false);
+    }
+
+    return;
+  }
+
+  function closePanel() {
+    setSelectedFlight(undefined);
+    setPanelActive(false);
+
+    return;
+  }
+
+  function searchFlight(input: string | number) {
+    if (!vatsimPilots) {
+      return;
+    }
+
+    setSelectedFlight(vatsimPilots?.find((flight) => flight.callsign === input));
+    if (selectedFlight) {
       setPanelActive(true);
     }
-  }, [selectedClient]);
 
-  const deselectClient = () => {
-    setSelectedClient(undefined);
-    setSelectedClientCallsign(undefined);
-  };
-
-  const searchClient = (searchValue?: string | number) => {
-    if (
-      vatsimPilots &&
-      searchValue &&
-      vatsimPilots.some((client) => {
-        return client.callsign === searchValue || client.cid === searchValue;
-      })
-    ) {
-      setSelectedClient(
-        vatsimPilots.find((client) => {
-          return client.callsign === searchValue || client.cid === searchValue;
-        }),
-      );
-    } else {
-      return;
-    }
-  };
-
-  useEffect(() => {
-    if (!selectedClientCallsign) {
-      return;
-    }
-
-    const client = vatsimPilots?.find((client) => {
-      return client.callsign === selectedClientCallsign;
-    });
-
-    selectClient(client!);
-  }, [vatsimPilots, selectedClientCallsign]);
+    return;
+  }
 
   return (
     <>
-      <Header pilotsCount={vatsimPilots?.length} controllersCount={vatsimControllers?.length} onSearch={searchClient} />
-      <Panel panelActive={panelActive} onHide={deselectClient} selectedClient={selectedClient} />
+      <Header
+        pilotsCount={vatsimPilots?.length}
+        controllersCount={vatsimControllers?.length}
+        handleSearch={searchFlight}
+      />
+      <Panel panelActive={panelActive} selectedFlight={selectedFlight} handleClose={closePanel} />
       <MapContainer
         className='map-container'
         center={[50, 10]}
@@ -95,7 +82,7 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ></TileLayer>
-        <Aircraft vatsimPilots={vatsimPilots} />
+        <Aircraft vatsimPilots={vatsimPilots} selectFlight={selectFlight} />
       </MapContainer>
     </>
   );
