@@ -13,10 +13,12 @@ import { PilotsInterface } from '../../types/PilotsInterface.ts';
 interface Props {
   vatsimPilots?: PilotsInterface['pilots'];
   selectFlight: (flight: PilotsInterface['pilots'][number]) => void;
+  selectedFlight?: PilotsInterface['pilots'][number];
+  panelActive: boolean;
 }
 
 function Aircraft(props: Props) {
-  const { vatsimPilots, selectFlight } = props;
+  const { vatsimPilots, selectFlight, selectedFlight, panelActive } = props;
 
   const map = useMap();
   const viewportBounds = useViewportBounds(map);
@@ -45,11 +47,16 @@ function Aircraft(props: Props) {
     iconSize: [24, 24],
   });
 
+  const selectedAirplaneIcon = icon({
+    iconUrl: '../assets/airplane-focus.svg',
+    iconSize: [24, 24],
+  });
+
   return (
     <>
       {displayedAircraft?.map((item) => (
         <Marker
-          icon={airplaneIcon}
+          icon={item === selectedFlight && panelActive ? selectedAirplaneIcon : airplaneIcon}
           position={[item.latitude, item.longitude]}
           key={item.cid}
           rotationAngle={item.heading}

@@ -26,37 +26,37 @@ function App() {
     }
   }, []);
 
-  // TODO : can probably simplify this
   const [selectedFlight, setSelectedFlight] = useState<PilotsInterface['pilots'][number]>();
   const [panelActive, setPanelActive] = useState(false);
 
   function selectFlight(flight: PilotsInterface['pilots'][number]) {
-    if (!selectedFlight) {
-      setSelectedFlight(flight);
-      setPanelActive(true);
-    } else {
-      setSelectedFlight(undefined);
-      setPanelActive(false);
-    }
-
+    setSelectedFlight(flight);
+    setPanelActive(true);
     return;
   }
 
-  function closePanel() {
-    setSelectedFlight(undefined);
+  function deselectFlight() {
     setPanelActive(false);
-
     return;
   }
 
-  function searchFlight(input: string | number) {
+  function searchFlight(input: string) {
     if (!vatsimPilots) {
       return;
     }
 
-    setSelectedFlight(vatsimPilots?.find((flight) => flight.callsign === input));
-    if (selectedFlight) {
-      setPanelActive(true);
+    if (isNaN(Number(input))) {
+      const searchResult = vatsimPilots.find((p) => p.callsign === input);
+      if (searchResult) {
+        setSelectedFlight(searchResult);
+        setPanelActive(true);
+      }
+    } else {
+      const searchResult = vatsimPilots.find((p) => p.cid === Number(input));
+      if (searchResult) {
+        setSelectedFlight(searchResult);
+        setPanelActive(true);
+      }
     }
 
     return;
@@ -69,7 +69,7 @@ function App() {
         controllersCount={vatsimControllers?.length}
         handleSearch={searchFlight}
       />
-      <Panel panelActive={panelActive} selectedFlight={selectedFlight} handleClose={closePanel} />
+      <Panel panelActive={panelActive} selectedFlight={selectedFlight} handleClose={deselectFlight} />
       <MapContainer
         className='map-container'
         center={[50, 10]}
@@ -82,7 +82,12 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ></TileLayer>
-        <Aircraft vatsimPilots={vatsimPilots} selectFlight={selectFlight} />
+        <Aircraft
+          vatsimPilots={vatsimPilots}
+          selectFlight={selectFlight}
+          selectedFlight={selectedFlight}
+          panelActive={panelActive}
+        />
       </MapContainer>
     </>
   );

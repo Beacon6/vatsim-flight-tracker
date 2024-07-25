@@ -9,13 +9,13 @@ import Navbar from 'react-bootstrap/Navbar';
 interface Props {
   pilotsCount?: number;
   controllersCount?: number;
-  handleSearch: (input: string | number) => void;
+  handleSearch: (input: string) => void;
 }
 
 function Header(props: Props) {
   const { pilotsCount, controllersCount, handleSearch } = props;
 
-  const [searchValue, setSearchValue] = useState<string | number>('');
+  const [searchValue, setSearchValue] = useState<string>('');
 
   function updateValue(input: React.ChangeEvent<HTMLInputElement>) {
     setSearchValue(input.target.value.toUpperCase());

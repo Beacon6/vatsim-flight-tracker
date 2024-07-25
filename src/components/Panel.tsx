@@ -30,7 +30,7 @@ function Panel(props: Props) {
     const clientArrival = selectedFlight.flight_plan.arrival;
     const clientRoute = selectedFlight.flight_plan.route;
 
-    const encodedFlightPlan = encodeURIComponent(clientDeparture + ' ' + clientRoute + ' ' + clientArrival);
+    const encodedFlightPlan = encodeURIComponent(`${clientDeparture} ${clientRoute} ${clientArrival}`);
     setSkyVectorUrl(`https://skyvector.com/?chart=304&fpl=${encodedFlightPlan}`);
   }, [selectedFlight]);
 
