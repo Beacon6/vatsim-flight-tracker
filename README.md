@@ -8,11 +8,10 @@ The main focus of VATSIM is providing a convincing and immersive simulation of c
 
 VATSIM Flight Tracker allows for displaying currently logged-in pilots, air traffic controllers and their sectors, as well as some general statistics about the network.
 
-The easiest way to checkout this project in action is through Docker. There are Makefile targets provided for building and running the container.
+Checkout the project locally via Docker:
 
 ```
-make build
-make run
+docker compose up --build
 ```
 
 _NOTE: This is a personal project which is being continously developed and expanded._
