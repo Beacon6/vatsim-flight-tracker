@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -16,6 +16,21 @@ function Header(props: Props) {
   const { pilotsCount, controllersCount, handleSearch } = props;
 
   const [searchValue, setSearchValue] = useState<string>('');
+
+  useEffect(() => {
+    if (sessionStorage.getItem('searchValue')) {
+      const v = sessionStorage.getItem('searchValue');
+      setSearchValue(v!);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!searchValue) {
+      return;
+    }
+
+    sessionStorage.setItem('searchValue', searchValue);
+  }, [searchValue]);
 
   function updateValue(input: React.ChangeEvent<HTMLInputElement>) {
     setSearchValue(input.target.value.toUpperCase());
@@ -37,7 +52,7 @@ function Header(props: Props) {
           <Container className='header-item'>
             <InputGroup className='d-flex'>
               <InputGroup.Text>CID / Callsign</InputGroup.Text>
-              <Form.Control type='text' placeholder='Search' onChange={updateValue} />
+              <Form.Control type='text' value={searchValue} placeholder='Search' onChange={updateValue} />
             </InputGroup>
             <Button
               variant='outline-primary'
