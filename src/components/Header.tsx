@@ -25,10 +25,6 @@ function Header(props: Props) {
   }, []);
 
   useEffect(() => {
-    if (!searchValue) {
-      return;
-    }
-
     sessionStorage.setItem('searchValue', searchValue);
   }, [searchValue]);
 
