@@ -36,7 +36,7 @@ function Panel(props: Props) {
 
   return (
     <>
-      <Offcanvas className='panel' show={panelActive} handleClose={handleClose} backdrop={false}>
+      <Offcanvas className='panel' show={panelActive} handleClose={handleClose} backdrop={false} scroll={true}>
         <Offcanvas.Header className='panel-header' closeButton={false}>
           <Container>
             <Row>
