@@ -27,16 +27,19 @@ function App() {
   }, []);
 
   const [selectedFlight, setSelectedFlight] = useState<PilotsInterface['pilots'][number]>();
+  const [selectedFlightId, setSelectedFlightId] = useState<number>();
   const [panelActive, setPanelActive] = useState(false);
 
   function selectFlight(flight: PilotsInterface['pilots'][number]) {
     setSelectedFlight(flight);
+    setSelectedFlightId(flight.cid);
     setPanelActive(true);
     return;
   }
 
   function deselectFlight() {
     setPanelActive(false);
+    setSelectedFlightId(undefined);
     return;
   }
 
@@ -48,12 +51,14 @@ function App() {
     if (isNaN(Number(input))) {
       const searchResult = vatsimPilots.find((p) => p.callsign === input);
       if (searchResult) {
+        setSelectedFlightId(searchResult.cid);
         setSelectedFlight(searchResult);
         setPanelActive(true);
       }
     } else {
       const searchResult = vatsimPilots.find((p) => p.cid === Number(input));
       if (searchResult) {
+        setSelectedFlightId(searchResult.cid);
         setSelectedFlight(searchResult);
         setPanelActive(true);
       }
@@ -82,12 +87,7 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ></TileLayer>
-        <Aircraft
-          vatsimPilots={vatsimPilots}
-          selectFlight={selectFlight}
-          selectedFlight={selectedFlight}
-          panelActive={panelActive}
-        />
+        <Aircraft vatsimPilots={vatsimPilots} selectFlight={selectFlight} selectedFlightId={selectedFlightId} />
       </MapContainer>
     </>
   );
