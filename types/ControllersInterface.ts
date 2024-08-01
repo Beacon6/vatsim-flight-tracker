@@ -4,7 +4,11 @@ export interface ControllersInterface {
     callsign: string;
     frequency: string;
     facility: number;
+    rating: number;
+    server: string;
+    visual_range: number;
     text_atis: string[];
-    sector?: [number, number][];
+    last_updated: string;
+    logon_time: string;
   }[];
 }

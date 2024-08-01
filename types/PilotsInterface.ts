@@ -1,34 +1,37 @@
 export interface PilotsInterface {
   pilots: {
-    altitude: number;
-    callsign: string;
     cid: number;
+    callsign: string;
+    server: string;
+    pilot_rating: number;
+    military_rating: number;
+    latitude: number;
+    longitude: number;
+    altitude: number;
+    groundspeed: number;
+    transponder: number;
+    heading: number;
+    qnh_i_hq: number;
+    qnh_mb: number;
     flight_plan?: {
+      flight_rules: string;
       aircraft: string;
       aircraft_faa: string;
       aircraft_short: string;
-      alternate: string;
-      altitude: number;
-      arrival: string;
-      assigned_transponder: number;
-      cruise_tas: number;
       departure: string;
+      arrival: string;
+      alternate: string;
+      cruise_tas: number;
+      altitude: number;
       deptime: number;
       enroute_time: number;
-      flight_rules: string;
       fuel_time: number;
       remarks: string;
-      revision_id: number;
       route: string;
+      revision_id: number;
+      assigned_transponder: number;
+      logon_time: string;
+      last_updated: string;
     };
-    groundspeed: number;
-    heading: number;
-    latitude: number;
-    longitude: number;
-    name: string;
-    qnh_i_hq: number;
-    qnh_mb: number;
-    server: string;
-    transponder: number;
   }[];
 }
