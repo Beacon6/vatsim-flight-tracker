@@ -1,14 +1,14 @@
 {
   "name": "vatsim-flight-tracker",
   "private": true,
-  "version": "0.6.0",
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "start": "tsx server/server.ts",
     "dev": "concurrently \"vite build --watch\" \"tsx watch server/server.ts\"",
-    "build": "tsc && vite build",
-    "watch": "tsc --noEmit --watch",
-    "format": "prettier . --write"
+    "build": "tsc -b && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
   "dependencies": {
     "axios": "^1.6.7",
