@@ -3,6 +3,7 @@ import cors from 'cors';
 import express from 'express';
 
 import { createServer } from 'node:http';
+import { existsSync } from 'node:fs';
 // import { open } from 'node:fs/promises';
 import { Server } from 'socket.io';
 
@@ -19,6 +20,10 @@ app.use(express.static('dist'));
 
 let interval: NodeJS.Timeout | undefined;
 let vatsimData: (PilotsInterface & ControllersInterface) | undefined;
+
+if (!existsSync('dist')) {
+  throw Error('Build files not found');
+}
 
 async function getVatsimData() {
   const response = await axios.get('https://data.vatsim.net/v3/vatsim-data.json');
