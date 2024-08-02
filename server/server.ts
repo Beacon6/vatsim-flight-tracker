@@ -4,9 +4,10 @@ import express from 'express';
 
 import { createServer } from 'node:http';
 import { existsSync } from 'node:fs';
-// import { open } from 'node:fs/promises';
+import { open } from 'node:fs/promises';
 import { Server } from 'socket.io';
 
+import { AirportsInterface } from '../types/AirportsInterface.ts';
 import { PilotsInterface } from '../types/PilotsInterface.ts';
 import { ControllersInterface } from '../types/ControllersInterface.ts';
 
@@ -21,9 +22,38 @@ app.use(express.static('dist'));
 let interval: NodeJS.Timeout | undefined;
 let vatsimData: (PilotsInterface & ControllersInterface) | undefined;
 
-if (!existsSync('dist')) {
-  throw Error('Build files not found');
+function checkFiles() {
+  if (!existsSync('dist')) {
+    throw Error('build files not found');
+  }
+  if (!existsSync('public/data/airports.txt')) {
+    throw Error('airports.txt file not found');
+  }
 }
+checkFiles();
+
+async function readAirports(): Promise<AirportsInterface> {
+  const airports: AirportsInterface = { airports: [] };
+
+  const file = await open('./public/data/airports.txt');
+  for await (const line of file.readLines()) {
+    const a = line.split('|');
+    const airport: AirportsInterface['airports'][number] = {
+      icao: a[0],
+      airport_name: a[1],
+      lat: Number(a[2]),
+      lng: Number(a[3]),
+      iata: a[4],
+      fir: a[5],
+      is_pseudo: Boolean(Number(a[6])),
+    };
+
+    airports.airports.push(airport);
+  }
+
+  return airports;
+}
+readAirports();
 
 async function getVatsimData() {
   const response = await axios.get('https://data.vatsim.net/v3/vatsim-data.json');
@@ -80,29 +110,6 @@ io.on('connection', async (socket) => {
     }
   });
 });
-
-//   app.get('/airports', async (_, res) => {
-//     try {
-//       const airports = { airports: [] };
-//       const file = await open('./public/data/VATSpyAirports.dat');
-//
-//       for await (const line of file.readLines()) {
-//         const airportDetails = line.split('|');
-//         const airportObject: any = {
-//           icao: airportDetails[0],
-//           airport_name: airportDetails[1],
-//           latitude: Number(airportDetails[2]),
-//           longitude: Number(airportDetails[3]),
-//         };
-//
-//         airports.airports.push(airportObject);
-//       }
-//
-//       res.status(200).send(airports);
-//     } catch (err) {
-//       res.status(500).send({ error: err.message });
-//     }
-//   });
 
 webSocketServer.listen(5000);
 console.log(`Server listening on http://127.0.0.1:5000`);
