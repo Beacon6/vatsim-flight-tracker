@@ -53,7 +53,17 @@ async function readAirports(): Promise<AirportsInterface> {
 
   return airports;
 }
-readAirports();
+
+async function sendAirports() {
+  try {
+    const airports = await readAirports();
+    if (airports) {
+      io.emit('airportsData', airports);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 async function getVatsimData() {
   const response = await axios.get('https://data.vatsim.net/v3/vatsim-data.json');
@@ -82,6 +92,7 @@ io.on('connection', async (socket) => {
   console.log(`Clients connected: ${io.engine.clientsCount}`);
 
   try {
+    sendAirports();
     if (vatsimData) {
       io.emit('vatsimData', vatsimData);
     }

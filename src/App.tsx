@@ -6,12 +6,14 @@ import Aircraft from './components/Aircraft.tsx';
 import Header from './components/Header.tsx';
 import Panel from './components/Panel.tsx';
 
+import { AirportsInterface } from '../types/AirportsInterface.ts';
 import { PilotsInterface } from '../types/PilotsInterface.ts';
 import { ControllersInterface } from '../types/ControllersInterface.ts';
 
 function App() {
   const [vatsimPilots, setVatsimPilots] = useState<PilotsInterface['pilots']>();
   const [vatsimControllers, setVatsimControllers] = useState<ControllersInterface['controllers']>();
+  const [airports, setAirports] = useState<AirportsInterface['airports']>();
 
   useEffect(() => {
     const socket = io('http://127.0.0.1:5000');
@@ -20,6 +22,9 @@ function App() {
       socket.on('vatsimData', (data: PilotsInterface & ControllersInterface) => {
         setVatsimPilots(data.pilots);
         setVatsimControllers(data.controllers);
+      });
+      socket.on('airportsData', (data: AirportsInterface) => {
+        setAirports(data.airports);
       });
     } catch (err) {
       console.error(err);
@@ -31,6 +36,8 @@ function App() {
   const [panelActive, setPanelActive] = useState(false);
 
   function selectFlight(flight: PilotsInterface['pilots'][number]) {
+    console.log(airports);
+
     setSelectedFlight(flight);
     setSelectedFlightId(flight.cid);
     setPanelActive(true);
