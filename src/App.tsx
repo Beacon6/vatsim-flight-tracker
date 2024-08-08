@@ -3,6 +3,7 @@ import { MapContainer, TileLayer } from 'react-leaflet';
 import { io } from 'socket.io-client';
 
 import Aircraft from './components/Aircraft.tsx';
+import Controllers from './components/Controllers.tsx';
 import Header from './components/Header.tsx';
 import Panel from './components/Panel.tsx';
 
@@ -22,6 +23,13 @@ function App() {
       socket.on('vatsimData', (data: PilotsInterface & ControllersInterface) => {
         setVatsimPilots(data.pilots);
         setVatsimControllers(data.controllers);
+
+        // ATC categories
+        // 2 - Delivery
+        // 3 - Gnd
+        // 4 - Tower
+        // 5 - App
+        // 6 - Ctr
       });
       socket.on('airportsData', (data: AirportsInterface) => {
         setAirports(data.airports);
@@ -36,8 +44,6 @@ function App() {
   const [panelActive, setPanelActive] = useState(false);
 
   function selectFlight(flight: PilotsInterface['pilots'][number]) {
-    console.log(airports);
-
     setSelectedFlight(flight);
     setSelectedFlightId(flight.cid);
     setPanelActive(true);
@@ -95,6 +101,7 @@ function App() {
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ></TileLayer>
         <Aircraft vatsimPilots={vatsimPilots} selectFlight={selectFlight} selectedFlightId={selectedFlightId} />
+        <Controllers vatsimControllers={vatsimControllers} airports={airports} />
       </MapContainer>
     </>
   );
