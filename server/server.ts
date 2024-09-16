@@ -4,11 +4,9 @@ import express from 'express';
 
 import { createServer } from 'node:http';
 import { existsSync } from 'node:fs';
-// import { open } from 'node:fs/promises';
 import { Server } from 'socket.io';
 
-import { PilotsInterface } from '../types/PilotsInterface.ts';
-import { ControllersInterface } from '../types/ControllersInterface.ts';
+import { VatsimDataInterface } from '../types/VatsimDataInterface.ts';
 
 const app = express();
 const webSocketServer = createServer(app);
@@ -19,7 +17,7 @@ app.use(express.json());
 app.use(express.static('dist'));
 
 let interval: NodeJS.Timeout | undefined;
-let vatsimData: (PilotsInterface & ControllersInterface) | undefined;
+let vatsimData: VatsimDataInterface | undefined;
 
 if (!existsSync('dist')) {
   throw Error('Build files not found');
@@ -29,7 +27,10 @@ async function getVatsimData() {
   const response = await axios.get('https://data.vatsim.net/v3/vatsim-data.json');
 
   if (response.status === 200) {
-    vatsimData = response.data;
+    vatsimData = {
+      pilots: response['data']['pilots'],
+      atcCount: response['data']['controllers'].length,
+    };
     return vatsimData;
   } else {
     throw Error('Bad response when fetching Vatsim data');
@@ -80,29 +81,6 @@ io.on('connection', async (socket) => {
     }
   });
 });
-
-//   app.get('/airports', async (_, res) => {
-//     try {
-//       const airports = { airports: [] };
-//       const file = await open('./public/data/VATSpyAirports.dat');
-//
-//       for await (const line of file.readLines()) {
-//         const airportDetails = line.split('|');
-//         const airportObject: any = {
-//           icao: airportDetails[0],
-//           airport_name: airportDetails[1],
-//           latitude: Number(airportDetails[2]),
-//           longitude: Number(airportDetails[3]),
-//         };
-//
-//         airports.airports.push(airportObject);
-//       }
-//
-//       res.status(200).send(airports);
-//     } catch (err) {
-//       res.status(500).send({ error: err.message });
-//     }
-//   });
 
 webSocketServer.listen(5000);
 console.log(`Server listening on http://127.0.0.1:5000`);

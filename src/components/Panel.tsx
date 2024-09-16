@@ -7,11 +7,11 @@ import Container from 'react-bootstrap/Container';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Row from 'react-bootstrap/Row';
 
-import { PilotsInterface } from '../../types/PilotsInterface';
+import { VatsimDataInterface } from '../../types/VatsimDataInterface';
 
 interface Props {
   panelActive: boolean;
-  selectedFlight?: PilotsInterface['pilots'][number];
+  selectedFlight?: VatsimDataInterface['pilots'][number];
   handleClose: () => void;
 }
 

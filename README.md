@@ -6,7 +6,7 @@ VATSIM, or Virtual Air Traffic Simulation network is a free online platform that
 
 The main focus of VATSIM is providing a convincing and immersive simulation of controlled airspace. You can read more about VATSIM in the [official documentation](https://vatsim.net/docs/about/about-vatsim).
 
-VATSIM Flight Tracker allows for displaying currently logged-in pilots, air traffic controllers and their sectors, as well as some general statistics about the network.
+VATSIM Flight Tracker allows for displaying currently logged-in pilots as well as some general statistics about the network.
 
 Checkout the project locally via Docker:
 
@@ -14,10 +14,8 @@ Checkout the project locally via Docker:
 docker compose up --build
 ```
 
-_NOTE: This is a personal project which is being continously developed and expanded._
-
 ## Credits
 
 Flight plan route mapping: [SkyVector](https://skyvector.com)
 
-Airport and FIR Data: [VAT-Spy Data Project](https://github.com/vatsimnetwork/vatspy-data-project)
+Themed with: [Catppuccin](https://catppuccin.com/)

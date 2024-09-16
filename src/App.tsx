@@ -6,31 +6,30 @@ import Aircraft from './components/Aircraft.tsx';
 import Header from './components/Header.tsx';
 import Panel from './components/Panel.tsx';
 
-import { PilotsInterface } from '../types/PilotsInterface.ts';
-import { ControllersInterface } from '../types/ControllersInterface.ts';
+import { VatsimDataInterface } from '../types/VatsimDataInterface.ts';
 
 function App() {
-  const [vatsimPilots, setVatsimPilots] = useState<PilotsInterface['pilots']>();
-  const [vatsimControllers, setVatsimControllers] = useState<ControllersInterface['controllers']>();
+  const [vatsimPilots, setVatsimPilots] = useState<VatsimDataInterface['pilots']>();
+  const [atcCount, setAtcCount] = useState<VatsimDataInterface['atcCount']>();
 
   useEffect(() => {
     const socket = io('http://127.0.0.1:5000');
 
     try {
-      socket.on('vatsimData', (data: PilotsInterface & ControllersInterface) => {
+      socket.on('vatsimData', (data: VatsimDataInterface) => {
         setVatsimPilots(data.pilots);
-        setVatsimControllers(data.controllers);
+        setAtcCount(data.atcCount);
       });
     } catch (err) {
       console.error(err);
     }
   }, []);
 
-  const [selectedFlight, setSelectedFlight] = useState<PilotsInterface['pilots'][number]>();
+  const [selectedFlight, setSelectedFlight] = useState<VatsimDataInterface['pilots'][number]>();
   const [selectedFlightId, setSelectedFlightId] = useState<number>();
   const [panelActive, setPanelActive] = useState(false);
 
-  function selectFlight(flight: PilotsInterface['pilots'][number]) {
+  function selectFlight(flight: VatsimDataInterface['pilots'][number]) {
     setSelectedFlight(flight);
     setSelectedFlightId(flight.cid);
     setPanelActive(true);
@@ -69,11 +68,7 @@ function App() {
 
   return (
     <>
-      <Header
-        pilotsCount={vatsimPilots?.length}
-        controllersCount={vatsimControllers?.length}
-        handleSearch={searchFlight}
-      />
+      <Header pilotsCount={vatsimPilots?.length} controllersCount={atcCount} handleSearch={searchFlight} />
       <Panel panelActive={panelActive} selectedFlight={selectedFlight} handleClose={deselectFlight} />
       <MapContainer
         className='map-container'

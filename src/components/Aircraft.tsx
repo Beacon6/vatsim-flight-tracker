@@ -8,11 +8,11 @@ import 'leaflet-rotatedmarker';
 
 import useViewportBounds from '../hooks/useViewportBounds.ts';
 
-import { PilotsInterface } from '../../types/PilotsInterface.ts';
+import { VatsimDataInterface } from '../../types/VatsimDataInterface.ts';
 
 interface Props {
-  vatsimPilots?: PilotsInterface['pilots'];
-  selectFlight: (flight: PilotsInterface['pilots'][number]) => void;
+  vatsimPilots?: VatsimDataInterface['pilots'];
+  selectFlight: (flight: VatsimDataInterface['pilots'][number]) => void;
   selectedFlightId?: number;
 }
 
@@ -22,13 +22,13 @@ function Aircraft(props: Props) {
   const map = useMap();
   const viewportBounds = useViewportBounds(map);
 
-  const [displayedAircraft, setDisplayedAircraft] = useState<PilotsInterface['pilots']>();
+  const [displayedAircraft, setDisplayedAircraft] = useState<VatsimDataInterface['pilots']>();
 
   useEffect(() => {
     if (!vatsimPilots || !viewportBounds) {
       return;
     }
-    const aircraftOnScreen: PilotsInterface['pilots'] = [];
+    const aircraftOnScreen: VatsimDataInterface['pilots'] = [];
 
     for (const p of vatsimPilots) {
       const position: LatLngExpression = [p.latitude, p.longitude];
