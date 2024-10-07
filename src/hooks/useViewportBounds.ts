@@ -1,19 +1,19 @@
-import { LatLngBounds, Map } from 'leaflet';
-import { useState } from 'react';
-import { useMapEvent } from 'react-leaflet';
+import { LatLngBounds, Map } from "leaflet";
+import { useState } from "react";
+import { useMapEvent } from "react-leaflet";
 
 function useViewportBounds(map: Map) {
-  const [viewportBounds, setViewportBounds] = useState<LatLngBounds>();
+    const [viewportBounds, setViewportBounds] = useState<LatLngBounds>();
 
-  if (!viewportBounds) {
-    setViewportBounds(map.getBounds());
-  }
+    if (!viewportBounds) {
+        setViewportBounds(map.getBounds());
+    }
 
-  const mapMovementHandler = useMapEvent('moveend', () => {
-    setViewportBounds(mapMovementHandler.getBounds());
-  });
+    const mapMovementHandler = useMapEvent("moveend", () => {
+        setViewportBounds(mapMovementHandler.getBounds());
+    });
 
-  return viewportBounds;
+    return viewportBounds;
 }
 
 export default useViewportBounds;
