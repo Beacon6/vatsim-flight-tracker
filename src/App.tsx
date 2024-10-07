@@ -6,30 +6,33 @@ import Aircraft from "./components/Aircraft.tsx";
 import Header from "./components/Header.tsx";
 import Panel from "./components/Panel.tsx";
 
-import { VatsimDataInterface } from "../types/VatsimDataInterface.ts";
+import { IPilots } from "../types/IPilots.ts";
+import { IControllers } from "../types/IControllers.ts";
+import { IVatsimData } from "../types/IVatsimData.ts";
 
 function App() {
-    const [vatsimPilots, setVatsimPilots] = useState<VatsimDataInterface["pilots"]>();
-    const [atcCount, setAtcCount] = useState<VatsimDataInterface["atcCount"]>();
+    const [vatsimPilots, setVatsimPilots] = useState<IPilots["pilots"]>();
+    const [vatsimControllers, setVatsimControllers] = useState<IControllers["controllers"]>();
 
     useEffect(() => {
-        const socket = io("http://127.0.0.1:5000");
+        console.log(import.meta.env.VITE_PORT);
+        const socket = io(`http://127.0.0.1:${import.meta.env.VITE_PORT}`);
 
         try {
-            socket.on("vatsimData", (data: VatsimDataInterface) => {
+            socket.on("vatsimData", (data: IVatsimData) => {
                 setVatsimPilots(data.pilots);
-                setAtcCount(data.atcCount);
+                setVatsimControllers(data.controllers);
             });
         } catch (err) {
             console.error(err);
         }
     }, []);
 
-    const [selectedFlight, setSelectedFlight] = useState<VatsimDataInterface["pilots"][number]>();
+    const [selectedFlight, setSelectedFlight] = useState<IPilots["pilots"][number]>();
     const [selectedFlightId, setSelectedFlightId] = useState<number>();
     const [panelActive, setPanelActive] = useState(false);
 
-    function selectFlight(flight: VatsimDataInterface["pilots"][number]) {
+    function selectFlight(flight: IPilots["pilots"][number]) {
         setSelectedFlight(flight);
         setSelectedFlightId(flight.cid);
         setPanelActive(true);
@@ -68,7 +71,11 @@ function App() {
 
     return (
         <>
-            <Header pilotsCount={vatsimPilots?.length} controllersCount={atcCount} handleSearch={searchFlight} />
+            <Header
+                pilotsCount={vatsimPilots?.length}
+                controllersCount={vatsimControllers?.length}
+                handleSearch={searchFlight}
+            />
             <Panel panelActive={panelActive} selectedFlight={selectedFlight} handleClose={deselectFlight} />
             <MapContainer
                 className="map-container"

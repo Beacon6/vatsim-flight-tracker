@@ -1,4 +1,4 @@
-export interface VatsimDataInterface {
+export interface IPilots {
     pilots: {
         cid: number;
         callsign: string;
@@ -34,5 +34,4 @@ export interface VatsimDataInterface {
             last_updated: string;
         };
     }[];
-    atcCount: number;
 }

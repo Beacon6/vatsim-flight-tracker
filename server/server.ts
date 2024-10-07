@@ -1,12 +1,13 @@
-import axios from "axios";
 import cors from "cors";
+import "dotenv/config";
 import express from "express";
 
 import { createServer } from "node:http";
 import { existsSync } from "node:fs";
 import { Server } from "socket.io";
 
-import { VatsimDataInterface } from "../types/VatsimDataInterface.ts";
+import { IPilots } from "../types/IPilots.ts";
+import { IControllers } from "../types/IControllers.ts";
 
 const app = express();
 const webSocketServer = createServer(app);
@@ -17,23 +18,27 @@ app.use(express.json());
 app.use(express.static("dist"));
 
 let interval: NodeJS.Timeout | undefined;
-let vatsimData: VatsimDataInterface | undefined;
+let vatsimData: { pilots: IPilots; controllers: IControllers } | undefined;
 
 if (!existsSync("dist")) {
     throw Error("Build files not found");
 }
+if (!existsSync(`db/${process.env.DB_FILENAME}`)) {
+    throw Error("Database not found");
+}
 
 async function getVatsimData() {
-    const response = await axios.get("https://data.vatsim.net/v3/vatsim-data.json");
+    const response = await fetch("https://data.vatsim.net/v3/vatsim-data.json");
+    const data = await response.json();
 
-    if (response.status === 200) {
+    if (response.ok) {
         vatsimData = {
-            pilots: response["data"]["pilots"],
-            atcCount: response["data"]["controllers"].length,
+            pilots: data["pilots"],
+            controllers: data["controllers"],
         };
         return vatsimData;
     } else {
-        throw Error("Bad response when fetching Vatsim data");
+        throw Error(`Bad response when fetching Vatsim data: ${response.status}`);
     }
 }
 
@@ -82,5 +87,5 @@ io.on("connection", async (socket) => {
     });
 });
 
-webSocketServer.listen(5000);
-console.log(`Server listening on http://127.0.0.1:5000`);
+webSocketServer.listen(process.env.VITE_PORT);
+console.log(`Server listening on http://127.0.0.1:${process.env.VITE_PORT}`);
