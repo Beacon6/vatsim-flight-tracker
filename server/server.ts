@@ -6,6 +6,8 @@ import { createServer } from "node:http";
 import { existsSync } from "node:fs";
 import { Server } from "socket.io";
 
+import Data from "./database.ts";
+
 import { IPilots } from "../types/IPilots.ts";
 import { IControllers } from "../types/IControllers.ts";
 
@@ -19,13 +21,21 @@ app.use(express.static("dist"));
 
 let interval: NodeJS.Timeout | undefined;
 let vatsimData: { pilots: IPilots; controllers: IControllers } | undefined;
+const dbFilename = process.env.DB_FILENAME!;
 
 if (!existsSync("dist")) {
     throw Error("Build files not found");
 }
-if (!existsSync(`db/${process.env.DB_FILENAME}`)) {
+if (!existsSync(`db/${dbFilename}`)) {
     throw Error("Database not found");
 }
+
+app.get("/airports", (_, res) => {
+    const database = new Data(dbFilename);
+    const airports = database.getAirports();
+    res.send(airports);
+    database.close();
+});
 
 async function getVatsimData() {
     const response = await fetch("https://data.vatsim.net/v3/vatsim-data.json");
