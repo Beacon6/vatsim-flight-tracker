@@ -8,9 +8,17 @@ export default class NavigraphDatabase {
         this.db = new Database(`db/${process.env.DB_FILENAME}`);
     }
 
-    getAirports() {
+    getAirportsCollection() {
         const query = this.db.prepare("SELECT * FROM tbl_airports");
         return query.all();
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    getAirports(dep: any, arr: any, altn: any) {
+        const query = this.db.prepare(
+            "SELECT * FROM tbl_airports WHERE airport_identifier=? OR airport_identifier=? OR airport_identifier=?",
+        );
+        return query.all(dep, arr, altn);
     }
 
     close() {

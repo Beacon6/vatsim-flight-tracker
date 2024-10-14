@@ -11,12 +11,13 @@ import { IControllers } from "../types/IControllers.ts";
 import { IVatsimData } from "../types/IVatsimData.ts";
 
 function App() {
+    const PORT = import.meta.env.VITE_PORT || 8080;
+
     const [vatsimPilots, setVatsimPilots] = useState<IPilots["pilots"]>();
     const [vatsimControllers, setVatsimControllers] = useState<IControllers["controllers"]>();
 
     useEffect(() => {
-        console.log(import.meta.env.VITE_PORT);
-        const socket = io(`http://127.0.0.1:${import.meta.env.VITE_PORT}`);
+        const socket = io(`http://127.0.0.1:${PORT}`);
 
         try {
             socket.on("vatsimData", (data: IVatsimData) => {
@@ -26,13 +27,14 @@ function App() {
         } catch (err) {
             console.error(err);
         }
-    }, []);
+    }, [PORT]);
 
     const [selectedFlight, setSelectedFlight] = useState<IPilots["pilots"][number]>();
     const [selectedFlightId, setSelectedFlightId] = useState<number>();
     const [panelActive, setPanelActive] = useState(false);
 
     function selectFlight(flight: IPilots["pilots"][number]) {
+        fetchAirports(flight);
         setSelectedFlight(flight);
         setSelectedFlightId(flight.cid);
         setPanelActive(true);
@@ -53,6 +55,7 @@ function App() {
         if (isNaN(Number(input))) {
             const searchResult = vatsimPilots.find((p) => p.callsign === input);
             if (searchResult) {
+                fetchAirports(searchResult);
                 setSelectedFlightId(searchResult.cid);
                 setSelectedFlight(searchResult);
                 setPanelActive(true);
@@ -60,6 +63,7 @@ function App() {
         } else {
             const searchResult = vatsimPilots.find((p) => p.cid === Number(input));
             if (searchResult) {
+                fetchAirports(searchResult);
                 setSelectedFlightId(searchResult.cid);
                 setSelectedFlight(searchResult);
                 setPanelActive(true);
@@ -67,6 +71,14 @@ function App() {
         }
 
         return;
+    }
+
+    async function fetchAirports(flight: IPilots["pilots"][number]) {
+        const dep = flight.flight_plan?.departure;
+        const arr = flight.flight_plan?.arrival;
+        const altn = flight.flight_plan?.alternate;
+
+        await fetch(`http://127.0.0.1:${PORT}/airports?dep=${dep}&arr=${arr}&altn=${altn}`);
     }
 
     return (

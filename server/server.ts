@@ -14,6 +14,7 @@ import { IControllers } from "../types/IControllers.ts";
 const app = express();
 const webSocketServer = createServer(app);
 const io = new Server(webSocketServer, { cors: { origin: "*" } });
+const PORT = process.env.VITE_PORT || 8080;
 
 app.use(cors());
 app.use(express.json());
@@ -30,9 +31,16 @@ if (!existsSync(`db/${dbFilename}`) || !process.env.DB_FILENAME) {
     throw Error("Database not found");
 }
 
-app.get("/airports", (_, res) => {
+app.get("/collections/airports", (_, res) => {
     const database = new NavigraphDatabase();
-    const airports = database.getAirports();
+    const airportsCollection = database.getAirportsCollection();
+    res.send(airportsCollection);
+    database.close();
+});
+
+app.get("/airports", (req, res) => {
+    const database = new NavigraphDatabase();
+    const airports = database.getAirports(req.query.dep, req.query.arr, req.query.altn);
     res.send(airports);
     database.close();
 });
@@ -97,5 +105,5 @@ io.on("connection", async (socket) => {
     });
 });
 
-webSocketServer.listen(process.env.VITE_PORT || 8080);
-console.log(`Server listening on http://127.0.0.1:${process.env.VITE_PORT || 8080}`);
+webSocketServer.listen(PORT);
+console.log(`Server listening on http://127.0.0.1:${PORT}`);
