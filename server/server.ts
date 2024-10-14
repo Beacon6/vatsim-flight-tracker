@@ -6,7 +6,7 @@ import { createServer } from "node:http";
 import { existsSync } from "node:fs";
 import { Server } from "socket.io";
 
-import Data from "./database.ts";
+import NavigraphDatabase from "./database.ts";
 
 import { IPilots } from "../types/IPilots.ts";
 import { IControllers } from "../types/IControllers.ts";
@@ -26,19 +26,19 @@ const dbFilename = process.env.DB_FILENAME!;
 if (!existsSync("dist")) {
     throw Error("Build files not found");
 }
-if (!existsSync(`db/${dbFilename}`)) {
+if (!existsSync(`db/${dbFilename}`) || !process.env.DB_FILENAME) {
     throw Error("Database not found");
 }
 
 app.get("/airports", (_, res) => {
-    const database = new Data(dbFilename);
+    const database = new NavigraphDatabase();
     const airports = database.getAirports();
     res.send(airports);
     database.close();
 });
 
 async function getVatsimData() {
-    const response = await fetch("https://data.vatsim.net/v3/vatsim-data.json");
+    const response = await fetch(process.env.VATSIM_API!);
     const data = await response.json();
 
     if (response.ok) {
@@ -97,5 +97,5 @@ io.on("connection", async (socket) => {
     });
 });
 
-webSocketServer.listen(process.env.VITE_PORT);
-console.log(`Server listening on http://127.0.0.1:${process.env.VITE_PORT}`);
+webSocketServer.listen(process.env.VITE_PORT || 8080);
+console.log(`Server listening on http://127.0.0.1:${process.env.VITE_PORT || 8080}`);

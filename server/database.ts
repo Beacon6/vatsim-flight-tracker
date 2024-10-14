@@ -1,10 +1,11 @@
 import Database from "better-sqlite3";
+import "dotenv/config";
 
-export default class Data {
+export default class NavigraphDatabase {
     db: any;
 
-    constructor(filename: string) {
-        this.db = new Database(`db/${filename}`);
+    constructor() {
+        this.db = new Database(`db/${process.env.DB_FILENAME}`);
     }
 
     getAirports() {
