@@ -31,20 +31,6 @@ if (!existsSync(`db/${dbFilename}`) || !process.env.DB_FILENAME) {
     throw Error("Database not found");
 }
 
-app.get("/collections/airports", (_, res) => {
-    const database = new NavigraphDatabase();
-    const airportsCollection = database.getAirportsCollection();
-    res.send(airportsCollection);
-    database.close();
-});
-
-app.get("/airports", (req, res) => {
-    const database = new NavigraphDatabase();
-    const airports = database.getAirports(req.query.dep, req.query.arr, req.query.altn);
-    res.send(airports);
-    database.close();
-});
-
 async function getVatsimData() {
     const response = await fetch(process.env.VATSIM_API!);
     const data = await response.json();
@@ -70,6 +56,28 @@ async function sendVatsimData() {
         console.error(err);
     }
 }
+
+app.get("/airports", async (req, res) => {
+    const database = new NavigraphDatabase();
+    try {
+        const { dep, arr, altn } = req.query;
+
+        if (!dep || !arr || !altn) {
+            return res.status(400).json({ Error: "Required query parameters missing" });
+        }
+
+        const departure = await database.getAirport(dep as string);
+        const arrival = await database.getAirport(arr as string);
+        const alternate = await database.getAirport(altn as string);
+
+        res.json({ departure: departure, arrival: arrival, alternate: alternate });
+    } catch (e: any) {
+        console.error(e);
+        res.status(500).json({ Error: e.message });
+    } finally {
+        database.close();
+    }
+});
 
 io.on("connection", async (socket) => {
     console.log("New client connected");
