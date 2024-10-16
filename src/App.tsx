@@ -35,6 +35,7 @@ function App() {
 
     function selectFlight(flight: IPilots["pilots"][number]) {
         fetchAirports(flight);
+        fetchRoute(flight);
         setSelectedFlight(flight);
         setSelectedFlightId(flight.cid);
         setPanelActive(true);
@@ -79,6 +80,12 @@ function App() {
         const altn = flight.flight_plan?.alternate;
 
         await fetch(`http://127.0.0.1:${PORT}/airports?dep=${dep}&arr=${arr}&altn=${altn}`);
+    }
+
+    async function fetchRoute(flight: IPilots["pilots"][number]) {
+        const callsign = flight.callsign;
+
+        await fetch(`http://127.0.0.1:${PORT}/route?callsign=${callsign}`);
     }
 
     return (

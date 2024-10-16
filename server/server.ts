@@ -71,9 +71,34 @@ app.get("/airports", async (req, res) => {
         const alternate = await database.getAirport(altn as string);
 
         res.json({ departure: departure, arrival: arrival, alternate: alternate });
-    } catch (e: any) {
-        console.error(e);
-        res.status(500).json({ Error: e.message });
+    } catch (err: any) {
+        console.error(err);
+        res.status(500).json({ Error: err.message });
+    } finally {
+        database.close();
+    }
+});
+
+app.get("/route", async (req, res) => {
+    const database = new NavigraphDatabase();
+    try {
+        const callsign = req.query.callsign;
+
+        if (!callsign) {
+            return res.status(400).json({ Error: "Required query parameter missing" });
+        } else if (!vatsimData) {
+            return res.status(500).json({ Error: "No clients active - Vatsim data missing" });
+        }
+
+        const pilots = vatsimData.pilots as any;
+        const flightPlanRoute = pilots.find((e: IPilots["pilots"][number]) => {
+            return e.callsign === callsign;
+        })?.flight_plan?.route;
+
+        res.json({ Route: flightPlanRoute });
+    } catch (err: any) {
+        console.error(err);
+        res.status(500).json({ Error: err.message });
     } finally {
         database.close();
     }
@@ -106,6 +131,7 @@ io.on("connection", async (socket) => {
             try {
                 clearInterval(interval);
                 interval = undefined;
+                vatsimData = undefined;
             } catch (err) {
                 console.error(err);
             }
