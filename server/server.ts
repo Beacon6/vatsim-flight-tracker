@@ -7,6 +7,7 @@ import { existsSync } from "node:fs";
 import { Server } from "socket.io";
 
 import NavigraphDatabase from "./database.ts";
+import parseRoute from "./helpers/routeParser.ts";
 
 import { IPilots } from "../types/IPilots.ts";
 import { IControllers } from "../types/IControllers.ts";
@@ -95,7 +96,9 @@ app.get("/route", async (req, res) => {
             return e.callsign === callsign;
         })?.flight_plan?.route;
 
-        res.json({ Route: flightPlanRoute });
+        const waypoints = parseRoute(flightPlanRoute);
+
+        res.json({ Route: waypoints });
     } catch (err: any) {
         console.error(err);
         res.status(500).json({ Error: err.message });
