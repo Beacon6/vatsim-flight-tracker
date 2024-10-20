@@ -1,14 +1,19 @@
 export default function parseRoute(routeString: string): string[] {
-    const waypoints = routeString.split(" ");
+    const flightPlan = routeString.split(" ");
+    const waypoints = [];
 
-    for (let i = 0; i < waypoints.length; i++) {
-        if (waypoints[i].includes("/")) {
-            const idx = waypoints[i].indexOf("/");
-            waypoints[i] = waypoints[i].substring(0, idx);
+    for (let element of flightPlan) {
+        if (element.includes("/")) {
+            const idx = element.indexOf("/");
+            element = element.substring(0, idx);
         }
+
+        if (element.length === 0 || element === "DCT") {
+            continue;
+        }
+
+        waypoints.push(element);
     }
 
     return waypoints;
 }
-
-console.log(parseRoute("waypoint1 waypoint2/restriction  "));
