@@ -97,8 +97,9 @@ app.get("/route", async (req, res) => {
         })?.flight_plan?.route;
 
         const waypoints = parseRoute(flightPlanRoute);
+        const enrouteWaypoints = database.getWaypoints(waypoints);
 
-        res.json({ Route: waypoints });
+        res.json(enrouteWaypoints);
     } catch (err: any) {
         console.error(err);
         res.status(500).json({ Error: err.message });
