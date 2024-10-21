@@ -11,13 +11,21 @@ import { IControllers } from "../types/IControllers.ts";
 import { IVatsimData } from "../types/IVatsimData.ts";
 
 function App() {
-    const PORT = import.meta.env.VITE_PORT || 8080;
+    const ENV: string = import.meta.env.VITE_ENV;
+    let SERVER: string;
+    if (ENV === "production") {
+        SERVER = "http://beacon6.com:8080";
+    } else if (ENV === "development") {
+        SERVER = "http://127.0.0.1:8080";
+    } else {
+        throw Error("Required environment variable VITE_ENV is missing.");
+    }
 
     const [vatsimPilots, setVatsimPilots] = useState<IPilots["pilots"]>();
     const [vatsimControllers, setVatsimControllers] = useState<IControllers["controllers"]>();
 
     useEffect(() => {
-        const socket = io(`http://127.0.0.1:${PORT}`);
+        const socket = io(SERVER);
 
         try {
             socket.on("vatsimData", (data: IVatsimData) => {
@@ -27,7 +35,7 @@ function App() {
         } catch (err) {
             console.error(err);
         }
-    }, [PORT]);
+    }, [SERVER]);
 
     const [selectedFlight, setSelectedFlight] = useState<IPilots["pilots"][number]>();
     const [selectedFlightId, setSelectedFlightId] = useState<number>();
@@ -68,7 +76,7 @@ function App() {
     }
 
     async function fetchFlightInfo(flight: IPilots["pilots"][number]) {
-        await fetch(`http://127.0.0.1:${PORT}/flight?callsign=${flight.callsign}`);
+        await fetch(`${SERVER}/flight?callsign=${flight.callsign}`);
     }
 
     return (

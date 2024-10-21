@@ -5,7 +5,7 @@ export default class NavigationDatabase {
     db: any;
 
     constructor() {
-        this.db = new Database(`db/${process.env.DB_FILENAME}`);
+        this.db = new Database(process.env.DATABASE_PATH);
     }
 
     close() {

@@ -15,7 +15,7 @@ import { IControllers } from "../types/IControllers.ts";
 const app = express();
 const webSocketServer = createServer(app);
 const io = new Server(webSocketServer, { cors: { origin: "*" } });
-const PORT = process.env.VITE_PORT || 8080;
+const DB_PATH = process.env.DATABASE_PATH;
 
 app.use(cors());
 app.use(express.json());
@@ -24,8 +24,14 @@ app.use(express.static("dist"));
 let interval: NodeJS.Timeout | undefined;
 let vatsimData: { pilots: IPilots; controllers: IControllers } | undefined;
 
+if (!DB_PATH) {
+    throw Error("Required environment variable 'DATABASE_PATH' is missing.");
+}
+if (!existsSync(DB_PATH)) {
+    throw Error("Database file is missing.");
+}
 if (!existsSync("dist")) {
-    throw Error("Build files not found");
+    throw Error("Build files are missing.");
 }
 
 async function getVatsimData() {
@@ -55,7 +61,7 @@ async function sendVatsimData() {
 }
 
 app.get("/flight", async (req, res) => {
-    // const db = new NavigationDatabase();
+    const db = new NavigationDatabase();
     try {
         const callsign = req.query.callsign;
         res.json({ callsign: callsign });
@@ -63,7 +69,7 @@ app.get("/flight", async (req, res) => {
         console.error(err);
         res.status(500).json({ error: err.message });
     } finally {
-        // db.close();
+        db.close();
     }
 });
 
@@ -102,5 +108,5 @@ io.on("connection", async (socket) => {
     });
 });
 
-webSocketServer.listen(PORT);
-console.log(`Server listening on http://127.0.0.1:${PORT}`);
+webSocketServer.listen(8080);
+console.log(`Server listening on http://127.0.0.1:8080`);
