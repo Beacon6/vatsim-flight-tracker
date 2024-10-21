@@ -34,8 +34,7 @@ function App() {
     const [panelActive, setPanelActive] = useState(false);
 
     function selectFlight(flight: IPilots["pilots"][number]) {
-        fetchAirports(flight);
-        fetchRoute(flight);
+        fetchFlightInfo(flight);
         setSelectedFlight(flight);
         setSelectedFlightId(flight.cid);
         setPanelActive(true);
@@ -54,38 +53,22 @@ function App() {
         }
 
         if (isNaN(Number(input))) {
-            const searchResult = vatsimPilots.find((p) => p.callsign === input);
-            if (searchResult) {
-                fetchAirports(searchResult);
-                setSelectedFlightId(searchResult.cid);
-                setSelectedFlight(searchResult);
-                setPanelActive(true);
+            const flight = vatsimPilots.find((p) => p.callsign === input);
+            if (flight) {
+                selectFlight(flight);
             }
         } else {
-            const searchResult = vatsimPilots.find((p) => p.cid === Number(input));
-            if (searchResult) {
-                fetchAirports(searchResult);
-                setSelectedFlightId(searchResult.cid);
-                setSelectedFlight(searchResult);
-                setPanelActive(true);
+            const flight = vatsimPilots.find((p) => p.cid === Number(input));
+            if (flight) {
+                selectFlight(flight);
             }
         }
 
         return;
     }
 
-    async function fetchAirports(flight: IPilots["pilots"][number]) {
-        const dep = flight.flight_plan?.departure;
-        const arr = flight.flight_plan?.arrival;
-        const altn = flight.flight_plan?.alternate;
-
-        await fetch(`http://127.0.0.1:${PORT}/airports?dep=${dep}&arr=${arr}&altn=${altn}`);
-    }
-
-    async function fetchRoute(flight: IPilots["pilots"][number]) {
-        const callsign = flight.callsign;
-
-        await fetch(`http://127.0.0.1:${PORT}/route?callsign=${callsign}`);
+    async function fetchFlightInfo(flight: IPilots["pilots"][number]) {
+        await fetch(`http://127.0.0.1:${PORT}/flight?callsign=${flight.callsign}`);
     }
 
     return (

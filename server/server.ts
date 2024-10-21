@@ -6,7 +6,7 @@ import { createServer } from "node:http";
 import { existsSync } from "node:fs";
 import { Server } from "socket.io";
 
-import NavigraphDatabase from "./database.ts";
+import NavigationDatabase from "./database.ts";
 import parseRoute from "./helpers/routeParser.ts";
 
 import { IPilots } from "../types/IPilots.ts";
@@ -23,17 +23,13 @@ app.use(express.static("dist"));
 
 let interval: NodeJS.Timeout | undefined;
 let vatsimData: { pilots: IPilots; controllers: IControllers } | undefined;
-const dbFilename = process.env.DB_FILENAME!;
 
 if (!existsSync("dist")) {
     throw Error("Build files not found");
 }
-if (!existsSync(`db/${dbFilename}`) || !process.env.DB_FILENAME) {
-    throw Error("Database not found");
-}
 
 async function getVatsimData() {
-    const response = await fetch(process.env.VATSIM_API!);
+    const response = await fetch("https://data.vatsim.net/v3/vatsim-data.json");
     const data = await response.json();
 
     if (response.ok) {
@@ -58,53 +54,16 @@ async function sendVatsimData() {
     }
 }
 
-app.get("/airports", async (req, res) => {
-    const database = new NavigraphDatabase();
-    try {
-        const { dep, arr, altn } = req.query;
-
-        if (!dep || !arr || !altn) {
-            return res.status(400).json({ Error: "Required query parameters missing" });
-        }
-
-        const departure = await database.getAirport(dep as string);
-        const arrival = await database.getAirport(arr as string);
-        const alternate = await database.getAirport(altn as string);
-
-        res.json({ departure: departure, arrival: arrival, alternate: alternate });
-    } catch (err: any) {
-        console.error(err);
-        res.status(500).json({ Error: err.message });
-    } finally {
-        database.close();
-    }
-});
-
-app.get("/route", async (req, res) => {
-    const database = new NavigraphDatabase();
+app.get("/flight", async (req, res) => {
+    // const db = new NavigationDatabase();
     try {
         const callsign = req.query.callsign;
-
-        if (!callsign) {
-            return res.status(400).json({ Error: "Required query parameter missing" });
-        } else if (!vatsimData) {
-            return res.status(500).json({ Error: "No clients active - Vatsim data missing" });
-        }
-
-        const pilots = vatsimData.pilots as any;
-        const flightPlanRoute = pilots.find((e: IPilots["pilots"][number]) => {
-            return e.callsign === callsign;
-        })?.flight_plan?.route;
-
-        const waypoints = parseRoute(flightPlanRoute);
-        const enrouteWaypoints = database.getWaypoints(waypoints);
-
-        res.json(enrouteWaypoints);
+        res.json({ callsign: callsign });
     } catch (err: any) {
         console.error(err);
-        res.status(500).json({ Error: err.message });
+        res.status(500).json({ error: err.message });
     } finally {
-        database.close();
+        // db.close();
     }
 });
 

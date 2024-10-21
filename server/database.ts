@@ -1,7 +1,7 @@
 import Database from "better-sqlite3";
 import "dotenv/config";
 
-export default class NavigraphDatabase {
+export default class NavigationDatabase {
     db: any;
 
     constructor() {
