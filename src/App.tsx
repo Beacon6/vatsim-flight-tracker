@@ -11,15 +11,7 @@ import { IControllers } from "../types/IControllers.ts";
 import { IVatsimData } from "../types/IVatsimData.ts";
 
 function App() {
-    const ENV: string = import.meta.env.VITE_ENV;
-    let SERVER: string;
-    if (ENV === "production") {
-        SERVER = "http://beacon6.com:8080";
-    } else if (ENV === "development") {
-        SERVER = "http://127.0.0.1:8080";
-    } else {
-        throw Error("Required environment variable VITE_ENV is missing.");
-    }
+    const SERVER = import.meta.env.VITE_API_SERVER;
 
     const [vatsimPilots, setVatsimPilots] = useState<IPilots["pilots"]>();
     const [vatsimControllers, setVatsimControllers] = useState<IControllers["controllers"]>();

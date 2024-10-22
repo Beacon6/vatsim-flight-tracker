@@ -109,4 +109,4 @@ io.on("connection", async (socket) => {
 });
 
 webSocketServer.listen(8080);
-console.log(`Server listening on http://127.0.0.1:8080`);
+console.log(`Server listening on port 8080`);

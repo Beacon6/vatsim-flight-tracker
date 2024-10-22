@@ -1,39 +1,15 @@
-ARG NODE_VERSION=22.9.0
+FROM node:22-alpine
 
-FROM node:${NODE_VERSION}-alpine AS base
+ARG VITE_API_SERVER=${VITE_API_SERVER}
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-FROM base AS deps
+COPY package*.json ./
 
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=package-lock.json,target=package-lock.json \
-    --mount=type=cache,target=/root/.npm \
-    npm ci --omit=dev
-
-FROM deps AS build
-
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=package-lock.json,target=package-lock.json \
-    --mount=type=cache,target=/root/.npm \
-    npm ci
+RUN npm ci
 
 COPY . .
 
 RUN npm run build
 
-FROM base AS final
-
-ENV NODE_ENV production
-
-USER node
-
-COPY package.json .
-
-COPY --from=deps /usr/src/app/node_modules ./node_modules
-COPY --from=build /usr/src/app/dist/ ./dist/
-COPY --from=build /usr/src/app/server/ ./server/
-
-EXPOSE 5000
-
-CMD npm start
+CMD [ "npm", "start" ]
