@@ -68,7 +68,7 @@ function App() {
   }
 
   async function fetchFlightInfo(flight: IPilots["pilots"][number]) {
-    await fetch(`${SERVER}/flight?callsign=${flight.callsign}`);
+    await fetch(`/flight?callsign=${flight.callsign}`);
   }
 
   return (
