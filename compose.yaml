@@ -1,9 +1,6 @@
 services:
   server:
-    build:
-      context: .
-      args:
-        - VITE_API_SERVER=${VITE_API_SERVER}
+    image: ghcr.io/vatsim-flight-tracker:latest
     container_name: vatsim-flight-tracker
     env_file:
       - .env
