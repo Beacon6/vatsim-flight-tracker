@@ -1,6 +1,6 @@
 services:
   server:
-    image: ghcr.io/vatsim-flight-tracker:latest
+    image: ghcr.io/beacon6/vatsim-flight-tracker:latest
     container_name: vatsim-flight-tracker
     env_file:
       - .env
