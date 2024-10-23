@@ -4,6 +4,8 @@ services:
     container_name: vatsim-flight-tracker
     env_file:
       - .env
+    volumes:
+      - ./db:/app/db
     restart: always
 
   nginx-reverse-proxy:
