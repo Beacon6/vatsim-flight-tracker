@@ -108,5 +108,5 @@ io.on("connection", async (socket) => {
   });
 });
 
-webSocketServer.listen(8080);
-console.log(`Server listening on port 8080`);
+webSocketServer.listen(5000);
+console.log(`Server listening on port 5000`);

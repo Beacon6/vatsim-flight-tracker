@@ -11,7 +11,7 @@ import { IControllers } from "../types/IControllers.ts";
 import { IVatsimData } from "../types/IVatsimData.ts";
 
 function App() {
-  const SERVER = import.meta.env.VITE_API_SERVER;
+  const SERVER = import.meta.env.VITE_SERVER;
 
   const [vatsimPilots, setVatsimPilots] = useState<IPilots["pilots"]>();
   const [vatsimControllers, setVatsimControllers] = useState<IControllers["controllers"]>();

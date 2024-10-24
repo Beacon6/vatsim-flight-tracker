@@ -1,7 +1,9 @@
 services:
-  server:
+  vatsim-flight-tracker:
     image: ghcr.io/beacon6/vatsim-flight-tracker:latest
     container_name: vatsim-flight-tracker
+    ports:
+      - 5000:5000
     env_file:
       - .env
     volumes:
@@ -11,6 +13,8 @@ services:
   nginx-reverse-proxy:
     image: nginx:alpine
     container_name: nginx-reverse-proxy
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
     ports:
       - 80:80
       - 443:443
@@ -19,4 +23,12 @@ services:
       - /etc/letsencrypt:/etc/nginx/certs
     restart: always
     depends_on:
-      - server
+      - vatsim-flight-tracker
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command:
+      - "--interval 30"
+      - "--cleanup"
