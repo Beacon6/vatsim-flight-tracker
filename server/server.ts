@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(express.static("dist"));
 
 let interval: NodeJS.Timeout | undefined;
-let vatsimData: { pilots: IPilots; controllers: IControllers } | undefined;
+let vatsimData: (IPilots & IControllers) | undefined;
 
 if (!DB_PATH) {
   throw Error("Required environment variable 'DATABASE_PATH' is missing.");
@@ -64,7 +64,22 @@ app.get("/flight", async (req, res) => {
   const db = new NavigationDatabase();
   try {
     const callsign = req.query.callsign;
-    res.json({ callsign: callsign });
+
+    if (!vatsimData) {
+      res.status(500).json({ error: "VatsimData missing" });
+      return;
+    }
+
+    const pilot = vatsimData.pilots.find((p) => {
+      return p.callsign === callsign;
+    });
+
+    const airports = { dep: undefined, arr: undefined, altn: undefined };
+    airports.dep = await db.getAirport(pilot?.flight_plan?.departure as string);
+    airports.arr = await db.getAirport(pilot?.flight_plan?.arrival as string);
+    airports.altn = await db.getAirport(pilot?.flight_plan?.alternate as string);
+
+    res.json({ pilot: pilot, airports: airports });
   } catch (err: any) {
     console.error(err);
     res.status(500).json({ error: err.message });
