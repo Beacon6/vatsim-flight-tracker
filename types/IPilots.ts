@@ -40,5 +40,5 @@ export interface IPilotsSubset {
   pilots: {
     callsign: string;
     heading: number;
-  };
+  }[];
 }

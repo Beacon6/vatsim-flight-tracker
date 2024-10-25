@@ -1,64 +1,58 @@
-import cors from "cors";
 import "dotenv/config";
+import cors from "cors";
 import express from "express";
-
 import { createServer } from "node:http";
-import { existsSync } from "node:fs";
 import { Server } from "socket.io";
 
+import assertPathExists from "./helpers/assertPathExists.ts";
 import NavigationDatabase from "./database.ts";
-import parseRoute from "./helpers/routeParser.ts";
-
-import { IPilots } from "../types/IPilots.ts";
+import { IPilots, IPilotsSubset } from "../types/IPilots.ts";
 import { IControllers } from "../types/IControllers.ts";
+import { sendVatsimDataSubset } from "./vatsimData.ts";
+
+const DATABASE_PATH = process.env.DATABASE_PATH!;
+const PORT = process.env.PORT!;
 
 const app = express();
-const webSocketServer = createServer(app);
-const io = new Server(webSocketServer, { cors: { origin: "*" } });
-const DB_PATH = process.env.DATABASE_PATH;
+const server = createServer(app);
+const io = new Server(server, { cors: { origin: "*" } });
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static("dist"));
 
-let interval: NodeJS.Timeout | undefined;
-let vatsimData: (IPilots & IControllers) | undefined;
+assertPathExists(DATABASE_PATH, "Database missing");
+assertPathExists("dist", "Build files missing");
 
-if (!DB_PATH) {
-  throw Error("Required environment variable 'DATABASE_PATH' is missing.");
-}
-if (!existsSync(DB_PATH)) {
-  throw Error("Database file is missing.");
-}
-if (!existsSync("dist")) {
-  throw Error("Build files are missing.");
-}
+server.listen(PORT);
+console.log(`Server listening on port ${PORT}`);
 
-async function getVatsimData() {
-  const response = await fetch("https://data.vatsim.net/v3/vatsim-data.json");
-  const data = await response.json();
+let refreshInterval: NodeJS.Timeout | undefined;
+let vatsimDataSubset: IPilotsSubset | undefined;
 
-  if (response.ok) {
-    vatsimData = {
-      pilots: data["pilots"],
-      controllers: data["controllers"],
-    };
-    return vatsimData;
-  } else {
-    throw Error(`Bad response when fetching Vatsim data: ${response.status}`);
-  }
-}
-
-async function sendVatsimData() {
+io.on("connection", async (socket) => {
+  await sendVatsimDataSubset(io);
+  console.log(`New client connected on port ${PORT}`);
+  console.log(`Clients connected: ${io.engine.clientsCount}`);
   try {
-    const vatsimData = await getVatsimData();
-    if (vatsimData) {
-      io.emit("vatsimData", vatsimData);
+    if (vatsimDataSubset) {
+      io.emit("vatsimDataSubset", vatsimDataSubset);
     }
-  } catch (err) {
-    console.error(err);
+    if (!refreshInterval) {
+      refreshInterval = setInterval(sendVatsimDataSubset, 15000);
+    }
+  } catch (err: any) {
+    console.error(err.message);
   }
-}
+
+  socket.on("disconnect", () => {
+    console.log(`Client disconnected from port ${PORT}`);
+    if (!io.engine.clientsCount) {
+      clearInterval(refreshInterval);
+      vatsimData = undefined;
+    }
+  });
+});
 
 app.get("/flight", async (req, res) => {
   const db = new NavigationDatabase();
@@ -87,41 +81,3 @@ app.get("/flight", async (req, res) => {
     db.close();
   }
 });
-
-io.on("connection", async (socket) => {
-  console.log("New client connected");
-  console.log(`Clients connected: ${io.engine.clientsCount}`);
-
-  try {
-    if (vatsimData) {
-      io.emit("vatsimData", vatsimData);
-    }
-
-    if (!interval) {
-      console.log("Creating new fetch interval");
-      interval = setInterval(sendVatsimData, 15000);
-      await sendVatsimData();
-    }
-  } catch (err) {
-    console.error(err);
-  }
-
-  socket.on("disconnect", () => {
-    console.log("Client disconnected");
-    console.log(`Clients connected: ${io.engine.clientsCount}`);
-
-    if (io.engine.clientsCount === 0) {
-      console.log("Clearing fetch interval");
-      try {
-        clearInterval(interval);
-        interval = undefined;
-        vatsimData = undefined;
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  });
-});
-
-webSocketServer.listen(5000);
-console.log(`Server listening on port 5000`);
