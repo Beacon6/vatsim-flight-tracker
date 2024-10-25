@@ -35,3 +35,10 @@ export interface IPilots {
     };
   }[];
 }
+
+export interface IPilotsSubset {
+  pilots: {
+    callsign: string;
+    heading: number;
+  };
+}
