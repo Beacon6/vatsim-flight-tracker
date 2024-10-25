@@ -1,20 +1,20 @@
 import "dotenv/config";
 import cors from "cors";
-import express from "express";
+import express, { Express } from "express";
 import { createServer } from "node:http";
 import { Server } from "socket.io";
 
 import assertPathExists from "./helpers/assertPathExists.ts";
 import NavigationDatabase from "./database.ts";
 import { IPilots, IPilotsSubset } from "../types/IPilots.ts";
-import { IControllers } from "../types/IControllers.ts";
-import { sendVatsimDataSubset } from "./vatsimData.ts";
+import { IVatsimData } from "../types/IVatsimData.ts";
+import { IAirports } from "../types/IAirports.ts";
 
-const DATABASE_PATH = process.env.DATABASE_PATH!;
-const PORT = process.env.PORT!;
+const DATABASE_PATH: string = process.env.DATABASE_PATH!;
+const PORT: string = process.env.PORT!;
 
-const app = express();
-const server = createServer(app);
+const app: Express = express();
+const server: any = createServer(app);
 const io = new Server(server, { cors: { origin: "*" } });
 
 app.use(cors());
@@ -28,43 +28,81 @@ server.listen(PORT);
 console.log(`Server listening on port ${PORT}`);
 
 let refreshInterval: NodeJS.Timeout | undefined;
+let vatsimData: IVatsimData | undefined;
 let vatsimDataSubset: IPilotsSubset | undefined;
 
-io.on("connection", async (socket) => {
-  await sendVatsimDataSubset(io);
-  console.log(`New client connected on port ${PORT}`);
-  console.log(`Clients connected: ${io.engine.clientsCount}`);
+async function fetchVatsimData(): Promise<IVatsimData> {
+  console.log("VATSIM API called");
+  const response: Response = await fetch("https://data.vatsim.net/v3/vatsim-data.json");
+  const data: any = await response.json();
+
+  if (response.ok) {
+    return {
+      general: data["general"],
+      pilots: data["pilots"],
+      controllers: data["controllers"],
+      atis: data["atis"],
+      facilities: data["facilities"],
+    };
+  } else {
+    throw new Error(`Bad response when fetching Vatsim data: ${response.status}`);
+  }
+}
+
+export async function sendVatsimData(): Promise<void> {
   try {
+    vatsimData = await fetchVatsimData();
+    vatsimDataSubset = { pilots: [] };
+
+    for (const pilot of vatsimData.pilots) {
+      vatsimDataSubset.pilots.push({ callsign: pilot.callsign, heading: pilot.heading });
+    }
+
+    io.emit("vatsimDataSubset", vatsimDataSubset);
+  } catch (err: any) {
+    console.error(err.message);
+  }
+}
+
+io.on("connection", async (socket: any): Promise<void> => {
+  try {
+    console.log(`New client connected on port ${PORT}`);
+    console.log(`Clients connected: ${io.engine.clientsCount}`);
+
     if (vatsimDataSubset) {
       io.emit("vatsimDataSubset", vatsimDataSubset);
     }
+
     if (!refreshInterval) {
-      refreshInterval = setInterval(sendVatsimDataSubset, 15000);
+      refreshInterval = setInterval(sendVatsimData, 15000);
+      await sendVatsimData();
     }
   } catch (err: any) {
     console.error(err.message);
   }
 
-  socket.on("disconnect", () => {
+  socket.on("disconnect", (): void => {
     console.log(`Client disconnected from port ${PORT}`);
+    console.log(`Clients connected: ${io.engine.clientsCount}`);
     if (!io.engine.clientsCount) {
       clearInterval(refreshInterval);
-      vatsimData = undefined;
+      refreshInterval = undefined;
+      vatsimDataSubset = undefined;
     }
   });
 });
 
-app.get("/flight", async (req, res) => {
+app.get("/flight", async (req: any, res: any): Promise<void> => {
   const db = new NavigationDatabase();
   try {
-    const callsign = req.query.callsign;
+    const callsign: string = req.query.callsign;
 
     if (!vatsimData) {
       res.status(500).json({ error: "VatsimData missing" });
       return;
     }
 
-    const pilot = vatsimData.pilots.find((p) => {
+    const pilot: IPilots["pilots"][number] | undefined = vatsimData.pilots.find((p: IPilots["pilots"][number]) => {
       return p.callsign === callsign;
     });
 
