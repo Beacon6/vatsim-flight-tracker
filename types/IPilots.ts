@@ -1,3 +1,5 @@
+import { IAirportSubset } from "./IAirports.ts";
+
 export interface IPilots {
   pilots: {
     cid: number;
@@ -30,10 +32,17 @@ export interface IPilots {
       route: string;
       revision_id: number;
       assigned_transponder: number;
-      logon_time: string;
-      last_updated: string;
     };
+    logon_time: string;
+    last_updated: string;
   }[];
+}
+
+export interface IPilotDetails {
+  pilot: IPilots["pilots"][number];
+  departure: IAirportSubset;
+  arrival: IAirportSubset;
+  alternate: IAirportSubset;
 }
 
 export interface IPilotsSubset {

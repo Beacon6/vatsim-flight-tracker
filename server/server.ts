@@ -6,9 +6,9 @@ import { Server } from "socket.io";
 
 import assertPathExists from "./helpers/assertPathExists.ts";
 import NavigationDatabase from "./database.ts";
-import { IPilots, IPilotsSubset } from "../types/IPilots.ts";
+import { IPilotDetails, IPilots, IPilotsSubset } from "../types/IPilots.ts";
 import { IVatsimData } from "../types/IVatsimData.ts";
-import { IAirports } from "../types/IAirports.ts";
+import { IAirportSubset } from "../types/IAirports.ts";
 
 const DATABASE_PATH: string = process.env.DATABASE_PATH!;
 const PORT: string = process.env.PORT!;
@@ -92,7 +92,7 @@ io.on("connection", async (socket: any): Promise<void> => {
   });
 });
 
-app.get("/flight", async (req: any, res: any): Promise<void> => {
+app.get("/flight", (req: any, res: any): void => {
   const db = new NavigationDatabase();
   try {
     const callsign: string = req.query.callsign;
@@ -102,16 +102,22 @@ app.get("/flight", async (req: any, res: any): Promise<void> => {
       return;
     }
 
-    const pilot: IPilots["pilots"][number] | undefined = vatsimData.pilots.find((p: IPilots["pilots"][number]) => {
+    const pilot: IPilots["pilots"][number] = vatsimData.pilots.find((p: IPilots["pilots"][number]): boolean => {
       return p.callsign === callsign;
-    });
+    })!;
 
-    const airports = { dep: undefined, arr: undefined, altn: undefined };
-    airports.dep = await db.getAirport(pilot?.flight_plan?.departure as string);
-    airports.arr = await db.getAirport(pilot?.flight_plan?.arrival as string);
-    airports.altn = await db.getAirport(pilot?.flight_plan?.alternate as string);
+    const dep: IAirportSubset = db.getAirport(pilot?.flight_plan?.departure as string);
+    const arr: IAirportSubset = db.getAirport(pilot?.flight_plan?.arrival as string);
+    const alt: IAirportSubset = db.getAirport(pilot?.flight_plan?.alternate as string);
 
-    res.json({ pilot: pilot, airports: airports });
+    const pilotDetails: IPilotDetails = {
+      pilot: pilot,
+      departure: dep,
+      arrival: arr,
+      alternate: alt,
+    };
+
+    res.json(pilotDetails);
   } catch (err: any) {
     console.error(err);
     res.status(500).json({ error: err.message });

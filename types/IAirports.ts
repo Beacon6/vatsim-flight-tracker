@@ -1,4 +1,4 @@
-export interface IAirports {
+export interface IAirportSubset {
   airport_identifier: string;
   aiport_name: string;
   airport_ref_latitude: number;
