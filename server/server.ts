@@ -35,6 +35,11 @@ async function fetchVatsimData(): Promise<IVatsimData> {
   console.log("VATSIM API called");
   const response: Response = await fetch("https://data.vatsim.net/v3/vatsim-data.json");
   const data: any = await response.json();
+  for (const p of data.pilots) {
+    delete p.cid;
+    delete p.name;
+    delete p.server;
+  }
 
   if (response.ok) {
     return {

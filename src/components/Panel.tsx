@@ -37,11 +37,6 @@ function Panel(props: Props) {
                 </Button>
               </Col>
             </Row>
-            <Row>
-              <Col className="panel-subtitle">
-                <Offcanvas.Title className={"panel-subtitle"}>CID: {selectedFlight?.pilot.cid}</Offcanvas.Title>
-              </Col>
-            </Row>
           </Container>
         </Offcanvas.Header>
         <Offcanvas.Body className="panel-body">

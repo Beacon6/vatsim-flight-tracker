@@ -2,9 +2,7 @@ import { IAirportSubset } from "./IAirports.ts";
 
 export interface IPilots {
   pilots: {
-    cid: number;
     callsign: string;
-    server: string;
     pilot_rating: number;
     military_rating: number;
     latitude: number;

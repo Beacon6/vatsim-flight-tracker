@@ -47,7 +47,7 @@ function Header(props: Props) {
           </Container>
           <Container className="header-item">
             <InputGroup className="d-flex">
-              <InputGroup.Text>CID / Callsign</InputGroup.Text>
+              <InputGroup.Text>Callsign</InputGroup.Text>
               <Form.Control type="text" value={searchValue} placeholder="Search" onChange={updateValue} />
             </InputGroup>
             <Button
