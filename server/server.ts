@@ -55,7 +55,12 @@ export async function sendVatsimData(): Promise<void> {
     vatsimDataSubset = { pilots: [] };
 
     for (const pilot of vatsimData.pilots) {
-      vatsimDataSubset.pilots.push({ callsign: pilot.callsign, heading: pilot.heading });
+      vatsimDataSubset.pilots.push({
+        callsign: pilot.callsign,
+        latitude: pilot.latitude,
+        longitude: pilot.longitude,
+        heading: pilot.heading,
+      });
     }
 
     io.emit("vatsimDataSubset", vatsimDataSubset);
@@ -106,9 +111,9 @@ app.get("/flight", (req: any, res: any): void => {
       return p.callsign === callsign;
     })!;
 
-    const dep: IAirportSubset = db.getAirport(pilot?.flight_plan?.departure as string);
-    const arr: IAirportSubset = db.getAirport(pilot?.flight_plan?.arrival as string);
-    const alt: IAirportSubset = db.getAirport(pilot?.flight_plan?.alternate as string);
+    const dep: IAirportSubset | undefined = db.getAirport(pilot?.flight_plan?.departure as string);
+    const arr: IAirportSubset | undefined = db.getAirport(pilot?.flight_plan?.arrival as string);
+    const alt: IAirportSubset | undefined = db.getAirport(pilot?.flight_plan?.alternate as string);
 
     const pilotDetails: IPilotDetails = {
       pilot: pilot,

@@ -40,14 +40,16 @@ export interface IPilots {
 
 export interface IPilotDetails {
   pilot: IPilots["pilots"][number];
-  departure: IAirportSubset;
-  arrival: IAirportSubset;
-  alternate: IAirportSubset;
+  departure: IAirportSubset | undefined;
+  arrival: IAirportSubset | undefined;
+  alternate: IAirportSubset | undefined;
 }
 
 export interface IPilotsSubset {
   pilots: {
     callsign: string;
+    latitude: number;
+    longitude: number;
     heading: number;
   }[];
 }

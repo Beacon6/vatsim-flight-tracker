@@ -1,64 +1,53 @@
+import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
-import { io } from "socket.io-client";
 
 import Aircraft from "./components/Aircraft.tsx";
 import Header from "./components/Header.tsx";
 import Panel from "./components/Panel.tsx";
-
-import { IPilots } from "../types/IPilots.ts";
-import { IControllers } from "../types/IControllers.ts";
-import { IVatsimData } from "../types/IVatsimData.ts";
+import { IPilotDetails, IPilotsSubset } from "../types/IPilots.ts";
 
 function App() {
-  const SERVER = import.meta.env.VITE_SERVER;
+  const VITE_SERVER: string = import.meta.env.VITE_SERVER!;
 
-  const [vatsimPilots, setVatsimPilots] = useState<IPilots["pilots"]>();
-  const [vatsimControllers, setVatsimControllers] = useState<IControllers["controllers"]>();
+  const [onlinePilots, setOnlinePilots] = useState<IPilotsSubset["pilots"]>();
 
-  useEffect(() => {
-    const socket = io(SERVER);
-
+  useEffect((): void => {
     try {
-      socket.on("vatsimData", (data: IVatsimData) => {
-        setVatsimPilots(data.pilots);
-        setVatsimControllers(data.controllers);
+      const socket = io(VITE_SERVER);
+      socket.on("vatsimDataSubset", (data: IPilotsSubset): void => {
+        setOnlinePilots(data.pilots);
       });
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      console.error(err.message);
     }
-  }, [SERVER]);
+  }, [VITE_SERVER]);
 
-  const [selectedFlight, setSelectedFlight] = useState<IPilots["pilots"][number]>();
-  const [selectedFlightId, setSelectedFlightId] = useState<number>();
+  const [selectedFlight, setSelectedFlight] = useState<IPilotDetails>();
+  // const [selectedFlightId, setSelectedFlightId] = useState<number>();
   const [panelActive, setPanelActive] = useState(false);
 
-  function selectFlight(flight: IPilots["pilots"][number]) {
-    fetchFlightInfo(flight);
-    setSelectedFlight(flight);
-    setSelectedFlightId(flight.cid);
+  function selectFlight(target: IPilotsSubset["pilots"][number]): void {
+    fetchFlightInfo(target).then((res: IPilotDetails): void => setSelectedFlight(res));
+    // setSelectedFlightId(flight.cid);
     setPanelActive(true);
     return;
   }
 
   function deselectFlight() {
     setPanelActive(false);
-    setSelectedFlightId(undefined);
+    setSelectedFlight(undefined);
+    // setSelectedFlightId(undefined);
     return;
   }
 
   function searchFlight(input: string) {
-    if (!vatsimPilots) {
+    if (!onlinePilots) {
       return;
     }
 
     if (isNaN(Number(input))) {
-      const flight = vatsimPilots.find((p) => p.callsign === input);
-      if (flight) {
-        selectFlight(flight);
-      }
-    } else {
-      const flight = vatsimPilots.find((p) => p.cid === Number(input));
+      const flight = onlinePilots.find((p) => p.callsign === input);
       if (flight) {
         selectFlight(flight);
       }
@@ -67,17 +56,14 @@ function App() {
     return;
   }
 
-  async function fetchFlightInfo(flight: IPilots["pilots"][number]) {
-    await fetch(`/flight?callsign=${flight.callsign}`);
+  async function fetchFlightInfo(target: IPilotsSubset["pilots"][number]): Promise<IPilotDetails> {
+    const response: Response = await fetch(`/flight?callsign=${target.callsign}`);
+    return response.json();
   }
 
   return (
     <>
-      <Header
-        pilotsCount={vatsimPilots?.length}
-        controllersCount={vatsimControllers?.length}
-        handleSearch={searchFlight}
-      />
+      <Header pilotsCount={onlinePilots?.length} handleSearch={searchFlight} />
       <Panel panelActive={panelActive} selectedFlight={selectedFlight} handleClose={deselectFlight} />
       <MapContainer
         className="map-container"
@@ -91,7 +77,7 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         ></TileLayer>
-        <Aircraft vatsimPilots={vatsimPilots} selectFlight={selectFlight} selectedFlightId={selectedFlightId} />
+        <Aircraft onlinePilots={onlinePilots} selectFlight={selectFlight} />
       </MapContainer>
     </>
   );

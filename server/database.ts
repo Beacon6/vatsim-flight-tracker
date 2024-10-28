@@ -14,7 +14,11 @@ export default class NavigationDatabase {
     this.db.close();
   }
 
-  getAirport(ident: string): IAirportSubset {
+  getAirport(ident: string): IAirportSubset | undefined {
+    if (!ident) {
+      return;
+    }
+
     const query: any = this.db.prepare("SELECT * FROM tbl_airports WHERE airport_identifier=?");
     const result: any = query.get(ident);
 
