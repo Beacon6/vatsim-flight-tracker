@@ -38,7 +38,7 @@ function Header(props: Props) {
         <Navbar className="header-topbar">
           <Container className="header-item">
             <Navbar.Brand className="header-brand" href="#">
-              {"Vatsim Flight Tracker | Updated"}
+              {"Vatsim Flight Tracker"}
             </Navbar.Brand>
           </Container>
           <Container className="header-item">
