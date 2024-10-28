@@ -3,7 +3,7 @@ services:
     image: ghcr.io/beacon6/vatsim-flight-tracker:latest
     container_name: vatsim-flight-tracker
     ports:
-      - 5000:5000
+      - "5000:5000"
     env_file:
       - .env
     volumes:
@@ -16,8 +16,8 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=false"
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - /etc/letsencrypt:/etc/nginx/certs
@@ -33,4 +33,4 @@ services:
     command:
       - "--cleanup"
       - "--interval"
-      - "30"
+      - "300"
