@@ -1,5 +1,5 @@
-import { IPilots } from "./IPilots";
-import { IControllers } from "./IControllers";
+import { IPilots, IPilotsSubset } from "./IPilots";
+import { IControllers, IControllersSubset } from "./IControllers";
 
 export interface IVatsimData extends IPilots, IControllers {
   general: {
@@ -29,4 +29,10 @@ export interface IVatsimData extends IPilots, IControllers {
     short: string;
     long: string;
   }[];
+}
+
+export interface IVatsimDataSubset extends IPilotsSubset, IControllersSubset {
+  general: {
+    update_timestamp: string;
+  };
 }

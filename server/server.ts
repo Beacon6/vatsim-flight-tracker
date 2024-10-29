@@ -6,8 +6,8 @@ import { Server } from "socket.io";
 
 import assertPathExists from "./helpers/assertPathExists.ts";
 import NavigationDatabase from "./database.ts";
-import { IPilotDetails, IPilots, IPilotsSubset } from "../types/IPilots.ts";
-import { IVatsimData } from "../types/IVatsimData.ts";
+import { IPilotDetails, IPilots } from "../types/IPilots.ts";
+import { IVatsimData, IVatsimDataSubset } from "../types/IVatsimData.ts";
 import { IAirportSubset } from "../types/IAirports.ts";
 
 const DATABASE_PATH: string = process.env.DATABASE_PATH!;
@@ -29,7 +29,7 @@ console.log(`Server listening on port ${PORT}`);
 
 let refreshInterval: NodeJS.Timeout | undefined;
 let vatsimData: IVatsimData | undefined;
-let vatsimDataSubset: IPilotsSubset | undefined;
+let vatsimDataSubset: IVatsimDataSubset | undefined;
 
 async function fetchVatsimData(): Promise<IVatsimData> {
   console.log("VATSIM API called");
@@ -39,6 +39,11 @@ async function fetchVatsimData(): Promise<IVatsimData> {
     delete p.cid;
     delete p.name;
     delete p.server;
+  }
+  for (const c of data.controllers) {
+    delete c.cid;
+    delete c.name;
+    delete c.server;
   }
 
   if (response.ok) {
@@ -57,14 +62,21 @@ async function fetchVatsimData(): Promise<IVatsimData> {
 export async function sendVatsimData(): Promise<void> {
   try {
     vatsimData = await fetchVatsimData();
-    vatsimDataSubset = { pilots: [] };
+    vatsimDataSubset = { general: { update_timestamp: "" }, pilots: [], controllers: [] };
 
+    vatsimDataSubset.general.update_timestamp = vatsimData.general.update_timestamp;
     for (const pilot of vatsimData.pilots) {
       vatsimDataSubset.pilots.push({
         callsign: pilot.callsign,
         latitude: pilot.latitude,
         longitude: pilot.longitude,
         heading: pilot.heading,
+      });
+    }
+    for (const controller of vatsimData.controllers) {
+      vatsimDataSubset.controllers.push({
+        callsign: controller.callsign,
+        frequency: controller.frequency,
       });
     }
 
@@ -131,7 +143,6 @@ app.get("/flight", (req: any, res: any): void => {
   } catch (err: any) {
     console.error(err);
     res.status(500).json({ error: err.message });
-  } finally {
-    db.close();
   }
+  db.close();
 });
