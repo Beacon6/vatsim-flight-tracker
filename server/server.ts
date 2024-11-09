@@ -9,6 +9,7 @@ import NavigationDatabase from "./database.ts";
 import { IPilotDetails, IPilots } from "../types/IPilots.ts";
 import { IVatsimData, IVatsimDataSubset } from "../types/IVatsimData.ts";
 import { IAirportSubset } from "../types/IAirports.ts";
+import { IRoute } from "../types/IRoute.ts";
 
 const DATABASE_PATH: string = process.env.DATABASE_PATH!;
 const PORT: string = process.env.PORT!;
@@ -32,18 +33,13 @@ let vatsimData: IVatsimData | undefined;
 let vatsimDataSubset: IVatsimDataSubset | undefined;
 
 async function fetchVatsimData(): Promise<IVatsimData> {
-  console.log("VATSIM API called");
   const response: Response = await fetch("https://data.vatsim.net/v3/vatsim-data.json");
   const data: any = await response.json();
   for (const p of data.pilots) {
-    delete p.cid;
-    delete p.name;
-    delete p.server;
+    ["cid", "name", "server"].forEach((e: string): boolean => delete p[e]);
   }
   for (const c of data.controllers) {
-    delete c.cid;
-    delete c.name;
-    delete c.server;
+    ["cid", "name", "server"].forEach((e: string): boolean => delete c[e]);
   }
 
   if (response.ok) {
@@ -124,19 +120,21 @@ app.get("/flight", (req: any, res: any): void => {
       return;
     }
 
-    const pilot: IPilots["pilots"][number] = vatsimData.pilots.find((p: IPilots["pilots"][number]): boolean => {
-      return p.callsign === callsign;
-    })!;
+    const pilot: IPilots["pilots"][number] = vatsimData.pilots.find(
+      (p: IPilots["pilots"][number]): boolean => p.callsign === callsign,
+    )!;
 
     const dep: IAirportSubset | undefined = db.getAirport(pilot?.flight_plan?.departure as string);
     const arr: IAirportSubset | undefined = db.getAirport(pilot?.flight_plan?.arrival as string);
     const alt: IAirportSubset | undefined = db.getAirport(pilot?.flight_plan?.alternate as string);
+    const route: IRoute | undefined = db.getRoute(pilot?.flight_plan?.route as string);
 
     const pilotDetails: IPilotDetails = {
       pilot: pilot,
       departure: dep,
       arrival: arr,
       alternate: alt,
+      route: route,
     };
 
     res.json(pilotDetails);

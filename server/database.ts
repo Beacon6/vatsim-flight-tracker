@@ -2,6 +2,7 @@ import Database from "better-sqlite3";
 import "dotenv/config";
 
 import { IAirportSubset } from "../types/IAirports.ts";
+import { IRoute } from "../types/IRoute.ts";
 
 export default class NavigationDatabase {
   db: any;
@@ -30,23 +31,11 @@ export default class NavigationDatabase {
     };
   }
 
-  getWaypoints(waypoints: string[]) {
-    const enrouteWaypoints = [];
+  getRoute(route: string): IRoute | undefined {
+    const waypoints: string[] = route.split(" ");
+    const enroute_waypoints: string[] = waypoints.filter((w: string): boolean => w.length === 5);
+    console.log(enroute_waypoints);
 
-    for (const element of waypoints) {
-      if (/\d/.test(element)) {
-        continue;
-      }
-
-      const coords = this.db
-        .prepare(
-          "SELECT waypoint_identifier, waypoint_latitude, waypoint_longitude FROM tbl_enroute_waypoints WHERE waypoint_identifier=?",
-        )
-        .get(element);
-
-      enrouteWaypoints.push(coords);
-    }
-
-    return enrouteWaypoints;
+    return;
   }
 }
