@@ -124,10 +124,17 @@ app.get("/flight", (req: any, res: any): void => {
       (p: IPilots["pilots"][number]): boolean => p.callsign === callsign,
     )!;
 
-    const dep: IAirportSubset | undefined = db.getAirport(pilot?.flight_plan?.departure as string);
-    const arr: IAirportSubset | undefined = db.getAirport(pilot?.flight_plan?.arrival as string);
-    const alt: IAirportSubset | undefined = db.getAirport(pilot?.flight_plan?.alternate as string);
-    const route: IRoute | undefined = db.getRoute(pilot?.flight_plan?.route as string);
+    let dep: IAirportSubset | undefined;
+    let arr: IAirportSubset | undefined;
+    let alt: IAirportSubset | undefined;
+    let route: IRoute | undefined;
+
+    if (pilot.flight_plan) {
+      dep = db.getAirport(pilot?.flight_plan?.departure as string);
+      arr = db.getAirport(pilot?.flight_plan?.arrival as string);
+      alt = db.getAirport(pilot?.flight_plan?.alternate as string);
+      route = db.getRoute(pilot?.flight_plan?.route as string);
+    }
 
     const pilotDetails: IPilotDetails = {
       pilot: pilot,

@@ -32,6 +32,10 @@ export default class NavigationDatabase {
   }
 
   getRoute(route: string): IRoute | undefined {
+    if (!route) {
+      return;
+    }
+
     const waypoints: string[] = route.split(" ");
     const enroute_waypoints: string[] = waypoints.filter((w: string): boolean => w.length === 5);
     console.log(enroute_waypoints);

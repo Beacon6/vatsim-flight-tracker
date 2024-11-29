@@ -27,7 +27,7 @@ function Panel(props: Props) {
                   {selectedFlight?.pilot.callsign} (
                   {selectedFlight?.pilot.flight_plan?.aircraft_short
                     ? selectedFlight?.pilot.flight_plan.aircraft_short
-                    : "N/A"}
+                    : "Not specified"}
                   )
                 </Offcanvas.Title>
               </Col>
