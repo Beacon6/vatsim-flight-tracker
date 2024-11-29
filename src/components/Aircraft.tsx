@@ -8,15 +8,16 @@ import "leaflet-rotatedmarker";
 
 import useViewportBounds from "../hooks/useViewportBounds.ts";
 
-import { IPilotsSubset } from "../../types/IPilots.ts";
+import { IPilotsSubset, IPilotDetails } from "../../types/IPilots.ts";
 
 interface Props {
   onlinePilots?: IPilotsSubset["pilots"];
   selectFlight: (target: IPilotsSubset["pilots"][number]) => void;
+  selectedFlight?: IPilotDetails["pilot"];
 }
 
 function Aircraft(props: Props) {
-  const { onlinePilots, selectFlight } = props;
+  const { onlinePilots, selectFlight, selectedFlight } = props;
 
   const map = useMap();
   const viewportBounds = useViewportBounds(map);
@@ -45,16 +46,16 @@ function Aircraft(props: Props) {
     iconSize: [24, 24],
   });
 
-  // const selectedAirplaneIcon = icon({
-  //   iconUrl: "../assets/airplane-focus.svg",
-  //   iconSize: [24, 24],
-  // });
+  const airplaneIconFocus = icon({
+    iconUrl: "../assets/airplane-focus.svg",
+    iconSize: [24, 24],
+  });
 
   return (
     <>
       {displayedAircraft?.map((item) => (
         <Marker
-          icon={airplaneIcon}
+          icon={item.callsign === selectedFlight?.callsign ? airplaneIconFocus : airplaneIcon}
           position={[item.latitude, item.longitude]}
           key={item.callsign}
           rotationAngle={item.heading}
