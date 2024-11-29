@@ -15,19 +15,27 @@ export default class NavigationDatabase {
   }
 
   getAirport(ident: string): IAirportSubset | undefined {
-    if (!ident) {
-      return;
+    try {
+      if (!ident) {
+        return;
+      }
+
+      const query: any = this.db.prepare("SELECT * FROM tbl_airports WHERE airport_identifier=?");
+      const result: any = query.get(ident);
+
+      if (!result) {
+        return;
+      }
+
+      return {
+        airport_identifier: result.airport_identifier,
+        airport_name: result.airport_name,
+        airport_ref_latitude: result.airport_ref_latitude,
+        airport_ref_longitude: result.airport_ref_longitude,
+      };
+    } catch (err: any) {
+      console.error(err.message);
     }
-
-    const query: any = this.db.prepare("SELECT * FROM tbl_airports WHERE airport_identifier=?");
-    const result: any = query.get(ident);
-
-    return {
-      airport_identifier: result.airport_identifier,
-      aiport_name: result.airport_name,
-      airport_ref_latitude: result.airport_ref_latitude,
-      airport_ref_longitude: result.airport_ref_longitude,
-    };
   }
 
   // TODO: full route display
