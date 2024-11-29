@@ -9,7 +9,6 @@ import NavigationDatabase from "./database.ts";
 import { IPilotDetails, IPilots } from "../types/IPilots.ts";
 import { IVatsimData, IVatsimDataSubset } from "../types/IVatsimData.ts";
 import { IAirportSubset } from "../types/IAirports.ts";
-import { IRoute } from "../types/IRoute.ts";
 
 const DATABASE_PATH: string = process.env.DATABASE_PATH!;
 const PORT: string = process.env.PORT!;
@@ -127,13 +126,11 @@ app.get("/flight", (req: any, res: any): void => {
     let dep: IAirportSubset | undefined;
     let arr: IAirportSubset | undefined;
     let alt: IAirportSubset | undefined;
-    let route: IRoute | undefined;
 
     if (pilot.flight_plan) {
       dep = db.getAirport(pilot?.flight_plan?.departure as string);
       arr = db.getAirport(pilot?.flight_plan?.arrival as string);
       alt = db.getAirport(pilot?.flight_plan?.alternate as string);
-      route = db.getRoute(pilot?.flight_plan?.route as string);
     }
 
     const pilotDetails: IPilotDetails = {
@@ -141,7 +138,6 @@ app.get("/flight", (req: any, res: any): void => {
       departure: dep,
       arrival: arr,
       alternate: alt,
-      route: route,
     };
 
     res.json(pilotDetails);

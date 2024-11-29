@@ -1,5 +1,4 @@
 import { IAirportSubset } from "./IAirports.ts";
-import { IRoute } from "./IRoute.ts";
 
 export interface IPilots {
   pilots: {
@@ -42,7 +41,6 @@ export interface IPilotDetails {
   departure: IAirportSubset | undefined;
   arrival: IAirportSubset | undefined;
   alternate: IAirportSubset | undefined;
-  route: IRoute | undefined;
 }
 
 export interface IPilotsSubset {
