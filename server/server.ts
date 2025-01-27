@@ -2,6 +2,7 @@ import "dotenv/config";
 import cors from "cors";
 import express, { Express } from "express";
 import { createServer } from "node:http";
+import { randomBytes } from "node:crypto";
 import { Server } from "socket.io";
 
 import assertPathExists from "./helpers/assertPathExists.ts";
@@ -30,6 +31,7 @@ console.log(`Server listening on port ${PORT}`);
 let refreshInterval: NodeJS.Timeout | undefined;
 let vatsimData: IVatsimData | undefined;
 let vatsimDataSubset: IVatsimDataSubset | undefined;
+const connectedUsers: Set<string> = new Set();
 
 async function fetchVatsimData(): Promise<IVatsimData> {
   const response: Response = await fetch("https://data.vatsim.net/v3/vatsim-data.json");
@@ -82,8 +84,13 @@ export async function sendVatsimData(): Promise<void> {
 }
 
 io.on("connection", async (socket: any): Promise<void> => {
+  const userId: string = randomBytes(20).toString("hex");
+
   try {
-    console.log(`New client connected on port ${PORT}`);
+    connectedUsers.add(userId);
+    console.log(connectedUsers);
+
+    console.log(`Client ${userId} connected on port ${PORT}`);
     console.log(`Clients connected: ${io.engine.clientsCount}`);
 
     if (vatsimDataSubset) {
@@ -99,7 +106,10 @@ io.on("connection", async (socket: any): Promise<void> => {
   }
 
   socket.on("disconnect", (): void => {
-    console.log(`Client disconnected from port ${PORT}`);
+    connectedUsers.delete(userId);
+    console.log(connectedUsers);
+
+    console.log(`Client ${userId} disconnected from port ${PORT}`);
     console.log(`Clients connected: ${io.engine.clientsCount}`);
     if (!io.engine.clientsCount) {
       clearInterval(refreshInterval);
