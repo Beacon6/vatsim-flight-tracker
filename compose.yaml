@@ -1,0 +1,21 @@
+services:
+  vatsim-flight-tracker:
+    image: ghcr.io/beacon6/vatsim-flight-tracker:latest
+    container_name: vatsim-flight-tracker
+    ports:
+      - ${PORT}:${PORT}
+    env_file:
+      - .env
+    volumes:
+      - ./${DATABASE_PATH}:/app/${DATABASE_PATH}
+    restart: always
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/beacon/.docker/config.json:/config.json
+    command:
+      - "--cleanup"
+      - "--interval"
+      - "900"
