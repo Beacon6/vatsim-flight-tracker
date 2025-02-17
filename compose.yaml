@@ -16,6 +16,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /home/beacon/.docker/config.json:/config.json
     command:
-      - "--cleanup"
-      - "--interval"
-      - "900"
+      - '--cleanup'
+      - '--interval'
+      - '900'

@@ -1,7 +1,7 @@
-import Database from "better-sqlite3";
-import "dotenv/config";
+import Database from 'better-sqlite3';
+import 'dotenv/config';
 
-import { IAirportSubset } from "../types/IAirports.ts";
+import { IAirportSubset } from '../types/IAirports.ts';
 
 export default class NavigationDatabase {
   db: any;
@@ -20,7 +20,7 @@ export default class NavigationDatabase {
         return;
       }
 
-      const query: any = this.db.prepare("SELECT * FROM tbl_airports WHERE airport_identifier=?");
+      const query: any = this.db.prepare('SELECT * FROM tbl_airports WHERE airport_identifier=?');
       const result: any = query.get(ident);
 
       if (!result) {
@@ -37,18 +37,4 @@ export default class NavigationDatabase {
       console.error(err.message);
     }
   }
-
-  // TODO: full route display
-
-  // getRoute(route: string): IRoute | undefined {
-  //   if (!route) {
-  //     return;
-  //   }
-
-  //   const waypoints: string[] = route.split(" ");
-  //   const enroute_waypoints: string[] = waypoints.filter((w: string): boolean => w.length === 5);
-  //   console.log(enroute_waypoints);
-
-  //   return;
-  // }
 }

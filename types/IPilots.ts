@@ -1,4 +1,4 @@
-import { IAirportSubset } from "./IAirports.ts";
+import { IAirportSubset } from './IAirports.ts';
 
 export interface IPilots {
   pilots: {
@@ -37,7 +37,7 @@ export interface IPilots {
 }
 
 export interface IPilotDetails {
-  pilot: IPilots["pilots"][number];
+  pilot: IPilots['pilots'][number];
   departure: IAirportSubset | undefined;
   arrival: IAirportSubset | undefined;
   alternate: IAirportSubset | undefined;

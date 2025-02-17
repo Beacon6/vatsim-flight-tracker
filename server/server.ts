@@ -1,29 +1,29 @@
-import "dotenv/config";
-import cors from "cors";
-import express, { Express } from "express";
-import { createServer } from "node:http";
-import { randomBytes } from "node:crypto";
-import { Server } from "socket.io";
+import 'dotenv/config';
+import cors from 'cors';
+import express, { Express } from 'express';
+import { createServer } from 'node:http';
+import { randomBytes } from 'node:crypto';
+import { Server } from 'socket.io';
 
-import assertPathExists from "./helpers/assertPathExists.ts";
-import NavigationDatabase from "./database.ts";
-import { IPilotDetails, IPilots } from "../types/IPilots.ts";
-import { IVatsimData, IVatsimDataSubset } from "../types/IVatsimData.ts";
-import { IAirportSubset } from "../types/IAirports.ts";
+import assertPathExists from './helpers/assertPathExists.ts';
+import NavigationDatabase from './database.ts';
+import { IPilotDetails, IPilots } from '../types/IPilots.ts';
+import { IVatsimData, IVatsimDataSubset } from '../types/IVatsimData.ts';
+import { IAirportSubset } from '../types/IAirports.ts';
 
 const DATABASE_PATH: string = process.env.DATABASE_PATH!;
 const PORT: string = process.env.PORT!;
 
 const app: Express = express();
 const server: any = createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
+const io = new Server(server, { cors: { origin: '*' } });
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static("dist"));
+app.use(express.static('dist'));
 
-assertPathExists(DATABASE_PATH, "Database missing");
-assertPathExists("dist", "Build files missing");
+assertPathExists(DATABASE_PATH, 'Database missing');
+assertPathExists('dist', 'Build files missing');
 
 server.listen(PORT);
 console.log(`Server listening on port ${PORT}`);
@@ -34,22 +34,22 @@ let vatsimDataSubset: IVatsimDataSubset | undefined;
 const connectedUsers: Set<string> = new Set();
 
 async function fetchVatsimData(): Promise<IVatsimData> {
-  const response: Response = await fetch("https://data.vatsim.net/v3/vatsim-data.json");
+  const response: Response = await fetch('https://data.vatsim.net/v3/vatsim-data.json');
   const data: any = await response.json();
   for (const p of data.pilots) {
-    ["cid", "name", "server"].forEach((e: string): boolean => delete p[e]);
+    ['cid', 'name', 'server'].forEach((e: string): boolean => delete p[e]);
   }
   for (const c of data.controllers) {
-    ["cid", "name", "server"].forEach((e: string): boolean => delete c[e]);
+    ['cid', 'name', 'server'].forEach((e: string): boolean => delete c[e]);
   }
 
   if (response.ok) {
     return {
-      general: data["general"],
-      pilots: data["pilots"],
-      controllers: data["controllers"],
-      atis: data["atis"],
-      facilities: data["facilities"],
+      general: data['general'],
+      pilots: data['pilots'],
+      controllers: data['controllers'],
+      atis: data['atis'],
+      facilities: data['facilities'],
     };
   } else {
     throw new Error(`Bad response when fetching Vatsim data: ${response.status}`);
@@ -59,7 +59,7 @@ async function fetchVatsimData(): Promise<IVatsimData> {
 export async function sendVatsimData(): Promise<void> {
   try {
     vatsimData = await fetchVatsimData();
-    vatsimDataSubset = { general: { update_timestamp: "" }, pilots: [], controllers: [] };
+    vatsimDataSubset = { general: { update_timestamp: '' }, pilots: [], controllers: [] };
 
     vatsimDataSubset.general.update_timestamp = vatsimData.general.update_timestamp;
     for (const pilot of vatsimData.pilots) {
@@ -77,14 +77,14 @@ export async function sendVatsimData(): Promise<void> {
       });
     }
 
-    io.emit("vatsimDataSubset", vatsimDataSubset);
+    io.emit('vatsimDataSubset', vatsimDataSubset);
   } catch (err: any) {
     console.error(err.message);
   }
 }
 
-io.on("connection", async (socket: any): Promise<void> => {
-  const userId: string = randomBytes(20).toString("hex");
+io.on('connection', async (socket: any): Promise<void> => {
+  const userId: string = randomBytes(20).toString('hex');
 
   try {
     connectedUsers.add(userId);
@@ -94,7 +94,7 @@ io.on("connection", async (socket: any): Promise<void> => {
     console.log(`Clients connected: ${io.engine.clientsCount}`);
 
     if (vatsimDataSubset) {
-      io.emit("vatsimDataSubset", vatsimDataSubset);
+      io.emit('vatsimDataSubset', vatsimDataSubset);
     }
 
     if (!refreshInterval) {
@@ -105,7 +105,7 @@ io.on("connection", async (socket: any): Promise<void> => {
     console.error(err.message);
   }
 
-  socket.on("disconnect", (): void => {
+  socket.on('disconnect', (): void => {
     connectedUsers.delete(userId);
     console.log(connectedUsers);
 
@@ -119,18 +119,18 @@ io.on("connection", async (socket: any): Promise<void> => {
   });
 });
 
-app.get("/flight", (req: any, res: any): void => {
+app.get('/flight', (req: any, res: any): void => {
   const db = new NavigationDatabase();
   try {
     const callsign: string = req.query.callsign;
 
     if (!vatsimData) {
-      res.status(500).json({ error: "VatsimData missing" });
+      res.status(500).json({ error: 'VatsimData missing' });
       return;
     }
 
-    const pilot: IPilots["pilots"][number] = vatsimData.pilots.find(
-      (p: IPilots["pilots"][number]): boolean => p.callsign === callsign,
+    const pilot: IPilots['pilots'][number] = vatsimData.pilots.find(
+      (p: IPilots['pilots'][number]): boolean => p.callsign === callsign,
     )!;
 
     let dep: IAirportSubset | undefined;

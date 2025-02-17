@@ -1,5 +1,5 @@
-import { IPilots, IPilotsSubset } from "./IPilots";
-import { IControllers, IControllersSubset } from "./IControllers";
+import { IPilots, IPilotsSubset } from './IPilots';
+import { IControllers, IControllersSubset } from './IControllers';
 
 export interface IVatsimData extends IPilots, IControllers {
   general: {
