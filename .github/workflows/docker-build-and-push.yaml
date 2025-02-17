@@ -15,7 +15,7 @@ jobs:
           docker build \
             --tag ghcr.io/beacon6/vatsim-flight-tracker:latest \
             --tag ghcr.io/beacon6/vatsim-flight-tracker:${{ github.sha }} \
-            --build-arg VITE_SERVER=beacon6.com .
+            --build-arg VITE_SERVER=${{ env.VITE_SERVER }} .
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
