@@ -1,9 +1,7 @@
 import 'dotenv/config';
 import cors from 'cors';
-import express, { Express } from 'express';
-import { createServer } from 'node:http';
-import { randomBytes } from 'node:crypto';
-import { Server } from 'socket.io';
+import express from 'express';
+import { WebSocketServer } from 'ws';
 
 import assertPathExists from './helpers/assertPathExists.ts';
 import NavigationDatabase from './database.ts';
@@ -14,9 +12,8 @@ import { IAirportSubset } from '../types/IAirports.ts';
 const DATABASE_PATH: string = process.env.DATABASE_PATH!;
 const PORT: string = process.env.PORT!;
 
-const app: Express = express();
-const server: any = createServer(app);
-const io = new Server(server, { cors: { origin: '*' } });
+const app = express();
+const wss = new WebSocketServer({ port: Number(PORT) });
 
 app.use(cors());
 app.use(express.json());
@@ -25,13 +22,11 @@ app.use(express.static('dist'));
 assertPathExists(DATABASE_PATH, 'Database missing');
 assertPathExists('dist', 'Build files missing');
 
-server.listen(PORT);
 console.log(`Server listening on port ${PORT}`);
 
 let refreshInterval: NodeJS.Timeout | undefined;
 let vatsimData: IVatsimData | undefined;
 let vatsimDataSubset: IVatsimDataSubset | undefined;
-const connectedUsers: Set<string> = new Set();
 
 async function fetchVatsimData(): Promise<IVatsimData> {
   const response: Response = await fetch('https://data.vatsim.net/v3/vatsim-data.json');
@@ -77,24 +72,23 @@ export async function sendVatsimData(): Promise<void> {
       });
     }
 
-    io.emit('vatsimDataSubset', vatsimDataSubset);
+    wss.emit('vatsimDataSubset', vatsimDataSubset);
   } catch (err: any) {
     console.error(err.message);
   }
 }
 
-io.on('connection', async (socket: any): Promise<void> => {
-  const userId: string = randomBytes(20).toString('hex');
+wss.on('connection', async (socket, req) => {
+  socket.on('error', console.error);
+
+  console.log(
+    `New client connected on port ${PORT} (${req.socket.remoteAddress})\n` +
+      `Clients connected: ${wss.clients.size}`,
+  );
 
   try {
-    connectedUsers.add(userId);
-    console.log(connectedUsers);
-
-    console.log(`Client ${userId} connected on port ${PORT}`);
-    console.log(`Clients connected: ${io.engine.clientsCount}`);
-
     if (vatsimDataSubset) {
-      io.emit('vatsimDataSubset', vatsimDataSubset);
+      wss.emit('vatsimDataSubset', vatsimDataSubset);
     }
 
     if (!refreshInterval) {
@@ -105,13 +99,12 @@ io.on('connection', async (socket: any): Promise<void> => {
     console.error(err.message);
   }
 
-  socket.on('disconnect', (): void => {
-    connectedUsers.delete(userId);
-    console.log(connectedUsers);
+  socket.on('close', () => {
+    console.log(
+      `Client disconnected from port ${PORT}\n` + `Clients connected: ${wss.clients.size}`,
+    );
 
-    console.log(`Client ${userId} disconnected from port ${PORT}`);
-    console.log(`Clients connected: ${io.engine.clientsCount}`);
-    if (!io.engine.clientsCount) {
+    if (!wss.clients.size) {
       clearInterval(refreshInterval);
       refreshInterval = undefined;
       vatsimDataSubset = undefined;
