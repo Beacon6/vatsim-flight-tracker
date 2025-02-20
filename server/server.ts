@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
+import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 
 import assertPathExists from './helpers/assertPathExists.ts';
@@ -13,15 +14,17 @@ const DATABASE_PATH: string = process.env.DATABASE_PATH!;
 const PORT: string = process.env.PORT!;
 
 const app = express();
-const wss = new WebSocketServer({ port: Number(PORT) });
-
 app.use(cors());
 app.use(express.json());
 app.use(express.static('dist'));
 
+const server = createServer(app);
+const wss = new WebSocketServer({ server });
+
 assertPathExists(DATABASE_PATH, 'Database missing');
 assertPathExists('dist', 'Build files missing');
 
+server.listen(PORT);
 console.log(`Server listening on port ${PORT}`);
 
 let refreshInterval: NodeJS.Timeout | undefined;
