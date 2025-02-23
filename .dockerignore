@@ -12,3 +12,6 @@ navigraph_db.sqlite3
 
 # IDE related
 .idea/
+
+# Logs
+logs/

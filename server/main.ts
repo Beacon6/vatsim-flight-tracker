@@ -3,8 +3,9 @@ import cors from 'cors';
 import express from 'express';
 import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
+import logger from './utils/logger.ts'
 
-import assertPathExists from './helpers/assertPathExists.ts';
+import assertPathExists from './utils/assertPathExists.ts';
 import NavigationDatabase from './database.ts';
 import { IPilotDetails, IPilots } from '../types/IPilots.ts';
 import { IVatsimData, IVatsimDataSubset } from '../types/IVatsimData.ts';
@@ -25,7 +26,7 @@ assertPathExists(DATABASE_PATH, 'Database missing');
 assertPathExists('dist', 'Build files missing');
 
 server.listen(PORT);
-console.log(`Server listening on port ${PORT}`);
+logger.info(`Server listening on port ${PORT}`);
 
 let refreshInterval: NodeJS.Timeout | undefined;
 let vatsimData: IVatsimData | undefined;
