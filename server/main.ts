@@ -5,11 +5,11 @@ import { existsSync } from 'fs';
 import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import logger from './utils/logger.ts';
-import { fetchVatsimData } from './vatsimData.ts';
+import VatsimDataSource from './vatsim-data.ts';
 
 import NavigationDatabase from './database.ts';
 import { IPilotDetails, IPilots } from '../types/IPilots.ts';
-import { IVatsimData, IVatsimDataSubset } from '../types/IVatsimData.ts';
+import { IVatsimData } from '../types/IVatsimData.ts';
 import { IAirportSubset } from '../types/IAirports.ts';
 import assert from 'assert';
 
@@ -26,6 +26,7 @@ app.use(express.static('dist'));
 
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
+const vatsimDataSource = new VatsimDataSource();
 
 server.listen(PORT);
 logger.info(`server listening on port ${PORT}`);
@@ -43,19 +44,14 @@ wss.on('connection', async (socket, req) => {
 
   try {
     if (refreshInterval) {
-      logger.info('sending VATSIM data');
-      socket.send(JSON.stringify(vatsimData));
+      await vatsimDataSource.sendData(socket, vatsimData!);
     } else {
       logger.info('creating new refresh interval');
       refreshInterval = setInterval(async () => {
-        logger.info('fetching and sending VATSIM data');
-        vatsimData = await fetchVatsimData();
-        socket.send(JSON.stringify(vatsimData));
+        vatsimData = await vatsimDataSource.refreshData(socket);
       }, 15000);
 
-      logger.info('fetching and sending VATSIM data');
-      vatsimData = await fetchVatsimData();
-      socket.send(JSON.stringify(vatsimData));
+      vatsimData = await vatsimDataSource.refreshData(socket);
     }
   } catch (err: any) {
     logger.error(err.message);
