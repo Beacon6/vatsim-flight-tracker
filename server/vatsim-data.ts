@@ -42,6 +42,10 @@ export default class VatsimDataSource {
 
   async sendData(socket: WebSocket, data: IVatsimData): Promise<void> {
     try {
+      if (socket.readyState !== 1) {
+        throw new Error('socket not open');
+      }
+
       logger.info('sending VATSIM data');
       socket.send(JSON.stringify(data));
     } catch (err: any) {
@@ -51,6 +55,10 @@ export default class VatsimDataSource {
 
   async refreshData(socket: WebSocket): Promise<IVatsimData | undefined> {
     try {
+      if (socket.readyState !== 1) {
+        throw new Error('socket not open');
+      }
+
       logger.info('fetching and sending VATSIM data');
       const data = await this.#transformData();
       socket.send(JSON.stringify(data));
